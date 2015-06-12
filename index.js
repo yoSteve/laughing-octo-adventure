@@ -2,7 +2,20 @@ var express = require('express');
 
 var app = express();
 
+//set up handlbars
+var handlebars = require(express3-handlebars')
+	.create({ defaultLayout:'main' });
+	app.engine('handlebars', handlebars.engine);
+	app.set('view engin', 'handlebars');
+
+
 app.set('port', process.env.PORT || 3000);
+
+//index (front) page
+app.get('/', function(req, res){
+res.set('Content-Type', 'text/plain');
+res.send("pretty stuff go here!");
+})
 
 //404
 app.use(function(req,res){
