@@ -8,6 +8,10 @@ var handlebars = require('express3-handlebars')
 	app.engine('handlebars', handlebars.engine);
 	app.set('view engin', 'handlebars');
 
+//set up mondoose
+var dbConfig = require('./db/db.js');
+var mongoose = require('mongoose');
+mongoose.connect(dbConfig.url);
 
 app.set('port', process.env.PORT || 3000);
 
