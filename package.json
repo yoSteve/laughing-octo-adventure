@@ -25,6 +25,7 @@
   "homepage": "https://github.com/EatmoreVanCleef/laughing-octo-adventure#readme",
   "dependencies": {
     "express": "^4.12.4",
-    "express3-handlebars": "^0.5.2"
+    "express3-handlebars": "^0.5.2",
+    "sanitizer": "^0.1.2"
   }
 }
