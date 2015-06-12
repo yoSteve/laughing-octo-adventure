@@ -1,0 +1,29 @@
+{
+  "name": "mana-match",
+  "version": "0.0.2",
+  "description": "Puzzle Adventure Multiplayer Game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/EatmoreVanCleef/laughing-octo-adventure.git"
+  },
+  "keywords": [
+    "puzzle",
+    "node.js",
+    "melon.js",
+    "socket.io",
+    "8bit"
+  ],
+  "author": "Will Chantry (goofiw)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EatmoreVanCleef/laughing-octo-adventure/issues"
+  },
+  "homepage": "https://github.com/EatmoreVanCleef/laughing-octo-adventure#readme",
+  "dependencies": {
+    "express": "^4.12.4"
+  }
+}
