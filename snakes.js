@@ -2,11 +2,7 @@
 
 window.onload = function() {
     var canvas = document.createElement('canvas'),
-    ctx = canvas.getContext('2d'),
-    score = 0,
-    level = 0,
-    direction = 0;
-
+    ctx = canvas.getContext('2d');
 
 // Initialize the matrix.
     var SIZE = 8;
@@ -21,106 +17,196 @@ window.onload = function() {
     var body = document.getElementById('game-board');
     body.appendChild(canvas);
 
+    ////////////// Gameplay Functions /////////////////
+        // take in variable map, and set up board for play
+        boardLogic(map);
+        debugger;
+
+
+        
+        
+        //next will need turn logic (include move logic)
+
+    ///////////// Move Logic Functions /////////////////
+   
+
+    function findRow(board, row) {
+        // row is row index of board coordinates (board[col][row])
+        var array = [];
+        for (i = 0; i < SIZE; i++){
+            array.push(board[i][row]);
+        }
+        console.log("findRow looks like: " + array);
+        return array;
+    }
+
+    // cell is board coordinates (board[col][row])
+    // moves is number of spaces by which to shift values of array
+
+    function rotateLeft(board, row, moves) {
+        var array = findRow(board, row);
+        console.log("inside rotateLeft. array: " + array);
+        for (var i = 0; i < moves; i++) {
+            var beg = array.shift();
+            array.push(beg);
+        }
+        for (var i = 0; i < SIZE; i++) {
+            board[i][row] = array[i];
+        }
+    }
+
+    function rotateRight(board, row, moves) {
+        var array = findRow(board, row);
+        for (var i = 0; i < moves; i++) {
+            var end = array.pop();
+            array.unshift(end); 
+        }
+         for (var i = 0; i < SIZE; i++) {
+            board[i][row] = array[i];
+        }
+    }
+
+
+    // column should be given as map[col] where col is the target column
+    function rotateUp(column, moves) {
+        for (var i = 0; i < moves; i++) {
+            var beg = column.shift();
+            column.push(beg);
+        }
+    }
+
+    function rotateDown(column, moves) {
+        for (var i = 0; i < moves; i++) {
+            var end = column.pop();
+            column.unshift(end);
+        }
+    }
+
+
+
+    ///////////// Board Logic Functions ////////////////
+
     function getRandomCrystal() {
         return Math.round(Math.random() * 5);
     }
 
-    function assignCrystalsToMap (map) {
-        for (var col = 0; col < map.length; col++) {
-            for (var row = 0; row < map[col].length; row++) {
-                map[col][row] = getRandomCrystal();
+    function assignCrystalsToBoard (board) {
+        for (var col = 0; col < board.length; col++) {
+            for (var row = 0; row < board[col].length; row++) {
+                if (board[col][row] == null) {
+                    board[col][row] = getRandomCrystal();
+                }
             } 
         }
-        return map;
+        return board;
     }
 
     function destroy(cell) {
         cell = null;
     }
 
-    function findMatchRow (map) {
-        for (var col = 2; col < map.length; col++) {
-            for (var row = 0; row < map[col].length; row++) {
-                if (map[col][row] == map[col-1][row] && map[col][row] == map[col-2][row]) {
+    function findMatchRow (board) {
+        for (var col = 2; col < board.length; col++) {
+            for (var row = 0; row < board[col].length; row++) {
+                if (board[col][row] == board[col-1][row] && board[col][row] == board[col-2][row]) {
                     // award points/damage enemy here
 
-                    map[col][row] = null;
-                    map[col-1][row] = null;
-                    map[col-2][row] = null;
+                    board[col][row] = null;
+                    board[col-1][row] = null;
+                    board[col-2][row] = null;
                 }
             } 
-        } return map;
+        } return board;
     }
 
-    function findMatchCol (map) {
-        for (var col = 0; col < map.length; col++) {
-            for (var row = 2; row < map[col].length; row++) {
-                if (map[col][row] == map[col][row-1] && map[col][row] == map[col][row-2]) {
+    function findMatchCol (board) {
+        for (var col = 0; col < board.length; col++) {
+            for (var row = 2; row < board[col].length; row++) {
+                if (board[col][row] == board[col][row-1] && board[col][row] == board[col][row-2]) {
                     // award points/damage enemy here
-                    map[col][row] = null;
-                    map[col][row-1] = null;
-                    map[col][row-2] = null;
+                    board[col][row] = null;
+                    board[col][row-1] = null;
+                    board[col][row-2] = null;
                 }
             } 
         }
-        return map;
+        return board;
     }
 
 
-    function findAllMatches(map) {
-        findMatchRow(map);
-        findMatchCol(map);
-        return map;
+    function findAllMatches(board) {
+        findMatchRow(board);
+        findMatchCol(board);
+        return board;
     }
 
-    function checkNullSpace(map) {
-        console.log("inside CheckNullSpace");
+    function checkNullSpace(board) {
         for (var col = SIZE -1; col >= 0; col--) {
             var nullCount = 0;
             for (var row = SIZE -1 ; row >= 0; row--) {
-                if (map[col][row] == null) {
+                if (board[col][row] == null) {
                     nullCount++;
-                } else if (map[col][row] != null && nullCount > 0) { map[col][row + nullCount] = map[col][row];
+                } else if (board[col][row] != null && nullCount > 0) { board[col][row + nullCount] = board[col][row];
                 }
             } 
             for (var i = 0; i <= nullCount-1; i++) {
-                map[col][i] = null;
+                board[col][i] = null;
             }
-        } return map;
+        } return board;
     }
-    
-    assignCrystalsToMap(map);
 
-    findAllMatches(map);
-    
-    drawGame(map);
-    debugger
-    checkNullSpace(map);
-    drawGame(map);
+    function dropNewCrystals(board) {
+        for (var col = 0; col < SIZE; col++) {
+            for (var row = 0; row < SIZE; row++) {
+                if (board[col][row] == null) {
+                    board[col][row] = getRandomCrystal();
+                }
+            };
+        } console.log("inside dropNewCrystals");
+        return board;
+    }
+       
+    function refreshBoard (board) {
+         for (var col = 0; col < SIZE; col++) {
+            for (var row = 0; row < SIZE; row++) {
+                do {
+                    findAllMatches(board);
+                    checkNullSpace(board);      
+                    assignCrystalsToBoard(board);
+                } while (board[col][row] == null);
+            } 
+        } paintBoard(board);
+    }
+
+    function boardLogic(board){
+        assignCrystalsToBoard(board);
+        refreshBoard(board); 
+        paintBoard(board);
+    }
 
 
-    function drawGame(map) {
+    function paintBoard(board) {
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Start cycling the matrix
-        for (var row = 0; row < map.length; row++) {
-            for (var col = 0; col < map[0].length; col++) {
-                if (map[row][col] === 0) {
+        for (var row = 0; row < board.length; row++) {
+            for (var col = 0; col < board[0].length; col++) {
+                if (board[row][col] === 0) {
                     ctx.fillStyle = 'red';
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);
-                } else if (map[row][col] === 1) {
+                } else if (board[row][col] === 1) {
                     ctx.fillStyle = 'blue';
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-                }else if (map[row][col] === 2) {
+                }else if (board[row][col] === 2) {
                     ctx.fillStyle = 'green';
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-                }else if (map[row][col] === 3) {
+                }else if (board[row][col] === 3) {
                     ctx.fillStyle = 'yellow';
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-                }else if (map[row][col] === 4) {
+                }else if (board[row][col] === 4) {
                     ctx.fillStyle = 'black';
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-                }else if (map[row][col] === 5) {
+                }else if (board[row][col] === 5) {
                     ctx.fillStyle = 'floralwhite';
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
                 }else  {
@@ -128,7 +214,7 @@ window.onload = function() {
                     ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
                 }
             }
-        } console.log("inside paint", map);
+        } console.log("painting the board", board);
     }
 
 
