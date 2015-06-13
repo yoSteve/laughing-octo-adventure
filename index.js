@@ -12,8 +12,14 @@ var handlebars = require('express3-handlebars')
 var dbConfig = require('./db/db.js');
 var mongoose = require('mongoose');
 mongoose.connect(dbConfig.url);
-
 app.set('port', process.env.PORT || 3000);
+
+//require passport module
+var passport = require('passport');
+var expressSession = require('express-session');
+app.use(expressSession({secret: 'mySecretKey'}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //index (front) page
 app.get('/', function(req, res){
