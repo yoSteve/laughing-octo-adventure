@@ -19,8 +19,10 @@ window.onload = function() {
 
     ////////////// Gameplay Functions /////////////////
         // take in variable map, and set up board for play
+       var score = 0;
+
         boardLogic(map);
-        debugger;
+        TakeATurn(map);
 
 
         
@@ -28,7 +30,83 @@ window.onload = function() {
         //next will need turn logic (include move logic)
 
     ///////////// Move Logic Functions /////////////////
-   
+
+    var iColumn;
+    var iRow;
+    var fColumn;
+    var fRow;
+  
+    function MoveCheckHor(iCol, fCol) {
+        return iCol - fCol; 
+    }
+
+    function MoveCheckVert(iRow, fRow) {
+        return iRow - fRow;
+    }
+
+    function getInitialCoords() {
+        var initialPos = prompt("Enter inital Position", "col,row");
+        iColumn = initialPos.slice(0,1);
+        iRow = initialPos.slice(-1);
+    }
+
+    function getFinalCoords(){
+        var finalPos = prompt("Enter final Position", "col, row");
+        fColumn = finalPos.slice(0,1);
+        fRow = finalPos.slice(-1);
+
+    }
+
+    function TakeATurn(board) {
+        var initialPos = prompt("Enter inital Position", "col,row");
+        iColumn = initialPos.slice(0,1);
+        iRow = initialPos.slice(-1);
+
+        var finalPos = prompt("Enter final Position", "col, row");
+        fColumn = finalPos.slice(0,1);
+        fRow = finalPos.slice(-1);
+
+        var Hmove = MoveCheckHor(iColumn, fColumn);
+            Vmove = MoveCheckVert(iRow, fRow);
+
+        console.log("Hmove: " + Hmove);
+        console.log("Vmove: " + Vmove);
+
+        if (Hmove < 0 ) {
+            Hmove = (-1 * Hmove);
+            rotateRight(board, iRow, Hmove);
+            paintBoard(board);
+        } else if (Hmove > 0) {
+            rotateLeft(board, iRow, Hmove);
+            paintBoard(board);
+        } else if (Vmove < 0) {
+            Vmove = (-1 * Vmove);
+            rotateDown(board[iColumn], Vmove);
+            paintBoard(board);
+        } else if (Vmove > 0) {
+            rotateUp(board[iColumn], Vmove);
+            paintBoard(board);
+        }
+        refreshBoard(board);
+
+    }
+
+
+    //takes intial & final coords, determines direction & distance of movement
+    function defineMovement(iCol, iRow, fCol, fRow) {
+        var horDist = iCol - fCol;
+        var vertDist = iRow - fRow;
+        if (horDist < 0) {
+            console.log("moving right " + horDist + " spaces.");
+        } else if (horDist > 0) {
+            console.log("moving left " + horDist + " spaces.");
+        } else if (vertDist < 0 ) {
+            console.log("moving down " + vertDist + " spaces.") 
+        } else if (vertDist > 0) {
+            console.log("moving up " + vertDist + " spaces.")
+        }
+    }
+
 
     function findRow(board, row) {
         // row is row index of board coordinates (board[col][row])
@@ -181,7 +259,7 @@ window.onload = function() {
     function boardLogic(board){
         assignCrystalsToBoard(board);
         refreshBoard(board); 
-        paintBoard(board);
+        // paintBoard(board);
     }
 
 
