@@ -1,11 +1,11 @@
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
-var bCrypt = require('bcrypt-nodejs');
+var bCrypt = require('bcrypt-node');
 
 module.exports = function(passport){
 
-	passport.use('login'), new LocalStrategy({
-		passReqToCallback :true;
+	passport.use('login', new LocalStrategy({
+		passReqToCallback :true
 		}, function(req, username, password, done) {
 			var loginError = done(null, false, req.flash("login error: username and password do not match)"));
 
@@ -22,7 +22,7 @@ module.exports = function(passport){
 				}
 				return done(null, user);
 			});
-		}
+		})
 	);
 
 	var isValidPassword = function(user, password){
