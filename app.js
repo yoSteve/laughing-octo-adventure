@@ -11,7 +11,8 @@ var bodyParser = require('body-parser');
 var handlebars = require('express3-handlebars')
 	.create({ defaultLayout:'main' });
 	app.engine('handlebars', handlebars.engine);
-	app.set('view engin', 'handlebars');
+	app.set('views', path.join(__dirname, 'views'));
+	app.set('view engine', 'handlebars');
 
 //set up mondoose
 var dbConfig = require('./db.js');
@@ -30,16 +31,6 @@ app.use(passport.session());
 var initPassport = require('./passport/init');
 initPassport(passport);
 
-//index (front) page
-app.get('/', function(req, res){
-res.set('Content-Type', 'text/plain');
-res.send("pretty stuff go here!");
-})
-
-//views setup
-app.set('views', path.join(__dirname, 'view'));
-app.set('view engine', 'handlebars');
-
 //parsers
 app.use(favicon());
 app.use(logger('dev'));
@@ -51,6 +42,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // connect-flash used for flashing messages
 var flash = require('connect-flash');
 app.use(flash());
+
+//set upu routes
+var routes = require('./routes/index')(passport);
+app.use('/',routes);
+
+//set up socket
+var http = require('http').Server(app);
+var io = require('./sockets/socket.js')(http, passport);
+app.use('/', sockets);
 
 //404
 app.use(function(req,res){
