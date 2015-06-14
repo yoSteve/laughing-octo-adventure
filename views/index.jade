@@ -4,10 +4,5 @@ block title
 	title signup
 
 block content
-	form(class='form-signin', action='/login', method='POST')
-		input(type='text', name='username', placeholder='Email', required, autofocus)
-		input(type='password', name='password', placeholder='password', required)
-		button(type='submit') Sign in
-	#message
-	if message
-		h1 #{message}
+	include _signin
+	include _signup
