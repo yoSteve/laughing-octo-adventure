@@ -7,12 +7,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-//set up handlbars
-var handlebars = require('express3-handlebars')
-	.create({ defaultLayout:'main' });
-	app.engine('handlebars', handlebars.engine);
+//set up jade
 	app.set('views', path.join(__dirname, 'views'));
-	app.set('view engine', 'handlebars');
+	app.set('view engine', 'jade');
 
 //set up mondoose
 var dbConfig = require('./db.js');
