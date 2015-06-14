@@ -12,7 +12,7 @@ var bodyParser = require('body-parser');
 	app.set('view engine', 'jade');
 
 //set up mondoose
-var dbConfig = require('./db.js');
+var dbConfig = require('./db');
 var mongoose = require('mongoose');
 mongoose.connect(dbConfig.url);
 app.set('port', process.env.PORT || 3000);

@@ -32,6 +32,10 @@ module.exports = function(passport, io){
 	router.post('logout', function() {
 		console.log('logout');
 	});
+	
+	router.get('/game', isAuthenticated, function(req, res) {
+		res.render('game', {user: req.user });
+	});
 
 	io.on('connection', function(socket) {
 		console.log('somebody is connected!!!');
