@@ -15,6 +15,14 @@ module.exports = function(passport, io){
 		res.render('index', {message: req.flash('message')});
 	});
 
+	//google login redirects to google, google directs back
+	router.get('/auth/google', passport.authenticate('google-openidconnect'));
+
+	router.get('/auth/google/response',
+		passport.authenticate('google-openidconnect', {
+			successRedirect: '/game',
+			failureRedirect: '/'
+		}));
 		//handle login
 	router.post('/login',passport.authenticate('login', {
 			successRedirect: '/game',
