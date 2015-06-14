@@ -29,8 +29,9 @@ module.exports = function(passport, io){
 			failureFlash : true
 	}));
 
-	router.post('logout', function() {
-		console.log('logout');
+	router.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
 	});
 	
 	router.get('/game', isAuthenticated, function(req, res) {

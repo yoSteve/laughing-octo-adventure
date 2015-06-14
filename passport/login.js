@@ -8,18 +8,18 @@ module.exports = function(passport){
 		passReqToCallback : true
 	},
 		function(req, username, password, done) {
-			var loginError = done(null, false, req.flash("login error: username and password do not match)"));
+
 			console.log("hey", username);
 			User.findOne({ 'username' : username }, function(err, user){ 
 				if (err)
 					return done(err);
 				if(!user){
 					console.log('User not found', username);
-					return loginError;
+					return done(null, false, req.flash('message', "login error: user not found"));
 				}
 				if(!isValidPassword(user, password)) {
 					console.log('Invalid Password');
-					return loginError;
+					return done(null, false, req.flash('message', "login error: username and password do not match)"));
 				}
 				return done(null, user);
 			});
