@@ -43,14 +43,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 var flash = require('connect-flash');
 app.use(flash());
 
-//set upu routes
-var routes = require('./routes/index')(passport);
-app.use('/',routes);
-
-//set up socket
+//set upu routes with socket
 var http = require('http').Server(app);
-var io = require('./sockets/socket.js')(http, passport);
-app.use('/', sockets);
+var io  = require('socket.io').listen(http);
+var routes = require('./routes/index')(passport, io);
+app.use('/', routes);
 
 //404
 app.use(function(req,res){
@@ -67,7 +64,7 @@ app.use(function(err,req,res,next){
 	res.send('500 - we require more vespane gas');
 })
 
-app.listen(app.get('port'), function(){
+http.listen(app.get('port'), function(){
 	console.log('Express has started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate');
 });
 
