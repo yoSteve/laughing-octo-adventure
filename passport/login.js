@@ -4,9 +4,8 @@ var bCrypt = require('bcrypt-node');
 
 module.exports = function(passport){
 
-	passport.use('login', new LocalStrategy({
-		passReqToCallback :true
-		}, function(req, username, password, done) {
+	passport.use('login', new LocalStrategy(
+		function(username, password, done) {
 			var loginError = done(null, false, req.flash("login error: username and password do not match)"));
 
 			User.findOne({ 'username' : username }, function(err, user){ 

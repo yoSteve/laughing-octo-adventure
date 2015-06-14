@@ -1,7 +1,7 @@
-form(class='form-signin', action='/login', method='POST')
+form(id='form-signin', method='POST')
 	input(type='text', name='username', placeholder='Email', required, autofocus)
 	input(type='password', name='password', placeholder='password', required)
-	button(type='submit') Sign in
+	button(id='button-signin', type='submit') Sign in
 #message
 if message
 	h1 #{message}

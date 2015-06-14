@@ -34,6 +34,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+
+//for loading local files in public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // connect-flash used for flashing messages

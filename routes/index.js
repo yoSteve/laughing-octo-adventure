@@ -15,30 +15,30 @@ module.exports = function(passport, io){
 		res.render('index', {message: req.flash('message')});
 	});
 
+		//handle login
+	router.post('/login',passport.authenticate('login', {
+			successRedirect: '/game',
+			failureRedirect: '/',
+			failureFlash: true
+	}));
+
+	//handle Registration
+	router.post('/signup', passport.authenticate('signup', {
+			successRedirect: '/game',
+			failureRedirect: '/',
+			failureFlash : true
+	}));
+
+	router.post('logout', function() {
+		console.log('logout');
+	});
+
 	io.on('connection', function(socket) {
 		console.log('somebody is connected!!!');
 		socket.on('disconnect', function() {
 			console.log('somebody disconnected');
 		});
 	});
-
-	//handle login
-	io.on('login', passport.authenticate('login', {
-		successRedirect: '/game',
-		failureRedirect: '/',
-		failureFlash: true
-	}));
-
-	//handle Registration
-	io.on('signup', passport.authenticate('signup', {
-		successRedirect: '/game',
-		failureRedirect: '/',
-		failurFlash : true
-	}));
-
-	io.on('logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
+	
 	return router;
 }
