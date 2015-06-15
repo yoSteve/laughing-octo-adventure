@@ -33,12 +33,12 @@ window.onload = function() {
             manaBlack  = 0,
             manaWhite  = 0;
 
-        var meleRed    = 15,
-            meleBlue   = 15,
-            meleGreen  = 10,
-            meleYellow = 10,
-            meleBlack  =  5,
-            meleWhite  =  5;
+        var meleeRed    = 15,
+            meleeBlue   = 15,
+            meleeGreen  = 10,
+            meleeYellow = 10,
+            meleeBlack  =  5,
+            meleeWhite  =  5;
 
     //////////////// Game Play Order ////////////////////
 
@@ -58,7 +58,7 @@ window.onload = function() {
         // player1Turn
             // **useManaSpell   // debits mana pool and updates enemy HP or player hp
             getMoveFromUser(map); // includes move logic. includes paintBoard()
-            refreshBoard(map);  // awards mana to player and does mele attacks to enemy
+            refreshBoard(map);  // awards mana to player and does melee attacks to enemy
             updateManaPool();
             updateEnemyHP(); // prints enemyHP to browser
             paintBoard(map);    
@@ -67,7 +67,7 @@ window.onload = function() {
         // player2Turn
             // useManaSpell   // debits mana pool and updates enemy HP or player hp
             getMoveFromUser(map); // includes move logic. includes paintBoard()
-            refreshBoard(map);  // awards mana to player and does mele attacks to enemy
+            refreshBoard(map);  // awards mana to player and does melee attacks to enemy
             updateManaPool();
             updateEnemyHP(); // prints enemyHP to browser 
             paintBoard(map);    
@@ -149,25 +149,25 @@ window.onload = function() {
         $("#mana-white").text(manaWhite);
     }
 
-    function meleAttack(cell) {
+    function meleeAttack(cell) {
         switch (cell) {
             case 0 :
-                enemyHP = enemyHP - meleRed;
+                enemyHP = enemyHP - meleeRed;
                 break;
             case 1 :
-                enemyHP = enemyHP - meleBlue;
+                enemyHP = enemyHP - meleeBlue;
                 break;
             case 2 :
-                enemyHP = enemyHP - meleGreen;
+                enemyHP = enemyHP - meleeGreen;
                 break;
             case 3 :
-                enemyHP = enemyHP - meleYellow;
+                enemyHP = enemyHP - meleeYellow;
                 break;
             case 4 :
-                enemyHP = enemyHP - meleBlack;
+                enemyHP = enemyHP - meleeBlack;
                 break;
             case 5 :
-                enemyHP = enemyHP - meleWhite;
+                enemyHP = enemyHP - meleeWhite;
                 break;
         }
     }
@@ -330,9 +330,9 @@ window.onload = function() {
                 awardMana(board[col][row]);
                 awardMana(board[col-1][row]);
                 awardMana(board[col-2][row]);
-                meleAttack(board[col][row]);
-                meleAttack(board[col-1][row]);
-                meleAttack(board[col-2][row]);
+                meleeAttack(board[col][row]);
+                meleeAttack(board[col-1][row]);
+                meleeAttack(board[col-2][row]);
                 return true;
         }
         return false;
@@ -343,7 +343,7 @@ window.onload = function() {
             && findMatch3Row(board, col, row) 
             && board[col][row] == board[col-3][row] ) {
                 awardMana(board[col-3][row]);
-                meleAttack(board[col-3][row]);
+                meleeAttack(board[col-3][row]);
                 return true;
         }
         return false;
@@ -354,7 +354,7 @@ window.onload = function() {
         && findMatch4Row(board, col, row) 
         && board[col][row] == board[col-4][row] ) {
             awardMana(board[col-4][row]);
-            meleAttack(board[col-4][row]);
+            meleeAttack(board[col-4][row]);
             return true;
         }
         return false;
@@ -386,9 +386,9 @@ window.onload = function() {
             awardMana(board[col][row]);
             awardMana(board[col][row-1]);
             awardMana(board[col][row-2]);
-            meleAttack(board[col][row]);
-            meleAttack(board[col][row-1]);
-            meleAttack(board[col][row-2]);
+            meleeAttack(board[col][row]);
+            meleeAttack(board[col][row-1]);
+            meleeAttack(board[col][row-2]);
             return true;
         }
         return false;
@@ -399,7 +399,7 @@ window.onload = function() {
         && findMatch3Col(board, col, row) 
         && board[col][row] == board[col][row-3] ) {
             awardMana(board[col][row-3]);
-            meleAttack(board[col][row-3]);
+            meleeAttack(board[col][row-3]);
             return true;
         }
         return false;
@@ -410,7 +410,7 @@ window.onload = function() {
         && findMatch4Col(board, col, row) 
         && board[col][row] == board[col][row-4] ) {
             awardMana(board[col][row-4]);
-            meleAttack(board[col][row-4]);
+            meleeAttack(board[col][row-4]);
             return true;
         }
         return false;
