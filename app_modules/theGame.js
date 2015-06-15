@@ -11,6 +11,7 @@ module.exports = {
     refreshBoard(gameBoard);
     addMana();
     zeroMatches();
+    console.log(mana);
     return [gameBoard, mana];
   }
 };
@@ -43,7 +44,8 @@ module.exports = {
   function addMana() {
   	var i = 5;
   	while(i >= 0){
-  		mana[i] += matches[i];
+      if (matches[i])
+    		mana[i] += matches[i];
   		i--;
   	}
   }
