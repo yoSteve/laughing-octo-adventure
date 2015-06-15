@@ -1,0 +1,23 @@
+extends ./layout.jade
+
+block content
+  // Canvas placeholder
+#screen
+  // melonJS Library
+  // build:js js/app.min.js
+  script(type="text/javascript" src="../game_lib/melonJS-2.1.1.js")
+  // Plugin(s)
+
+  script(type="text/javascript" src="../game_lib/plugins/debug/debugPanel.js")
+  // Game Scripts 
+  script(type="text/javascript" src="../game_js/game.js")
+  script(type="text/javascript" src="../game_js/resources.js")
+  script(type="text/javascript" src="../game_js/entities/tile.js")
+  script(type="text/javascript" src="../game_js/entities/grid.js")
+  script(type="text/javascript" src="../game_js/entities/HUD.js")
+
+  script(type="text/javascript" src="../game_js/screens/title.js")
+  script(type="text/javascript" src="../game_js/screens/play.js")
+  <!-- /build -->
+  <!-- Bootstrap & Mobile optimization tricks -->
+  script(type="text/javascript" src="../game_js/window.js")

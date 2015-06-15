@@ -12,10 +12,11 @@ module.exports = function(passport) {
 			
 			var findOrCreateUser = function(){
 				User.findOne({'password' : profile.id}, function(err, user) {
+					console.log(err +'\n'+ user + '\n');
 					if (err)
-					return done(err)
-				if(user)
-					return done(null, user)
+						return done(err);
+					if(user)
+						return done(null, user);
 				});
 				var newUser = new User();
 				//set credentials
