@@ -2,16 +2,15 @@
 <html>
     <head>
         <title>melonJS Boilerplate</title>
-        <link rel="stylesheet" type="text/css" media="screen" href="index.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="game_canvas.css">
         <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon" href="icons/touch-icon-iphone-60x60.png">
-        <link rel="apple-touch-icon" sizes="76x76" href="icons/touch-icon-ipad-76x76.png">
-        <link rel="apple-touch-icon" sizes="120x120" href="icons/touch-icon-iphone-retina-120x120.png">
-        <link rel="apple-touch-icon" sizes="152x152" href="icons/touch-icon-ipad-retina-152x152.png">
-        <link rel="manifest" href="manifest.json">
+        <link rel="apple-touch-icon" href="game_icons/touch-icon-iphone-60x60.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="game_icons/touch-icon-ipad-76x76.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="game_icons/touch-icon-iphone-retina-120x120.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="game_icons/touch-icon-ipad-retina-152x152.png">
     </head>
     <body>
         <!-- Canvas placeholder -->
@@ -19,21 +18,21 @@
 
         <!-- melonJS Library -->
         <!-- build:js js/app.min.js -->
-        <script type="text/javascript" src="lib/melonJS-2.1.1.js"></script>
+        <script type="text/javascript" src="game_lib/melonJS-2.1.1.js"></script>
 
         <!-- Plugin(s) -->
-        <script type="text/javascript" src="lib/plugins/debug/debugPanel.js"></script>
+        <script type="text/javascript" src="game_lib/plugins/debug/debugPanel.js"></script>
 
         <!-- Game Scripts -->
-        <script type="text/javascript" src="js/game.js"></script>
-        <script type="text/javascript" src="build/js/resources.js"></script>
+        <script type="text/javascript" src="game_js/game.js"></script>
+        <script type="text/javascript" src="game_js/resources.js"></script>
 
-        <script type="text/javascript" src="js/entities/tile.js"></script>
-        <script type="text/javascript" src="js/entities/grid.js"></script>
-        <script type="text/javascript" src="js/entities/HUD.js"></script>
+        <script type="text/javascript" src="game_js/entities/tile.js"></script>
+        <script type="text/javascript" src="game_js/entities/grid.js"></script>
+        <script type="text/javascript" src="game_js/entities/HUD.js"></script>
 
-        <script type="text/javascript" src="js/screens/title.js"></script>
-        <script type="text/javascript" src="js/screens/play.js"></script>
+        <script type="text/javascript" src="game_js/screens/title.js"></script>
+        <script type="text/javascript" src="game_js/screens/play.js"></script>
         <!-- /build -->
         <!-- Bootstrap & Mobile optimization tricks -->
         <script type="text/javascript">
