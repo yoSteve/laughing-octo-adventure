@@ -1,3 +1,28 @@
+        var PLAYER1_DEFAULT_HP = 250,
+            PLAYER2_DEFAULT_HP = 250,
+            ENEMY_DEFAULT_HP   = 250;
+
+        var player1HP = PLAYER1_DEFAULT_HP,
+            player2HP = PLAYER2_DEFAULT_HP,
+            enemyHP   = ENEMY_DEFAULT_HP;
+
+       // MANA POOL //
+       var  manaRed    = 0,
+            manaBlue   = 0,
+            manaGreen  = 0,
+            manaYellow = 0,
+            manaBlack  = 0,
+            manaWhite  = 0;
+
+        var meleeRed    = 15,
+            meleeBlue   = 15,
+            meleeGreen  = 10,
+            meleeYellow = 10,
+            meleeBlack  =  5,
+            meleeWhite  =  5;
+
+////////////// ///////////////////// ////////////////////
+
     function awardMana(cell) {
         switch (cell) {
             case 0 :
@@ -39,25 +64,25 @@
         $("#mana-white").text(manaWhite);
     }
 
-    function meleAttack(cell) {
+    function meleeAttack(cell) {
         switch (cell) {
             case 0 :
-                enemyHP = enemyHP - meleRed;
+                enemyHP = enemyHP - meleeRed;
                 break;
             case 1 :
-                enemyHP = enemyHP - meleBlue;
+                enemyHP = enemyHP - meleeBlue;
                 break;
             case 2 :
-                enemyHP = enemyHP - meleGreen;
+                enemyHP = enemyHP - meleeGreen;
                 break;
             case 3 :
-                enemyHP = enemyHP - meleYellow;
+                enemyHP = enemyHP - meleeYellow;
                 break;
             case 4 :
-                enemyHP = enemyHP - meleBlack;
+                enemyHP = enemyHP - meleeBlack;
                 break;
             case 5 :
-                enemyHP = enemyHP - meleWhite;
+                enemyHP = enemyHP - meleeWhite;
                 break;
         }
     }
