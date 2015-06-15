@@ -1,35 +1,38 @@
 extends ./layout.jade
+block header
+  script.
+    var socket = io('http://localhost:3000/game');
 
 block content
-	h1 Welcome #{user.username}
-	p your email is #{user.email}
-	p Get ready for the game!
-	a(href='/logout') Logout
-	button(id='start') start
+  h1 Welcome #{user.username}
+  p your email is #{user.email}
+  p Get ready for the game!
+  a(href='/logout') Logout
+  button(id='start') start
 
-	#game-board
-		span Enemy
-		span#enemy-hp
-		br
-		span Red:
-		span#mana-red
-		br
-		span Green:
-		span#mana-green
-		br
-		span White:
-		span#mana-white
-		br
-		span Blue:
-		span#mana-blue
-		br
-		span Yellow:
-		span#mana-yellow
-		br
-		span Black:
-		span#mana-black
-		br
-		form(id='move')
-			input(type='text', name='initial', value='XY')
-			input(type='text', name='final', value='XY')
-			input(type='submit', value='move')
+#game-board
+    span Enemy
+    span#enemy-hp
+    br
+    span Red:
+    span#mana-red
+    br
+    span Green:
+    span#mana-green
+    br
+    span White:
+    span#mana-white
+    br
+    span Blue:
+    span#mana-blue
+    br
+    span Yellow:
+    span#mana-yellow
+    br
+    span Black:
+    span#mana-black
+    br
+    form(id='move')
+      input(type='text', name='initial', value='XY')
+      input(type='text', name='final', value='XY')
+      input(type='submit', value='move')

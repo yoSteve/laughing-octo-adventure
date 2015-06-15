@@ -1,6 +1,5 @@
 
 $(function(){
-	var socket = io('http://localhost:3000/game');
 
 	var map;
   var canvas = document.createElement('canvas'),
@@ -37,6 +36,11 @@ $(function(){
 	  var body = document.getElementById('game-board');
 	  body.appendChild(canvas);
   });
+	// initilialize theGame on click in loby
+	$('.play-game').on('click', function(e){
+		console.log('starting game with, ', this.dataset.id);
+		socket.emit('starting-game', this.dataset.id);
+	});
 
 // Initialize the matrix.
 

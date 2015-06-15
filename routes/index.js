@@ -57,32 +57,20 @@ module.exports = function(passport, io){
 	//////socket work//////
   var nspGame = io.of('/game');
 	nspGame.on('connection', function(socket) {
-		console.log(socket.request.session.passport)
 		if (socket.request.session.passport){
-			 User.findById(socket.request.session.passport.user, function(err, doc) {
-			var currentUser = doc;
-			console.log(currentUser);
-			console.log("your user id if", currentUser.username);
+			 User.findById(socket.request.session.passport.user, function(err, currentUser) {
+			console.log("your in the game", currentUser.username);
 			});
 		}
 
 		socket.on('disconnect', function() {
-			console.log('somebody disconnected');
-		});
-		//enter lobby
-		socket.on('waiting', function(err) {
-			User.findById(socket.request.session.passport.user, function(err, doc) {
-				doc.waiting = true;
-				doc.save();
-				console.log(doc);
-				socket.emit('waiting-res')
-			});
+			console.log('someone left the game');
 		});
 		//start game board
 		socket.on('start-game', function(err) {
   		var res = theGame.setUp();
 			socket.emit('game-board', res);
-		})
+		});
 
 		socket.on('move', function(data){
 			initialPos = data[0]['value'];
@@ -91,8 +79,22 @@ module.exports = function(passport, io){
 			socket.emit('return-move', res);
 		});
 	});
-	
+
+	var nspLobby = io.of('/lobby');
+	nspLobby.on('connection', function(socket){
+		if (socket.request.session.passport){
+			User.findById(socket.request.session.passport.user, function(err, currentUser){
+				console.log(currentUser.username, " is in the lobby");
+			});
+		}
+
+		socket.on('disconnect', function() {
+			console.log('someone left the lobby');
+		});
+
+		socket.on('starting-game', function(err, data){
+			console.log('starting game');
+		});
+	});	
 	return router;
-
-
 }
