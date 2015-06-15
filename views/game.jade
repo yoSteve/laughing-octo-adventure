@@ -5,3 +5,26 @@ block content
 	p your email is #{user.email}
 	p Get ready for the game!
 	a(href='/logout') Logout
+	button(id='start') start
+
+	#game-board
+		span Enemy
+		span#enemy-hp
+		br
+		span Red:
+		span#mana-red
+		br
+		span Green:
+		span#mana-green
+		br
+		span White:
+		span#mana-white
+		br
+		span Blue:
+		span#mana-blue
+		br
+		span Yellow:
+		span#mana-yellow
+		br
+		span Black:
+		span#mana-black
