@@ -1,0 +1,9 @@
+extends ./layout.jade
+
+block content
+	a(id='join-waiting', class='but', href='') Join The Wait List!
+
+	each item in waiting
+		if item
+			span #{item.username}
+
