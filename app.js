@@ -8,8 +8,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 //set up jade
-	app.set('views', path.join(__dirname, 'views'));
-	app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 //set up mondoose
 var dbConfig = require('./db');
@@ -20,7 +20,14 @@ app.set('port', process.env.PORT || 3000);
 //require passport module
 var passport = require('passport');
 var expressSession = require('express-session');
-app.use(expressSession({secret: 'mySecretKey'}));
+var sessionMiddleware = expressSession({
+	name: "cookie-sesstion",
+	secret: "god",
+	store: new (require('connect-mongo')(expressSession))({
+		url: 'mongodb://localhost/test'
+	})
+});
+app.use(sessionMiddleware)
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -45,6 +52,10 @@ app.use(flash());
 //set upu routes with socket
 var http = require('http').Server(app);
 var io  = require('socket.io').listen(http);
+io.use(function(socket, next) {
+		sessionMiddleware(socket.request, {}, next);
+});
+
 var routes = require('./routes/index')(passport, io);
 app.use('/', routes);
 

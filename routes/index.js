@@ -56,6 +56,9 @@ module.exports = function(passport, io){
 	//////socket work//////
   var nspGame = io.of('/game');
 	nspGame.on('connection', function(socket) {
+		if (socket.request.session.passport)
+			var userId = socket.request.session.passport.user;
+		console.log("your user id if", userId);
 		socket.on('disconnect', function() {
 			console.log('somebody disconnected');
 		});
