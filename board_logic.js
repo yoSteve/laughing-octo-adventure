@@ -1,5 +1,26 @@
+window.onload = function() {
+    var canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d');
 
-var SIZE = 8;
+    var SIZE = 8;
+    var map = new Array(SIZE);
+    for (var i = map.length-1; i >= 0 ; i--) {
+        map[i] = new Array(SIZE);
+    }
+
+    canvas.width = 408;
+    canvas.height = 448;
+
+    var body = document.getElementById('game-board');
+    body.appendChild(canvas);
+
+    
+function boardLogic(board){
+  assignCrystalsToBoard(board);
+  refreshBoard(board); 
+  paintBoard(board);
+}
+
 
 function getRandomCrystal() {
 	return Math.round(Math.random() * 5);
@@ -16,43 +37,7 @@ function assignCrystalsToBoard (board) {
 	return board;
 }
 
-function destroy(cell) {
-	cell = null;
-}
 
-function findMatchRow (board) {
-	for (var col = 2; col < board.length; col++) {
-		for (var row = 0; row < board[col].length; row++) {
-			if (board[col][row] == board[col-1][row] && board[col][row] == board[col-2][row]) {
-        // award points/damage enemy here
-        board[col][row] = null;
-        board[col-1][row] = null;
-        board[col-2][row] = null;
-      }
-    } 
-  } return board;
-}
-
-function findMatchCol (board) {
-  for (var col = 0; col < board.length; col++) {
-    for (var row = 2; row < board[col].length; row++) {
-      if (board[col][row] == board[col][row-1] && board[col][row] == board[col][row-2]) {
-        // award points/damage enemy here
-        board[col][row] = null;
-        board[col][row-1] = null;
-        board[col][row-2] = null;
-      }
-    } 
-  }
-  return board;
-}
-
-
-function findAllMatches(board) {
-  findMatchRow(board);
-  findMatchCol(board);
-  return board;
-}
 
 function checkNullSpace(board) {
   for (var col = SIZE -1; col >= 0; col--) {
@@ -92,41 +77,43 @@ function refreshBoard (board) {
   } paintBoard(board);
 }
 
-function boardLogic(board){
-  assignCrystalsToBoard(board);
-  refreshBoard(board); 
-  paintBoard(board);
-}
 
 
 function paintBoard(board) {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // Start cycling the matrix
+  // Loops cycle through board. Switch picks color as per value of cell.
   for (var row = 0; row < board.length; row++) {
     for (var col = 0; col < board[0].length; col++) {
-      if (board[row][col] === 0) {
+      switch (board[row][col]) {
+        case 0 :
           ctx.fillStyle = 'red';
           ctx.fillRect(row * 50, col * 50 + 20, 48, 48);
-      } else if (board[row][col] === 1) {
-          ctx.fillStyle = 'blue';
-          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-      }else if (board[row][col] === 2) {
+          break;
+        case 1 : 
+          ctx.fillStyle = 'blue'; 
+          ctx.fillRect(row * 50, col * 50 + 20, 48, 48); 
+          break;         
+        case 2 :
           ctx.fillStyle = 'green';
-          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-      }else if (board[row][col] === 3) {
+          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);
+          break;          
+        case 3 :
           ctx.fillStyle = 'yellow';
-          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-      }else if (board[row][col] === 4) {
+          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);
+          break;          
+        case 4 :
           ctx.fillStyle = 'black';
-          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-      }else if (board[row][col] === 5) {
+          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);
+          break;          
+        case 5 :
           ctx.fillStyle = 'floralwhite';
-          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
-      }else  {
+          ctx.fillRect(row * 50, col * 50 + 20, 48, 48);
+          break;          
+        default:
           ctx.fillStyle = 'grey';
           ctx.fillRect(row * 50, col * 50 + 20, 48, 48);          
       }
     }
-  } 
+  } console.log("painting the board", board);
 }
