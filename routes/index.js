@@ -3,6 +3,11 @@ var router = express.Router();
 var SIZE = 8;
 var matches = new Array(6);
 var mana = new Array(6);
+var gameBoard = new Array(SIZE);
+var initialPos, finalPos;
+for (var i = gameBoard.length-1; i >= 0 ; i--) {
+  gameBoard[i] = new Array(SIZE);
+}
 var isAuthenticated = function(req, res, next) {
 	//checks to see if session is authenticated and
 	//lets through to their request
@@ -48,6 +53,7 @@ module.exports = function(passport, io){
 		res.render('game', {user: req.user });
 	});
 
+	//////socket work//////
 	io.on('connection', function(socket) {
 		console.log('somebody is connected!!!');
 		socket.on('disconnect', function() {
@@ -58,27 +64,39 @@ module.exports = function(passport, io){
 			// if (err)
 			// 	return err;
 			console.log("we've made it this far");
-		  var gameBoard = new Array(SIZE);
-		  for (var i = gameBoard.length-1; i >= 0 ; i--) {
-	      gameBoard[i] = new Array(SIZE);
-  		}
-  		assignCrystalsToBoard(gameBoard);
-  		refreshBoard(gameBoard);
-  		mana.map(function(mana) { mana = 0 });
+
+  		boardSetup(gameBoard, mana);
+
+  		console.log(mana);
 			socket.emit('game-board', [gameBoard, mana]);
 		})
+
+		socket.on('move', function(data){
+			console.log(data);
+			initialPos = data[0]['value'];
+			finalPos = data[1]['value'];      
+			getMoveFromUser();
+      findAllMatches(gameBoard);
+			socket.emit('return-move', [gameBoard, mana]);
+		});
 	});
 	
 	return router;
 
-  function boardSetup(board){
+  function boardSetup(board, mana){
       assignCrystalsToBoard(board);
       refreshBoard(board);
-      // zeroAllMana();
-      // setHPtoDefault();
-      // paintBoard(board);
+      zeroMana(mana);
   }
-///////GAME BOARD LOGICE//////////////////
+
+  function zeroMana(mana){
+		var i = 5;
+		while(i >= 0){
+			mana[i] = 0;
+			i--;
+		}
+  }
+///////GAME BOARD LOGIC//////////////////
   function getRandomCrystal() {
       return Math.round(Math.random() * 5);
   }
@@ -91,7 +109,6 @@ module.exports = function(passport, io){
               }
           } 
       }
-      return board;
   }
 
   function checkNullSpace(board) {
@@ -106,7 +123,7 @@ module.exports = function(passport, io){
         for (var i = 0; i <= nullCount-1; i++) {
             board[col][i] = null;
         }
-    } return board;
+    } 
   }
 
   function dropNewCrystals(board) {
@@ -134,7 +151,6 @@ module.exports = function(passport, io){
   function findAllMatches(board) {
       findBestMatchCol(board);
       findBestMatchRow(board);
-      return board;
   }
 
  function findBestMatchRow (board) {
@@ -153,7 +169,6 @@ module.exports = function(passport, io){
               }  
           } 
       } 
-      return board;
   }
 
   function findMatch3Row(board, col, row) {
@@ -204,7 +219,6 @@ module.exports = function(passport, io){
               }
           }
       }
-      return board;
   }
 
 
@@ -237,5 +251,98 @@ module.exports = function(passport, io){
           return true;
       }
       return false;
+  }
+
+  //////////Determinging Move//////
+  var iColumn,
+    iRow,
+    fColumn,
+    fRow;
+
+  function getInitialCoords() {
+      iColumn = initialPos.slice(0,1);
+      iRow = initialPos.slice(-1);
+  }
+
+  function getFinalCoords() {
+      fColumn = finalPos.slice(0,1);
+      fRow = finalPos.slice(-1);
+
+  }
+
+  function getMoveFromUser() {
+      getInitialCoords(),
+      getFinalCoords();
+
+      var Hmove = iColumn - fColumn,
+          Vmove = iRow - fRow;
+
+      console.log("Hmove: " + Hmove);
+      console.log("Vmove: " + Vmove);
+
+      if (Hmove < 0 ) {
+          Hmove = (-1 * Hmove);
+          rotateRight(gameBoard, iRow, Hmove);
+      } else if (Hmove > 0) {
+          rotateLeft(gameBoard, iRow, Hmove);
+      } else if (Vmove < 0) {
+          Vmove = (-1 * Vmove);
+          rotateDown(gameBoard[iColumn], Vmove);
+      } else if (Vmove > 0) {
+          rotateUp(gameBoard[iColumn], Vmove);
+      }
+  }
+
+  /////////Making Move/////////
+    function findRow(board, row) {
+      // row is row index of board coordinates (board[col][row])
+      var array = [];
+      for (i = 0; i < SIZE; i++){
+          array.push(board[i][row]);
+      }
+      console.log("findRow looks like: " + array);
+      return array;
+  }
+
+  
+  // moves is number of spaces by which to shift values of array
+
+  function rotateLeft(board, row, moves) {
+      var array = findRow(board, row);
+      console.log("inside rotateLeft. array: " + array);
+      for (var i = 0; i < moves; i++) {
+          var beg = array.shift();
+          array.push(beg);
+      }
+      for (var i = 0; i < SIZE; i++) {
+          board[i][row] = array[i];
+      }
+  }
+
+  function rotateRight(board, row, moves) {
+      var array = findRow(board, row);
+      for (var i = 0; i < moves; i++) {
+          var end = array.pop();
+          array.unshift(end); 
+      }
+       for (var i = 0; i < SIZE; i++) {
+          board[i][row] = array[i];
+      }
+  }
+
+
+  // column should be given as map[col] where col is the target column
+  function rotateUp(column, moves) {
+      for (var i = 0; i < moves; i++) {
+          var beg = column.shift();
+          column.push(beg);
+      }
+  }
+
+  function rotateDown(column, moves) {
+      for (var i = 0; i < moves; i++) {
+          var end = column.pop();
+          column.unshift(end);
+      }
   }
 }
