@@ -19,14 +19,17 @@ $(function(){
   });
 
   $('#move').submit(function(e){
+  	e.preventDefault();
   	socket.emit('move', $('#move').serializeArray());
   });
 
   socket.on('return-move', function(data) {
   	var board = data[0];
   	var mana = data[1];
+  	console.log("we are here part 1");
   	paintBoard(board)
   	updateManaPool(mana);
+  	console.log("we are here");
 	  var body = document.getElementById('game-board');
 	  body.appendChild(canvas);
   });

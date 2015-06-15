@@ -72,11 +72,13 @@ module.exports = function(passport, io){
 		})
 
 		socket.on('move', function(data){
-			console.log(data);
 			initialPos = data[0]['value'];
 			finalPos = data[1]['value'];      
 			getMoveFromUser();
       findAllMatches(gameBoard);
+      refreshBoard(gameBoard);
+      addMana();
+      zeroMatches();
 			socket.emit('return-move', [gameBoard, mana]);
 		});
 	});
@@ -93,6 +95,22 @@ module.exports = function(passport, io){
 		var i = 5;
 		while(i >= 0){
 			mana[i] = 0;
+			i--;
+		}
+  }
+
+  function addMana() {
+		var i = 5;
+		while(i >= 0){
+			mana[i] += matches[i];
+			i--;
+		}
+  }
+
+  function zeroMatches(){
+		var i = 5;
+		while(i >= 0){
+			matches[i] = 0;
 			i--;
 		}
   }
