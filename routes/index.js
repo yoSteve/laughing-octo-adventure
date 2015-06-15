@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var theGame = require('../app_modules/theGame');
+var Waiting = require('../models/waiting')
 
 
 var isAuthenticated = function(req, res, next) {
@@ -22,19 +23,19 @@ module.exports = function(passport, io){
 
 	router.get('/auth/google/response',
 		passport.authenticate('google-openidconnect', {
-			successRedirect: '/game',
+			successRedirect: '/lobby',
 			failureRedirect: '/'
 		}));
 		//handle login
 	router.post('/login',passport.authenticate('login', {
-			successRedirect: '/game',
+			successRedirect: '/lobby',
 			failureRedirect: '/',
 			failureFlash: true
 	}));
 
 	//handle Registration
 	router.post('/signup', passport.authenticate('signup', {
-			successRedirect: '/game',
+			successRedirect: '/lobby',
 			failureRedirect: '/',
 			failureFlash : true
 	}));
@@ -43,14 +44,18 @@ module.exports = function(passport, io){
 		req.logout();
 		res.redirect('/');
 	});
+
+	router.get('/lobby', isAuthenticated, function(req, res) {
+		res.render('lobby', {waiting: Waiting.find(), user: req.user});
+	});
 	
 	router.get('/game', isAuthenticated, function(req, res) {
 		res.render('game', {user: req.user });
 	});
 
 	//////socket work//////
-	io.on('connection', function(socket) {
-		console.log('somebody is connected!!!');
+  var nspGame = io.of('/game');
+	nspGame.on('connection', function(socket) {
 		socket.on('disconnect', function() {
 			console.log('somebody disconnected');
 		});

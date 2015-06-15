@@ -1,6 +1,7 @@
 
 $(function(){
-	var socket = io();
+	var socket = io('http://localhost:3000/game');
+
 	var map;
   var canvas = document.createElement('canvas'),
   ctx = canvas.getContext('2d');
@@ -8,6 +9,11 @@ $(function(){
   	socket.emit('start-game', function() {
   	});
   });
+
+  $('#join-waiting').on('click', function(e) {
+  	e.preventDefault();
+  	socket.emit('waiting')
+  })
 
   socket.on('game-board', function(data) {
   	var board = data[0];

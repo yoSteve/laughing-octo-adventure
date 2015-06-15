@@ -7,7 +7,7 @@ module.exports = function(passport){
 		passReqToCallback : true
 	},
 		function(req, username, password, done) {
-			findOrCreateUser = function(){
+			var findOrCreateUser = function(){
 				User.findOne({ 'username': username }, function(err, user){
 				if (err) {
 					console.error(('Error in signup : ' + err));
@@ -36,7 +36,7 @@ module.exports = function(passport){
 				}
 			});
 		};
-			//delays until next tic of event loop
+		// 	//delays until next tic of event loop
 		process.nextTick(findOrCreateUser);
 		})
 	);

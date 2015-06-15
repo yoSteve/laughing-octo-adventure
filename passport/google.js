@@ -9,7 +9,6 @@ module.exports = function(passport) {
 			callbackURL: "http://localhost:3000/auth/google/response"
 		},
 		function(iss, sub, profile, accessToken, refreshToken, done) {
-			console.log(accessToken, profile);
 			User.findOrCreate(profile, function (err, user) {
 				return done(err, user);
 			});
