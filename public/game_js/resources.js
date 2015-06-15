@@ -8,5 +8,10 @@ game.resources = [
         "name": "crystals",
         "type": "image",
         "src": "data/img/crystals.png"
+    },
+    {
+        "name": "characters",
+        "type": "image",
+        "src": "data/img/characters.png"
     }
 ];

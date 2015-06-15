@@ -17,6 +17,9 @@ game.PlayScreen = me.ScreenObject.extend({
         this.grid = new game.Grid();
         this.grid.createTiles();
         me.game.world.addChild(this.grid, 2);
+
+        //add a sprite
+        me.game.world.addChild(new game.Character(0, 0));
     },
 
     /**

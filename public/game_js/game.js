@@ -46,6 +46,7 @@ var game = {
         me.pool.register('tile', game.Tile);
         me.pool.register('grid', game.Grid);
         me.pool.register('tile group', game.TileGroup);
+        me.pool.register('character', game.Character);
 
         // Start the game.
         me.state.change(me.state.PLAY);
