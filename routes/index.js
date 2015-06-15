@@ -62,16 +62,8 @@ module.exports = function(passport, io){
   var nspGame = io.of('/game');
 	nspGame.on('connection', function(socket) {
 		if (socket.request.session.passport){
-<<<<<<< HEAD
 			 User.findById(socket.request.session.passport.user, function(err, currentUser) {
 			console.log("your in the game", currentUser.username);
-=======
-			 User.findById(socket.request.session.passport.user, function(err, doc) {
-			var currentUser = doc;
-			console.log(currentUser);
-			if(currentUser)
-				console.log("your user id if", currentUser.username);
->>>>>>> 91653e246c3d8e0024994a782761ea3077159c83
 			});
 		}
 
