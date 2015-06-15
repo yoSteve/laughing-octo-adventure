@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var theGame = require('../app_modules/theGame');
-var Waiting = require('../models/waiting')
-
+var User = require('../models/user');
 
 var isAuthenticated = function(req, res, next) {
 	//checks to see if session is authenticated and
@@ -46,7 +45,9 @@ module.exports = function(passport, io){
 	});
 
 	router.get('/lobby', isAuthenticated, function(req, res) {
-		res.render('lobby', {waiting: Waiting.find(), user: req.user});
+		User.find({waiting: true}, function(err, docs){
+				res.render('lobby', {waiting: docs});
+		});
 	});
 	
 	router.get('/game', isAuthenticated, function(req, res) {
@@ -56,11 +57,26 @@ module.exports = function(passport, io){
 	//////socket work//////
   var nspGame = io.of('/game');
 	nspGame.on('connection', function(socket) {
-		if (socket.request.session.passport)
-			var userId = socket.request.session.passport.user;
-		console.log("your user id if", userId);
+		console.log(socket.request.session.passport)
+		if (socket.request.session.passport){
+			 User.findById(socket.request.session.passport.user, function(err, doc) {
+			var currentUser = doc;
+			console.log(currentUser);
+			console.log("your user id if", currentUser.username);
+			});
+		}
+
 		socket.on('disconnect', function() {
 			console.log('somebody disconnected');
+		});
+		//enter lobby
+		socket.on('waiting', function(err) {
+			User.findById(socket.request.session.passport.user, function(err, doc) {
+				doc.waiting = true;
+				doc.save();
+				console.log(doc);
+				socket.emit('waiting-res')
+			});
 		});
 		//start game board
 		socket.on('start-game', function(err) {

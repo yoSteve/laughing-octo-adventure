@@ -11,7 +11,8 @@ var User = new Schema({
 		losses: Number,
 		quits: Number
 	},
-	teams: [Team]
+	teams: [Team],
+	waiting: Boolean
 });
 
 
@@ -32,8 +33,8 @@ User.statics.findOrCreate = function(profile, done) {
 	newUser.save(function(err){
 		if (err)
 			return done(err);
-		return done(null, newUser);
-	})
+	});
+	return done(null, newUser);
 	
 	console.log('shouldnt get here');	
 }

@@ -24,7 +24,7 @@ var sessionMiddleware = expressSession({
 	name: "cookie-sesstion",
 	secret: "god",
 	store: new (require('connect-mongo')(expressSession))({
-		url: 'mongodb://localhost/test'
+		url: dbConfig.url
 	})
 });
 app.use(sessionMiddleware)
@@ -77,6 +77,7 @@ app.use(function(err,req,res,next){
 http.listen(app.get('port'), function(){
 	console.log('Express has started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate');
 });
+
 
 //dev error post
 if (app.get('env') === 'development'){

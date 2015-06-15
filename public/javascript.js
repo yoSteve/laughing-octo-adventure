@@ -12,7 +12,7 @@ $(function(){
 
   $('#join-waiting').on('click', function(e) {
   	e.preventDefault();
-  	socket.emit('waiting')
+  	socket.emit('waiting');
   })
 
   socket.on('game-board', function(data) {
