@@ -50,8 +50,12 @@ module.exports = function(passport, io){
 		});
 	});
 	
-	router.get('/game', isAuthenticated, function(req, res) {
+	router.get('/engine/index', isAuthenticated, function(req, res) {
 		res.render('game', {user: req.user });
+	});
+
+	router.get('/game_canvas', isAuthenticated, function(req, res) {
+		res.render('game_canvas');
 	});
 
 	//////socket work//////
@@ -62,7 +66,8 @@ module.exports = function(passport, io){
 			 User.findById(socket.request.session.passport.user, function(err, doc) {
 			var currentUser = doc;
 			console.log(currentUser);
-			console.log("your user id if", currentUser.username);
+			if(currentUser)
+				console.log("your user id if", currentUser.username);
 			});
 		}
 

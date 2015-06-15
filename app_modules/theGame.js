@@ -15,6 +15,7 @@ module.exports = {
     return [gameBoard, mana];
   }
 };
+
   var SIZE = 8;
   var matches = new Array(6);
   var mana;
