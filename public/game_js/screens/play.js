@@ -4,10 +4,11 @@ game.PlayScreen = me.ScreenObject.extend({
      */
     onResetEvent: function() {
         // reset the score
-        game.data.score = 0;
+        game.data.score = 5;
 
         // change bg
-        me.game.world.addChild(new me.ColorLayer('background', '#333333'), 0);
+        //me.game.world.addChild(new me.ColorLayer('background', '#333333'), 0);
+        me.game.world.addChild(new me.ImageLayer(0, 0, { image: 'background2' }, 0)); 
 
         // add our HUD to the game world
         this.HUD = new game.HUD.Container();
