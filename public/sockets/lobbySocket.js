@@ -1,4 +1,5 @@
 $(function(){
+  var lobbySocket = io('http://localhost:3000/lobby');
 	// initilialize theGame on click in loby
 	$('.play-game').on('click', function(e){
 		console.log('starting game with, ', this.dataset.id);
