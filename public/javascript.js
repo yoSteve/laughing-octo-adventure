@@ -1,42 +1,13 @@
 
 $(function(){
-	var socket = io('http://localhost:3000/game');
 
 	var map;
   var canvas = document.createElement('canvas'),
   ctx = canvas.getContext('2d');
-  $('#start').on('click', function() {
-  	socket.emit('start-game', function() {
-  	});
-  });
 
-  $('#join-waiting').on('click', function(e) {
-  	e.preventDefault();
-  	socket.emit('waiting');
-  })
 
-  socket.on('game-board', function(data) {
-  	var board = data[0];
-  	var mana = data[1];
-  	paintBoard(board)
-  	updateManaPool(mana);
-	  var body = document.getElementById('game-board');
-	  body.appendChild(canvas);
-  });
 
-  $('#move').submit(function(e){
-  	e.preventDefault();
-  	socket.emit('move', $('#move').serializeArray());
-  });
 
-  socket.on('return-move', function(data) {
-  	var board = data[0];
-  	var mana = data[1];
-  	paintBoard(board)
-  	updateManaPool(mana);
-	  var body = document.getElementById('game-board');
-	  body.appendChild(canvas);
-  });
 
 // Initialize the matrix.
 
