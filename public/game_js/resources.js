@@ -13,5 +13,10 @@ game.resources = [
         "name": "characters",
         "type": "image",
         "src": "data/img/characters.png"
+    },
+    {
+        "name": "characters-lg",
+        "type": "image",
+        "src": "data/img/characters-lg.png"
     }
 ];

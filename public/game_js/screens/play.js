@@ -18,8 +18,16 @@ game.PlayScreen = me.ScreenObject.extend({
         this.grid.createTiles();
         me.game.world.addChild(this.grid, 2);
 
-        //add a sprite
-        me.game.world.addChild(new game.Character(0, 0));
+        // add sprites
+        me.game.world.addChild(me.pool.pull('character', 10, 100, true));
+        me.game.world.addChild(me.pool.pull('character', 10, 200, true));
+        me.game.world.addChild(me.pool.pull('character', 10, 300, true));
+        me.game.world.addChild(me.pool.pull('character', 10, 400, true));
+
+        me.game.world.addChild(me.pool.pull('character', 890, 100, false));
+        me.game.world.addChild(me.pool.pull('character', 890, 200, false));
+        me.game.world.addChild(me.pool.pull('character', 890, 300, false));
+        me.game.world.addChild(me.pool.pull('character', 890, 400, false));
     },
 
     /**
