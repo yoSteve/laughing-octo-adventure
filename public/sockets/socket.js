@@ -11,21 +11,16 @@ $(function(){
   	});
   });
 
-	// initilialize theGame on click in loby
-	$('.play-game').on('click', function(e){
-		console.log('starting game with, ', this.dataset.id);
-		socket.emit('starting-game', this.dataset.id);
-	});
-
   socket.on('match-message', function (user) {
     console.log("on the front and matched", user);
-    $('#match').text("You have been matched with " + user + "\nclick to enter the game!");
+    $('#match').text("You have been matched with " + user[0] + "\nclick to enter the game!");
     $(window).on('click', function() {
-      window.location.href = '/game';
+      console.log('should buser someones id ', user[1])
+      socket.emit('start-game', { userId: user[1]});
     });
   });
 
- socket.on('game-board', function(data) {
+  socket.on('game-board', function(data) {
     var board = data[0];
     var mana = data[1];
     paintBoard(board)

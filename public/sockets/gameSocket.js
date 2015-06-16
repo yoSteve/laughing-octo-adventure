@@ -1,3 +1,4 @@
+//lives in lobby socket to keep sockets persistent
 $(function(){ 
   var gameSocket = io('http://localhost:3000/game');
  gameSocket.on('game-board', function(data) {

@@ -13,6 +13,11 @@ module.exports = {
     zeroMatches();
     console.log(mana);
     return [gameBoard, mana];
+  },
+  createId: function(id1, id2) {
+    if(id1 > id2)
+      return id1 + id2;
+    return id2 + id1;
   }
 };
 
