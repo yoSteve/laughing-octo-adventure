@@ -13,7 +13,7 @@ var User = new Schema({
 	},
 	teams: [Team],
 	waiting: Boolean,
-  socketID: String
+  socketId: String
 });
 
 mongoose.model('User', User);

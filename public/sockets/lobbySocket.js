@@ -16,4 +16,12 @@ $(function(){
 		console.log('starting game with, ', this.dataset.id);
 		lobbySocket.emit('starting-game', this.dataset.id);
 	});
+
+  lobbySocket.on('match-message', function (user) {
+    console.log("on the front and matched", user);
+    $('#match').text("You have been matched with " + user + "\nclick to enter the game!");
+    $(window).on('click', function() {
+      window.location.href = '/game';
+    });
+  });
 });

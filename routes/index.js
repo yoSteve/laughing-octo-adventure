@@ -94,10 +94,19 @@ module.exports = function(passport, io){
         currentUser.socketId = socket.id;
         currentUser.save();
         User.findOne({waiting: true}, function(err, user){
-         //theGame.newGame(currentUser, user)
-          })
-        currentUser.waiting = true;
+          console.log("XXXXXXXXXXXXXXXXXX found", user);
+          if(user){
+            console.log("matchXXXXXXXXXXX", user.socketId);
+            socket.broadcast.to(user.socketId).emit('match-message', currentUser.username);
+            socket.emit('match-message', user.username);
+            currentUser.waiting = false;
+            user.waiting = false;
+            user.save();
+          } else {
+          currentUser.waiting = true;
+          }
         currentUser.save();
+        });
 				console.log(currentUser.username, " is in the lobby");
 			});
 		}
