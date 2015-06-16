@@ -1,34 +1,46 @@
 module.exports = {
-  setUp: function() {
-    boardSetup(gameBoard);
-    return [gameBoard, mana];
+  game: function(room, home, away) {
+    this.room = room;
+    this.home = home;
+    this.away = away;
+    console.log("new game created \n", room, '\nhome: ', home, '\naway: ', away);
+
+    
+    var SIZE = 8;
+    var matches = new Array(6);
+    var mana;
+    var gameBoard = new Array(SIZE);
+    var initialPos, finalPos;
+    for (var i = gameBoard.length-1; i >= 0 ; i--) {
+      gameBoard[i] = new Array(SIZE);
+    }
+  
+    function setUp() {
+      boardSetup(gameBoard);
+      return [gameBoard, mana];
+    }
+
+    function move(initPos, finPos) {
+      initialPos = initPos;
+      finalPos = finPos;
+      getMoveFromUser();
+      findAllMatches(gameBoard);
+      refreshBoard(gameBoard);
+      addMana();
+      zeroMatches();
+      console.log(mana);
+      return [gameBoard, mana];
+    }
+    
   },
-  move: function(initPos, finPos) {
-    initialPos = initPos;
-    finalPos = finPos;
-    getMoveFromUser();
-    findAllMatches(gameBoard);
-    refreshBoard(gameBoard);
-    addMana();
-    zeroMatches();
-    console.log(mana);
-    return [gameBoard, mana];
-  },
-  createId: function(id1, id2) {
+  gameId: function(id1, id2) {
     if(id1 > id2)
       return id1 + id2;
     return id2 + id1;
   }
 };
 
-  var SIZE = 8;
-  var matches = new Array(6);
-  var mana;
-  var gameBoard = new Array(SIZE);
-  var initialPos, finalPos;
-  for (var i = gameBoard.length-1; i >= 0 ; i--) {
-    gameBoard[i] = new Array(SIZE);
-  }
+
 
 
   function boardSetup(board){

@@ -98,11 +98,14 @@ module.exports = function(passport, io){
             console.log("XXXXXXXXXXXXXXXXXX found", user);
             if(user){
               console.log("matchXXXXXXXXXXX", user.socketId);
-              socket.broadcast.to(user.socketId).emit('match-message', [currentUser.username, currentUser._id]);
-              socket.emit('match-message', [user.username, user._id]);
+              var gameId = theGame.gameId(currentUser._id, user._id);
+              var room = io.to(gameId);
+              socket.broadcast.to(user.socketId).emit('match-message', [currentUser.username, gameId]);
+              socket.emit('match-message', [user.username, gameId]);
               currentUser.waiting = false;
               user.waiting = false;
               user.save();
+              new theGame.game(room, currentUser, user);
             } else {
             currentUser.waiting = true;
             }
@@ -112,12 +115,11 @@ module.exports = function(passport, io){
         }
 			});
 		}
-    // joining the game lobby, returns initialized of game with user ids (inprogress)
+    // joining the game lobby, initialized of game with user ids (inprogress)
     socket.on('start-game', function(data){
-      console.log('data ', data['userId'], '\n socket user ',  socket.request.session.passport.user)
-      var gameId = theGame.createId(data['userId'], socket.request.session.passport.user)
-        console.log('joining roomi ', gameId)
-      socket.join(gameId);
+      console.log('data ', data['room'], '\n socket user ',  socket.request.session.passport.user)
+      console.log('joining roomi ', data['room']);
+      socket.join(data['room']);
     });
 
 		socket.on('disconnect', function() {
