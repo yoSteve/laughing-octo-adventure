@@ -1,8 +1,6 @@
 extends ./layout.jade
 block header
-  script.
-    var socket = io('http://localhost:3000/game');
-
+  script(type='text/javascript' src='sockets/gameSocket.js')
 block content
   h1 Welcome #{user.username}
   p your email is #{user.email}

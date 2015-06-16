@@ -1,9 +1,7 @@
 extends ./layout.jade
 
 block header
-  script.
-    var socketLobby = io('http://localhost:3000/lobby');
-
+  script(type='text/javascript' src='sockets/lobbySocket.js')
 block content
   a(id='join-waiting', class='but', href='') Join The Wait List!
   ul
