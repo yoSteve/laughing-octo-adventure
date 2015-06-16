@@ -1,9 +1,18 @@
 extends ./layout.jade
 
+block header
+  script(type='text/javascript' src='sockets/lobbySocket.js')
 block content
-	a(id='join-waiting', class='but', href='') Join The Wait List!
+  a(id='join-waiting', class='but', href='') Join The Wait List!
+  ul
+    each item in waiting
+      if item
+        li
+          a.play-game(href='/game' data-id="#{item._id}") #{item.username}
+block content
+  a(id='join-waiting', class='but', href='') Join The Wait List!
 
-	each item in waiting
-		if item
-			span #{item.username} #{item._id}
-			br
+  each item in waiting
+    if item
+      span #{item.username} #{item._id}
+      br

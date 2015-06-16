@@ -1,22 +1,23 @@
 doctype html
 html(lang='en')
-	head
-		title = Mana Match
-		script(src="/socket.io/socket.io.js")
-		script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
-		script(type='text/javascript' src="javascript.js")
-		link(rel='stylesheet', href='application.css')
-		link(rel="stylesheet" type="text/css" media="screen" href="game_canvas.css")
-		meta(id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
-		meta(name="apple-mobile-web-app-capable" content="yes")
-		meta(name="mobile-web-app-capable" content="yes")
-		meta(name="apple-mobile-web-app-status-bar-style" content="black")
-		link(rel="apple-touch-icon" href="game_icons/touch-icon-iphone-60x60.png")
-		link(rel="apple-touch-icon" sizes="76x76" href="game_icons/touch-icon-ipad-76x76.png")
-		linkr(rel="apple-touch-icon" sizes="120x120" href="game_icons/touch-icon-iphone-retina-120x120.png")
-		link(rel="apple-touch-icon" sizes="152x152" href="game_icons/touch-icon-ipad-retina-152x152.png")
-	body
-		block content
+  head
+    title = Mana Match
+    script(src="/socket.io/socket.io.js")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+    script(type='text/javascript' src="javascript.js")
+    block header
+    link(rel='stylesheet', href='application.css')
+    link(rel="stylesheet" type="text/css" media="screen" href="game_canvas.css")
+    meta(id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+    meta(name="apple-mobile-web-app-capable" content="yes")
+    meta(name="mobile-web-app-capable" content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style" content="black")
+    link(rel="apple-touch-icon" href="game_icons/touch-icon-iphone-60x60.png")
+    link(rel="apple-touch-icon" sizes="76x76" href="game_icons/touch-icon-ipad-76x76.png")
+    linkr(rel="apple-touch-icon" sizes="120x120" href="game_icons/touch-icon-iphone-retina-120x120.png")
+    link(rel="apple-touch-icon" sizes="152x152" href="game_icons/touch-icon-ipad-retina-152x152.png")
 
+  body
+    block content
 
 
