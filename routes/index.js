@@ -50,7 +50,7 @@ module.exports = function(passport, io){
 		});
 	});
 	
-	router.get('/engine/index', isAuthenticated, function(req, res) {
+	router.get('/game', isAuthenticated, function(req, res) {
 		res.render('game', {user: req.user });
 	});
 
@@ -63,7 +63,9 @@ module.exports = function(passport, io){
 	nspGame.on('connection', function(socket) {
 		if (socket.request.session.passport){
 			 User.findById(socket.request.session.passport.user, function(err, currentUser) {
-			console.log("your in the game", currentUser.username);
+        currentUser.socketId = socket.id;
+        currentUser.save();
+			  console.log("your in the game", currentUser.username, currentUser.socketId, socket.id);
 			});
 		}
 
@@ -86,14 +88,35 @@ module.exports = function(passport, io){
 
 	var nspLobby = io.of('/lobby');
 	nspLobby.on('connection', function(socket){
+    console.log(socket.id, " youre in da house urdjtyfkjgykhgvkgkg");
 		if (socket.request.session.passport){
 			User.findById(socket.request.session.passport.user, function(err, currentUser){
+        currentUser.socketId = socket.id;
+        currentUser.save();
+        User.findOne({waiting: true}, function(err, user){
+          console.log("XXXXXXXXXXXXXXXXXX found", user);
+          if(user){
+            console.log("matchXXXXXXXXXXX", user.socketId);
+            socket.broadcast.to(user.socketId).emit('match-message', currentUser.username);
+            socket.emit('match-message', user.username);
+            currentUser.waiting = false;
+            user.waiting = false;
+            user.save();
+          } else {
+          currentUser.waiting = true;
+          }
+        currentUser.save();
+        });
 				console.log(currentUser.username, " is in the lobby");
 			});
 		}
 
 		socket.on('disconnect', function() {
-			console.log('someone left the lobby');
+			User.findById(socket.request.session.passport.user, function(err, currentUser){
+        console.log('someone left the lobby');
+        currentUser.waiting = false;
+        currentUser.save();
+      });
 		});
 
 		socket.on('starting-game', function(err, data){

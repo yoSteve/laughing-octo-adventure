@@ -12,7 +12,8 @@ var User = new Schema({
 		quits: Number
 	},
 	teams: [Team],
-	waiting: Boolean
+	waiting: Boolean,
+  socketId: String
 });
 
 mongoose.model('User', User);
