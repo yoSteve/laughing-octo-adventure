@@ -13,11 +13,16 @@ $(function(){
 
   socket.on('match-message', function (data) {
     console.log("on the front and matched", data);
-    $('#match').text("You have been matched with " + data[0] + "\nclick to enter the game!");
+    $('#match').text("You have been matched with \nclick to enter the game!");
     $(window).on('click', function() {
-      console.log('should buser someones id ', data[1])
-      socket.emit('start-game', { room: data[1]});
+      console.log('room id (game id): ', data);
+      socket.emit('start-game', { gameId: data});
     });
+  });
+
+  socket.on('refresh-board', function(data) {
+    console.log(data);
+    $('#match').text("you have been matched");
   });
 
   socket.on('game-board', function(data) {

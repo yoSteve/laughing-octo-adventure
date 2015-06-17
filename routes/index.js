@@ -8,12 +8,14 @@ var isAuthenticated = function(req, res, next) {
 	//lets through to their request
 	//else redirects to login (home)
 	if(req.isAuthenticated())
-		return next();
+    return next();
 	res.redirect('/');
 }
 
 module.exports = function(passport, io){
 	router.get('/', function(req, res) {
+    if(res.user)
+      res.redirect('game')
 		res.render('index', {message: req.flash('message')});
 	});
 
@@ -88,28 +90,29 @@ module.exports = function(passport, io){
 //socket work using lobby namespace
 	var nspLobby = io.of('/lobby');
 	nspLobby.on('connection', function(socket){
-    console.log(socket.id, " youre in da house urdjtyfkjgykhgvkgkg");
 		if (socket.request.session.passport){
 			User.findById(socket.request.session.passport.user, function(err, currentUser){
         if(currentUser) {
+          console.log("\n\n\n\n\n", currentUser);
           currentUser.socketId = socket.id;
+          currentUser.waiting = false;
           currentUser.save();
-        User.findOne({waiting: true}, function(err, user){
+          console.log("\n\n\n\n\n After setting to false", currentUser);
+          User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
             console.log("XXXXXXXXXXXXXXXXXX found", user);
-            if(user){
-              console.log("matchXXXXXXXXXXX", user.socketId);
-              var gameId = theGame.gameId(currentUser._id, user._id);
-              var room = io.to(gameId);
-              socket.broadcast.to(user.socketId).emit('match-message', [currentUser.username, gameId]);
-              socket.emit('match-message', [user.username, gameId]);
-              currentUser.waiting = false;
+            if(user) {
+              console.log('\n\n\n\n\n\n\n', user._id, '\n\n\n', currentUser._id);
+              console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
+              var gameId = theGame.createGameId(currentUser._id, user._id);
+              var game = new theGame.Game(nspLobby, gameId, currentUser, user);
+              socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
+              socket.emit('match-message', game.gameId);
               user.waiting = false;
               user.save();
-              new theGame.game(room, currentUser, user);
             } else {
             currentUser.waiting = true;
             }
-          currentUser.save();
+            currentUser.save();
           });
           console.log(currentUser.username, " is in the lobby");
         }
@@ -117,9 +120,8 @@ module.exports = function(passport, io){
 		}
     // joining the game lobby, initialized of game with user ids (inprogress)
     socket.on('start-game', function(data){
-      console.log('data ', data['room'], '\n socket user ',  socket.request.session.passport.user)
-      console.log('joining roomi ', data['room']);
-      socket.join(data['room']);
+        console.log(data['gameId'], " XXXXX NEED TO NKNOW OIEUHFDLS");
+        socket.join(data['gameId']);
     });
 
 		socket.on('disconnect', function() {
