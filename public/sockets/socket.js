@@ -17,6 +17,7 @@ $(function(){
     $(window).on('click', function() {
       console.log('room id (game id): ', data);
       socket.emit('start-game', { gameId: data});
+      socket.emit('gameJoin');
       $(window).off('click');
     });
   });

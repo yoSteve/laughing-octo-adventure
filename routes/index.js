@@ -73,6 +73,7 @@ module.exports = function(passport, io){
 
 //socket work using lobby namespace
 	var nspLobby = io.of('/lobby');
+  var games = {};
 	nspLobby.on('connection', function(socket){
 		if (socket.request.session.passport){
 			User.findById(socket.request.session.passport.user, function(err, currentUser){
@@ -90,9 +91,10 @@ module.exports = function(passport, io){
               var gameId = theGame.createGameId(currentUser._id, user._id);
               var game = new theGame.Game(nspLobby, gameId, currentUser, user);
               socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
-              socket.emit('match-message', game.gameId);
+              socket.join(game.gameId);
               user.waiting = false;
               user.save();
+              games[gameId] = game;
             } else {
             currentUser.waiting = true;
             }
@@ -106,6 +108,8 @@ module.exports = function(passport, io){
     socket.on('start-game', function(data){
         console.log(data['gameId'], " XXXXX NEED TO NKNOW OIEUHFDLS");
         socket.join(data['gameId']);
+        console.log('logging data passed back ' + games);
+        games[data['gameId']].refreshBoard();
     });
 
 		socket.on('disconnect', function() {
@@ -120,9 +124,6 @@ module.exports = function(passport, io){
       }
 		});
 
-		socket.on('starting-game', function(err, data){
-			console.log('starting game');
-		});
 	});	
 	return router;
 }

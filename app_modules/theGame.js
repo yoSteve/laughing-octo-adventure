@@ -4,19 +4,17 @@ var game = function(io, gameId, home, away) {
   thisGame = new Game({
     gameId: gameId,
     io: io,
-    home: home,
-    away: away
+    homeUser: home,
+    awayUser: away
   });  
-  var mana;
   this.initialPos, this.finalPos;
   setInterval(function() {
     console.log('We are ina  game!!!!!! ', thisGame.gameId);
-    thisGame.io.to(gameId).emit('refresh-board', {home: thisGame.home.username, away: thisGame.away.username, gameBoard: thisGame.board});
+  //  thisGame.io.to(gameId).emit('refresh-board', {home: thisGame.home.username, away: thisGame.away.username, gameBoard: thisGame.board});
   //  console.log(io['sockets']);
   }, 3000);
   return thisGame;
 }
-
 
 
 var createGameId = function(id1, id2) {
@@ -66,7 +64,7 @@ function move(initPos, finPos) {
       if (matches[i])
     		mana[i] += matches[i];
   		i--;
-  	}
+
   }
 
   function zeroMatches(){

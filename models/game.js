@@ -5,8 +5,8 @@ var User = require('./user');
 var Game = new Schema({
   gameId: String,
   io: Object,
-  playerOne: Object,
-  playerTwo: Object,
+  homeUser: Object,
+  awayUser: Object,
   home: Object,
   away: Object,
   size: Number,
@@ -16,8 +16,8 @@ var Game = new Schema({
 
 Game.post('init', function (game){
   // create clones of the team
-  game.home = JSON.parse(JSON.stringify(game.playerOne.team));
-  game.away = JSON.parse(JSON.stringify(game.playerTwo.team));
+  game.home = JSON.parse(JSON.stringify(game.homeUser.team));
+  game.away = JSON.parse(JSON.stringify(game.awayUser.team));
   game.home.Hp = game.home.maxHp();
   game.away.hp = game.away.maxHp();
   game.home.mana = 0;
@@ -29,6 +29,12 @@ Game.post('init', function (game){
   }    
   
 });
+
+Game.methods.refreshBoard = function() {
+  this.io.to(this.gameId).emit('refresh-board', {home: this.homeUser.username,
+    away: this.awayUser.username,
+    gameBoard: this.board});
+}
 
 mongoose.model('Game', Game);
 module.exports = mongoose.model('Game');
