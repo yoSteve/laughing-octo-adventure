@@ -125,13 +125,15 @@ module.exports = function(passport, io){
     });
 
 		socket.on('disconnect', function() {
-			User.findById(socket.request.session.passport.user, function(err, currentUser){
-        if(currentUser) {
-          console.log('someone left the lobby');
-          currentUser.waiting = false;
-          currentUser.save();
-        }
-      });
+      if(socket.request.session.passport){
+        User.findById(socket.request.session.passport.user, function(err, currentUser){
+          if(currentUser) {
+            console.log('someone left the lobby');
+            currentUser.waiting = false;
+            currentUser.save();
+          }
+        });
+      }
 		});
 
 		socket.on('starting-game', function(err, data){

@@ -19,7 +19,7 @@ var game = function(io, gameId, home, away) {
   setInterval(function() {
     console.log('We are ina  game!!!!!! ', gameId);
     io.to(gameId).emit('refresh-board', {home: home.username, away: away.username, gameBoard: gameBoard});
-   // console.log(io);
+    console.log(io['sockets']);
   }, 3000);
 }
 
