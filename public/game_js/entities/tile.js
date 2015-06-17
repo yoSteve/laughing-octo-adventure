@@ -13,6 +13,7 @@ game.Tile = me.DraggableEntity.extend({
     this.grid = grid;
     this.selected = [];
     this.moved = false;
+    this.type;
 
     this._super(me.DraggableEntity, 'init', [x, y, settings]);
     this.chooseCrystal();
@@ -54,6 +55,7 @@ game.Tile = me.DraggableEntity.extend({
 
   chooseCrystal: function() {
     var frame = ~~(Math.random() * 6);
+    this.type = frame;
     this.renderable.addAnimation('idle', [frame], 1);
     this.renderable.setCurrentAnimation('idle');
   },

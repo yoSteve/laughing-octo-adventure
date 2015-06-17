@@ -3,7 +3,7 @@ game.Grid = me.Container.extend({
     this.COLS = 8;
     this.ROWS = 8; 
     this.board = []; 
-    this._super(me.Container, 'init', [me.game.viewport.width / 4, game.Tile.width, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
+    this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
   createTiles: function() {
@@ -86,6 +86,19 @@ game.Grid = me.Container.extend({
       }
 
       this.board[col][i].pos.y = i * game.Tile.height;
+    }
+  },
+
+  getMatches: function() {
+    var cell;
+    for(var col = 2; col < this.COLS; col++) {
+      for(var row = 0; row < this.ROWS; row++) {
+        cell = this.board[col][row]; 
+        if(cell.type == this.board[col-1][row].type &&
+            cell.type == this.board[col-2][row].type) {
+          console.log('match at ' + col + ':' + row);
+        }
+      }
     }
   },
 
