@@ -1,33 +1,20 @@
+var Game = require('../models/game');
 var game = function(io, gameId, home, away) {
-  this.gameId = gameId;
-  this.io = io;
-  this.home = home;
-  this.away = away;
-  console.log("new game created \n", gameId);
-    
-  var SIZE = 8;
-  var matches = new Array(6);
+  console.log("new game created \n", game.gameId);
+  thisGame = new Game({
+    gameId: gameId,
+    io: io,
+    home: home,
+    away: away
+  });  
   var mana;
-  this.gameBoard = new Array(SIZE);
   this.initialPos, this.finalPos;
-  for (var i = this.gameBoard.length-1; i >= 0 ; i--) {
-    this.gameBoard[i] = new Array(SIZE);
-  }    
-  gameBoard = this.gameBoard;
-  room = this.room;
-<<<<<<< HEAD
-  currentPlayer = this.currentPlayer;
   setInterval(function() {
-    console.log('We are ina  game!!!!!!')
-    io.to(gameId).emit('refresh-board', [gameBoard, home.username, away.username, currentPlayer] );
-   // console.log(io);
-=======
-  setInterval(function() {
-    console.log('We are ina  game!!!!!! ', gameId);
-    io.to(gameId).emit('refresh-board', {home: home.username, away: away.username, gameBoard: gameBoard});
-    console.log(io['sockets']);
->>>>>>> a0a628180c3c031e5df5dc953e530f9bcda1a7e3
+    console.log('We are ina  game!!!!!! ', thisGame.gameId);
+    thisGame.io.to(gameId).emit('refresh-board', {home: thisGame.home.username, away: thisGame.away.username, gameBoard: thisGame.board});
+  //  console.log(io['sockets']);
   }, 3000);
+  return thisGame;
 }
 
 
