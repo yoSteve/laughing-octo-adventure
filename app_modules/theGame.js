@@ -1,35 +1,54 @@
-module.exports = {
-  setUp: function() {
-    boardSetup(gameBoard);
-    return [gameBoard, mana];
-  },
-  move: function(initPos, finPos) {
-    initialPos = initPos;
-    finalPos = finPos;
-    getMoveFromUser();
-    findAllMatches(gameBoard);
-    refreshBoard(gameBoard);
-    addMana();
-    zeroMatches();
-    console.log(mana);
-    return [gameBoard, mana];
-  },
-  createId: function(id1, id2) {
-    if(id1 > id2)
-      return id1 + id2;
-    return id2 + id1;
-  }
-};
+var game = function(io, gameId, home, away) {
+  this.gameId = gameId;
+  this.io = io;
+  this.home = home;
+  this.away = away;
+  console.log("new game created \n", gameId);
 
+    
   var SIZE = 8;
   var matches = new Array(6);
   var mana;
-  var gameBoard = new Array(SIZE);
-  var initialPos, finalPos;
-  for (var i = gameBoard.length-1; i >= 0 ; i--) {
-    gameBoard[i] = new Array(SIZE);
-  }
+  this.gameBoard = new Array(SIZE);
+  this.initialPos, this.finalPos;
+  for (var i = this.gameBoard.length-1; i >= 0 ; i--) {
+    this.gameBoard[i] = new Array(SIZE);
+  }    
+  gameBoard = this.gameBoard;
+  room = this.room;
+  setInterval(function() {
+    console.log('We are ina  game!!!!!! ', gameId);
+    io.to(gameId).emit('refresh-board', {home: home.username, away: away.username, gameBoard: gameBoard});
+    console.log(io['sockets']);
+  }, 3000);
+}
 
+
+
+var createGameId = function(id1, id2) {
+  console.log(id1);
+  console.log(id2);
+  if(id1 > id2)
+    return id1 + id2;
+  return id2 + id1;
+}
+
+function setUp() {
+  boardSetup(gameBoard);
+  return [gameBoard, mana];
+}
+
+function move(initPos, finPos) {
+  initialPos = initPos;
+  finalPos = finPos;
+  getMoveFromUser();
+  findAllMatches(gameBoard);
+  refreshBoard(gameBoard);
+  addMana();
+  zeroMatches();
+  console.log(mana);
+  return [gameBoard, mana];
+}
 
   function boardSetup(board){
       mana = new Array(6);
@@ -312,4 +331,7 @@ module.exports = {
           column.unshift(end);
       }
   }
-
+module.exports = {
+  Game: game,
+  createGameId: createGameId
+};
