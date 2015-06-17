@@ -11,13 +11,19 @@ $(function(){
   	});
   });
 
-  socket.on('match-message', function (user) {
-    console.log("on the front and matched", user);
-    $('#match').text("You have been matched with " + user[0] + "\nclick to enter the game!");
+  socket.on('match-message', function (data) {
+    console.log("on the front and matched", data);
+    $('#match').text("You have been matched with \nclick to enter the game!");
     $(window).on('click', function() {
-      console.log('should buser someones id ', user[1])
-      socket.emit('start-game', { userId: user[1]});
+      console.log('room id (game id): ', data);
+      socket.emit('start-game', { gameId: data});
+      $(window).off('click');
     });
+  });
+
+  socket.on('refresh-board', function(data) {
+    console.log(data);
+    $('#match').text("you have been matched\n home: " + data['home'] + "\naway: " + data['away'] + "\n game board: " + data['gameBoard']);
   });
 
   socket.on('game-board', function(data) {

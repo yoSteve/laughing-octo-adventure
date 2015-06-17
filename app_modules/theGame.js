@@ -4,7 +4,6 @@ var game = function(io, gameId, home, away) {
   this.home = home;
   this.away = away;
   console.log("new game created \n", gameId);
-  this.currentPlayer = home;
     
   var SIZE = 8;
   var matches = new Array(6);
@@ -16,11 +15,18 @@ var game = function(io, gameId, home, away) {
   }    
   gameBoard = this.gameBoard;
   room = this.room;
+<<<<<<< HEAD
   currentPlayer = this.currentPlayer;
   setInterval(function() {
     console.log('We are ina  game!!!!!!')
     io.to(gameId).emit('refresh-board', [gameBoard, home.username, away.username, currentPlayer] );
    // console.log(io);
+=======
+  setInterval(function() {
+    console.log('We are ina  game!!!!!! ', gameId);
+    io.to(gameId).emit('refresh-board', {home: home.username, away: away.username, gameBoard: gameBoard});
+    console.log(io['sockets']);
+>>>>>>> a0a628180c3c031e5df5dc953e530f9bcda1a7e3
   }, 3000);
 }
 
