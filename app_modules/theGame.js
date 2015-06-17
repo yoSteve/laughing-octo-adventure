@@ -17,8 +17,8 @@ var game = function(io, gameId, home, away) {
   gameBoard = this.gameBoard;
   room = this.room;
   setInterval(function() {
-    console.log('We are ina  game!!!!!!')
-    io.to(gameId).emit('refresh-board', gameBoard);
+    console.log('We are ina  game!!!!!! ', gameId);
+    io.to(gameId).emit('refresh-board', {home: home.username, away: away.username, gameBoard: gameBoard});
    // console.log(io);
   }, 3000);
 }

@@ -17,12 +17,13 @@ $(function(){
     $(window).on('click', function() {
       console.log('room id (game id): ', data);
       socket.emit('start-game', { gameId: data});
+      $(window).off('click');
     });
   });
 
   socket.on('refresh-board', function(data) {
     console.log(data);
-    $('#match').text("you have been matched");
+    $('#match').text("you have been matched\n home: " + data['home'] + "\naway: " + data['away'] + "\n game board: " + data['gameBoard']);
   });
 
   socket.on('game-board', function(data) {
