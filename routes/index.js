@@ -14,8 +14,19 @@ var isAuthenticated = function(req, res, next) {
 
 module.exports = function(passport, io){
 	router.get('/', function(req, res) {
-    if(res.user)
-      res.redirect('game')
+    console.log(req.user, "ashdflakjdshfluaihsdlisuhdflahhhhhhaa");
+    //redirects logged in users to the lobby, i
+    //but assigns the new socket to the useri
+    // socket id, may run into problems if 
+    // user has multiple windows or if the user
+    // disconnects and reconnects, maybe store
+    // current game in array and on connect have
+    // the user join the current game,  would then
+    // have to make user the game is active, or have
+    // the user select from a list of active games 
+    // if we want them to be able to be playing multiple games at once.
+    if(req.user)
+      res.redirect('lobby');
 		res.render('index', {message: req.flash('message')});
 	});
 
@@ -60,33 +71,6 @@ module.exports = function(passport, io){
 		res.render('game_canvas');
 	});
 
-	//////This is depricated and not used//////
-  var nspGame = io.of('/game');
-	nspGame.on('connection', function(socket) {
-		if (socket.request.session.passport){
-			 User.findById(socket.request.session.passport.user, function(err, currentUser) {
-        currentUser.socketId = socket.id;
-        currentUser.save();
-			  console.log("your in the game", currentUser.username, currentUser.socketId, socket.id);
-			});
-		}
-
-		socket.on('disconnect', function() {
-			console.log('someone left the game');
-		});
-		//start game board
-		socket.on('start-game', function(err) {
-  		var res = theGame.setUp();
-			socket.emit('game-board', res);
-		});
-
-		socket.on('move', function(data){
-			initialPos = data[0]['value'];
-			finalPos = data[1]['value'];      
-      var res = theGame.move(initialPos, finalPos);
-			socket.emit('return-move', res);
-		});
-	});
 //socket work using lobby namespace
 	var nspLobby = io.of('/lobby');
 	nspLobby.on('connection', function(socket){
