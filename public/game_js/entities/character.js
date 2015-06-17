@@ -23,6 +23,6 @@ game.Character = me.Entity.extend({
     this.renderable.addAnimation('attack', [row * 6 + 1, row * 6 + 2, row * 6 + 3, row * 6 + 4], 200);
     this.renderable.addAnimation('wounded', [row * 6 + 4]);
     this.renderable.addAnimation('dead', [row * 6 + 5]);
-    this.renderable.setCurrentAnimation('walk');
+    this.renderable.setCurrentAnimation('idle');
   }
 });

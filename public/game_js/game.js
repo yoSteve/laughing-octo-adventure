@@ -41,7 +41,8 @@ var game = {
     // Run on game resources loaded.
     "loaded" : function () {
         me.state.set(me.state.MENU, new game.TitleScreen());
-        me.state.set(me.state.PLAY, new game.PlayScreen());
+        this.playScreen = new game.PlayScreen();
+        me.state.set(me.state.PLAY, this.playScreen);
 
         me.pool.register('tile', game.Tile);
         me.pool.register('grid', game.Grid);

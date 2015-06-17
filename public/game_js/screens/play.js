@@ -1,4 +1,8 @@
 game.PlayScreen = me.ScreenObject.extend({
+    init: function() {
+      this.grid = new game.Grid();
+      this._super(me.ScreenObject, 'init', []);
+    },
     /**
      *  action to perform on state change
      */
@@ -15,7 +19,6 @@ game.PlayScreen = me.ScreenObject.extend({
         me.game.world.addChild(this.HUD);
 
         // add a grid
-        this.grid = new game.Grid();
         this.grid.createTiles();
         me.game.world.addChild(this.grid, 2);
 

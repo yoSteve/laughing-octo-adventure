@@ -45,6 +45,7 @@ game.Tile = me.DraggableEntity.extend({
       } else if(Math.abs(this.oldY - this.pos.y) > 5) {
         this.lockX();
       } 
+      return true;
     }
 
     this.body.update();
@@ -83,6 +84,7 @@ game.Tile = me.DraggableEntity.extend({
   lockY: function() {
     this.pos.y = this.oldY;
   }
+
 });
 
 game.Tile.width = 64;

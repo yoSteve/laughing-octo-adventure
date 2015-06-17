@@ -36,6 +36,8 @@ game.Grid = me.Container.extend({
       
       this.board[i][row] = tempArray[i];
     }
+
+    this.resolveMatches(this.getRowMatches(), this.getColMatches());
   },
 
   shiftRight: function(row) {
@@ -57,6 +59,8 @@ game.Grid = me.Container.extend({
       
       this.board[i][row] = tempArray[i];
     }
+
+    this.resolveMatches(this.getRowMatches(), this.getColMatches());
   },
 
   shiftUp: function(col) {
@@ -72,6 +76,8 @@ game.Grid = me.Container.extend({
 
       this.board[col][i].pos.y = i * game.Tile.height;
     }
+
+    this.resolveMatches(this.getRowMatches(), this.getColMatches());
   },
 
   shiftDown: function(col) {
@@ -87,19 +93,93 @@ game.Grid = me.Container.extend({
 
       this.board[col][i].pos.y = i * game.Tile.height;
     }
+
+    this.resolveMatches(this.getRowMatches(), this.getColMatches());
   },
 
-  getMatches: function() {
-    var cell;
-    for(var col = 2; col < this.COLS; col++) {
-      for(var row = 0; row < this.ROWS; row++) {
-        cell = this.board[col][row]; 
-        if(cell.type == this.board[col-1][row].type &&
-            cell.type == this.board[col-2][row].type) {
-          console.log('match at ' + col + ':' + row);
+  getRowMatches: function() {
+    var resultArray = [];
+    var prevType;
+    var currCell;
+    var count;
+
+    for(var row = 0; row < this.ROWS; row++) {
+      count = 1;
+      prevType = this.board[0][row].type;
+      for(var col = 1; col < this.COLS; col++) {
+        currCell = this.board[col][row];
+        if(currCell.type == prevType) {
+          count++;
+          if(col == this.COLS -1 ) {
+            if(count >= 3) {
+              resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col, row: row }});
+            }
+          }
+        } else { 
+            if(count >= 3) {
+              resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col - 1, row: row }});
+            }
+          prevType = currCell.type;
+          count = 1;
         }
       }
     }
+
+    return resultArray;
+  },
+
+  getColMatches: function() {
+    var resultArray = [];
+    var prevType;
+    var currCell;
+    var count;
+
+    for(var col = 0; col < this.COLS; col++) {
+      count = 1;
+      prevType = this.board[col][0].type;
+      for(var row = 1; row < this.ROWS; row++) {
+        currCell = this.board[col][row]; 
+        if(currCell.type == prevType) {
+          count++;
+          if(row == this.ROWS - 1) {
+            if(count >= 3) {
+              resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row }});
+            }
+          }
+        } else {
+            if(count >= 3) {
+              resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row - 1 }});
+            }
+          prevType = currCell.type;
+          count = 1;
+        }
+      }
+    }
+
+    return resultArray;
+  },
+
+  resolveMatches: function(rowMatches, colMatches) {
+    var matches = rowMatches.concat(colMatches); 
+
+    var match, endCol, endRow, count;
+    for(var i = 0; i < matches.length; i++) {
+      endCol = matches[i].end.col;
+      endRow = matches[i].end.row;
+      count = matches[i].count;
+
+      if(matches[i].pattern == 'row') {
+        for(var j = endCol; j > endCol - count; j--) {
+          this.board[j][endRow].flickerAndDie();
+        }
+      } else {
+
+      }
+    }
+  },
+
+  stuff: function() {
+    console.log('stuff');
   },
 
   update: function(dt) {
