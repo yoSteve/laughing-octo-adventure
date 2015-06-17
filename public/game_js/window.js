@@ -1,4 +1,4 @@
-
+// runs on window load to trigger melonJS
 window.onReady(function onReady() {
 	game.onload()
 		// Mobile browser hacks

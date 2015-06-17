@@ -6,8 +6,17 @@ game.Character = me.Entity.extend({
     settings.height = 64;
     
     this._super(me.Entity, 'init', [x, y, settings]);
+
     this.chooseCharacter();
     this.renderable.flipX(flipped);
+
+    this.name;
+    this.health = 100;
+    this.healthUI ;
+    this.charClass;
+    this.specials = [];
+    this.manaScores = [];
+    this.initScores();
   },
 
   update: function(dt) {
@@ -24,5 +33,14 @@ game.Character = me.Entity.extend({
     this.renderable.addAnimation('wounded', [row * 6 + 4]);
     this.renderable.addAnimation('dead', [row * 6 + 5]);
     this.renderable.setCurrentAnimation('idle');
+  },
+
+  initScores: function() {
+    this.manaScores['red'] = 0;
+    this.manaScores['blue'] = 0;
+    this.manaScores['yellow'] = 0;
+    this.manaScores['green'] = 0;
+    this.manaScores['white'] = 0;
+    this.manaScores['black'] = 0;
   }
 });

@@ -1,16 +1,16 @@
 game.Grid = me.Container.extend({
-  init: function() {
-    this.COLS = 8;
-    this.ROWS = 8; 
+  init: function(cols, rows) {
+    this.COLS = cols;
+    this.ROWS = rows; 
     this.board = []; 
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
-  createTiles: function() {
+  assignTiles: function(tileColors) {
     for(var i = 0; i < this.COLS; i++) {
       this.board.push([]);
       for(var j = 0; j < this.ROWS; j++) {
-        var tile = me.pool.pull('tile', i * game.Tile.width, j * game.Tile.height, i, j, this);
+        var tile = me.pool.pull('tile', i * game.Tile.width, j * game.Tile.height, i, j, tileColors[i][j], this);
         this.board[i].push(tile);
         this.addChild(tile);
       }
@@ -170,16 +170,16 @@ game.Grid = me.Container.extend({
 
       if(matches[i].pattern == 'row') {
         for(var j = endCol; j > endCol - count; j--) {
-          this.board[j][endRow].flickerAndDie();
+          this.board[j][endRow].setCrystal(6);
         }
       } else {
-
+        for(var j = endRow; j > endRow - count; j--) {
+          this.board[endCol][j].setCrystal(6);
+        }
       }
     }
-  },
 
-  stuff: function() {
-    console.log('stuff');
+    this.fillEmpties();
   },
 
   update: function(dt) {

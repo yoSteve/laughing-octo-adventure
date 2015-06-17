@@ -3,7 +3,6 @@ var game = {
 
     // an object where to store game information
     data : {
-        // score
         score : 0
     },
 
@@ -35,6 +34,7 @@ var game = {
     // Initialize melonJS and display a loading screen.
     me.state.change(me.state.LOADING);
 
+    // disable gravity
     me.sys.gravity = 0;
 },
 
@@ -44,10 +44,9 @@ var game = {
         this.playScreen = new game.PlayScreen();
         me.state.set(me.state.PLAY, this.playScreen);
 
-        me.pool.register('tile', game.Tile);
+        me.pool.register('tile', game.Tile, true);
         me.pool.register('grid', game.Grid);
-        me.pool.register('tile group', game.TileGroup);
-        me.pool.register('character', game.Character);
+        me.pool.register('character', game.Character, true);
 
         // Start the game.
         me.state.change(me.state.PLAY);

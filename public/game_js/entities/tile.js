@@ -1,22 +1,21 @@
 game.Tile = me.DraggableEntity.extend({
-  init: function(x, y, col, row, grid) {
+  init: function(x, y, col, row, type, grid) {
     var settings = {};
     settings.image = 'crystals-lg';
     settings.width = game.Tile.width;
     settings.height = game.Tile.height;
 
-    this.mousePos = me.input.mouse.pos;
+    this._super(me.DraggableEntity, 'init', [x, y, settings]);
 
+    this.mousePos = me.input.mouse.pos;
     this.oldX, this.oldY;
     this.col = col;
     this.row = row;
     this.grid = grid;
-    this.selected = [];
     this.moved = false;
-    this.type;
+    this.type = type;
 
-    this._super(me.DraggableEntity, 'init', [x, y, settings]);
-    this.chooseCrystal();
+    this.setCrystal(this.type);
   },
 
   update: function(dt) {
@@ -54,10 +53,9 @@ game.Tile = me.DraggableEntity.extend({
     return true;
   },
 
-  chooseCrystal: function() {
-    var frame = ~~(Math.random() * 6);
-    this.type = frame;
-    this.renderable.addAnimation('idle', [frame], 1);
+  setCrystal: function(type) {
+    this.type = type;
+    this.renderable.addAnimation('idle', [type], 1);
     this.renderable.setCurrentAnimation('idle');
   },
 
@@ -68,7 +66,6 @@ game.Tile = me.DraggableEntity.extend({
     this.grabbed = true;
     this.moved = false;
   },
-
 
   dragEnd: function(event) {
     this._super(me.DraggableEntity, 'dragEnd', [event]);
