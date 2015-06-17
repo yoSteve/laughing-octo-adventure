@@ -8,7 +8,7 @@ var game = {
 
 
     // Run on page load.
-    "onload" : function () {
+    onload: function () {
     // Initialize the video.
     if (!me.video.init(1280, 720, {wrapper : "screen", scale : "auto"})) {
         alert("Your browser does not support HTML5 canvas.");
@@ -39,14 +39,11 @@ var game = {
 },
 
     // Run on game resources loaded.
-    "loaded" : function () {
-        me.state.set(me.state.MENU, new game.TitleScreen());
+    loaded: function () {
         this.playScreen = new game.PlayScreen();
         me.state.set(me.state.PLAY, this.playScreen);
 
         me.pool.register('tile', game.Tile, true);
-        me.pool.register('grid', game.Grid);
-        me.pool.register('character', game.Character, true);
 
         // Start the game.
         me.state.change(me.state.PLAY);
