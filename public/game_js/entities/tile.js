@@ -24,26 +24,26 @@ game.Tile = me.DraggableEntity.extend({
   update: function(dt) {
     this._super(me.DraggableEntity, 'update', [dt]);
 
-    if(game.playScreen.player1Turn) {
+    if(game.playScreen.currentPlayer == game.data.player) {
       if(this.grabbed && !this.moved) {
         //if moved left
         if(this.oldPos.x - this.mousePos.x > 10) {
           this.moveHorizontal(false);
-          game.playScreen.player1Turn = false;
+          game.playScreen.switchTurn();
         //if moved right
         } else if(this.mousePos.x - this.oldPos.x > 10) {
           this.moveHorizontal(true);
-          game.playScreen.player1Turn = false;
+          game.playScreen.switchTurn();
         }
 
         //if moved up 
         if(this.oldPos.y - this.mousePos.y > 10) {
           this.moveVertical(false);
-          game.playScreen.player1Turn = false;
+          game.playScreen.switchTurn();
         //if moved down
         } else if(this.mousePos.y - this.oldPos.y > 10) {
           this.moveVertical(true);
-          game.playScreen.player1Turn = false;
+          game.playScreen.switchTurn();
         }
       }
     }

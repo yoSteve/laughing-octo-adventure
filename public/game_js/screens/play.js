@@ -1,7 +1,7 @@
 game.PlayScreen = me.ScreenObject.extend({
     init: function() {
       this.grid;
-      this.player1Turn = true;
+      this.currentPlayer = 1;
     }, 
 
     onResetEvent: function() {
@@ -28,6 +28,9 @@ game.PlayScreen = me.ScreenObject.extend({
       */
 
       me.input.bindKey(me.input.KEY.X, 'clear', true);
+      me.input.bindKey(me.input.KEY.C, 'appear', true);
+      me.input.bindKey(me.input.KEY.F1, 'setPlayer1', true);
+      me.input.bindKey(me.input.KEY.F2, 'setPlayer2', true);
 
       this.grid = new game.Grid(8, 8);  
       this.grid.populate(tiles);
@@ -36,5 +39,13 @@ game.PlayScreen = me.ScreenObject.extend({
 
     onDestroyEvent: function() {
       me.game.world.removeChild(this.grid); 
+    },
+
+    switchTurn: function() {
+      if(this.currentPlayer == 1) {
+        this.currentPlayer = 2;
+      } else {
+        this.currentPlayer = 1;
+      }
     }
 });

@@ -1,15 +1,10 @@
-/* Game namespace */
 var game = {
+  data: {
+  //set which player is connected
+    player: 1
+  },
 
-    // an object where to store game information
-    data : {
-      //set which player is connected
-      player: 1
-    },
-
-
-    // Run on page load.
-    onload: function () {
+  onload: function () {
     // Initialize the video.
     if (!me.video.init(1280, 720, {wrapper : "screen", scale : "auto"})) {
         alert("Your browser does not support HTML5 canvas.");
@@ -37,16 +32,21 @@ var game = {
 
     // disable gravity
     me.sys.gravity = 0;
-},
+  },
 
-    // Run on game resources loaded.
-    loaded: function () {
-        this.playScreen = new game.PlayScreen();
-        me.state.set(me.state.PLAY, this.playScreen);
+  // Run on game resources loaded.
+  loaded: function () {
+      this.playScreen = new game.PlayScreen();
+      me.state.set(me.state.PLAY, this.playScreen);
 
-        me.pool.register('tile', game.Tile, true);
+      me.pool.register('tile', game.Tile, true);
 
-        // Start the game.
-        me.state.change(me.state.PLAY);
-    }
+      // Start the game.
+      me.state.change(me.state.PLAY);
+  },
+
+  sendMessage: function(command, object) {
+    console.log(command); 
+    console.log(object);
+  }
 };

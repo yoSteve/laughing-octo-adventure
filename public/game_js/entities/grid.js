@@ -10,8 +10,22 @@ game.Grid = me.Container.extend({
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
+    if(me.input.isKeyPressed('setPlayer1')) {
+      game.data.player = 1;
+      console.log(game.data.player);
+    }
+
+    if(me.input.isKeyPressed('setPlayer2')) {
+      game.data.player = 2;
+      console.log(game.data.player);
+    }
+
     if(me.input.isKeyPressed('clear')) {
       this.clearTiles({ pattern: 'row', end: { col: 3, row: 3 }, count: 3 });
+    }
+
+    if(me.input.isKeyPressed('appear')) {
+      this.fillTiles({ pattern: 'row', end: { col: 3, row: 0}, count: 3, colors: [1, 2, 3] });
     }
 
     if(this.dead >= 3) {
@@ -75,7 +89,7 @@ game.Grid = me.Container.extend({
       this.board[i][rowIndex] = row[i];
     }
 
-    this.sendMessage({ row: rowIndex, movedRight: right });
+    game.sendMessage('move', { pattern: 'row', row: rowIndex, movedRight: right });
   },
 
   shiftCol(colIndex, down) {
@@ -107,11 +121,7 @@ game.Grid = me.Container.extend({
 
     this.board[colIndex] = col;
 
-    this.sendMessage({ col: colIndex, movedDown: down });
-  },
-
-  sendMessage: function(object) {
-    console.log(object);
+    game.sendMessage('move', { pattern: 'column', col: colIndex, movedDown: down });
   },
 
   clearTiles: function(object) {
@@ -125,6 +135,24 @@ game.Grid = me.Container.extend({
       var col = this.getCol(object.end.col);
       for(var i = object.end.row; i > object.end.row - object.count; i--) {
         col[i].vanishCrystal();
+      }
+    }
+  },
+
+  fillTiles: function(object) {
+    // { pattern: row/column, end: { col: col, row: row }, count: > 3, colors: [1, 2, 3] }
+    if(object.pattern == 'row') {
+      var row = this.getRow(object.end.row);      
+      for(var i = object.end.col, j = object.colors.length - 1; i > object.end.col - object.count; i--, j--) {
+        console.log(object.colors[j]);
+        row[i].setCrystal(object.colors[j]);
+        row[i].appearCrystal();
+      }
+    } else {
+      var col = this.getCol(object.end.col);      
+      for(var i = object.end.row; i > object.end.row - object.count; i--) {
+        col[i].setCrystal(object.colors[i]);
+        col[i].appearCrystal();
       }
     }
   },
