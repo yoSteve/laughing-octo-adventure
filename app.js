@@ -1,92 +1,85 @@
-var express = require('express');
+var koa = require('koa');
 
-var app = express();
-var path = require('path');
-var favicon = require('static-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-//set up jade
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
+var app = koa();
+var logger = require('koa-logger');
+var serve = require('koa-static');
+//var cookieParser = require('cookie-parser');
+var bodyParser = require('koa-bodyparser');
+var jade = require('koa-jade');
+var session = require('koa-session');
+//set up jade need to move to end (load processsss)
+app.use(jade.middleware({
+  viewPath: __dirname + '/views',
+  debug: false,
+  pretty: false,
+  compileDebug: false,
+  noCache: process.env === 'development'
+}));
 //set up mondoose
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
 mongoose.connect(dbConfig.url);
-app.set('port', process.env.PORT || 3000);
 
 //require passport module
-var passport = require('passport');
-var expressSession = require('express-session');
-var sessionMiddleware = expressSession({
-	name: "cookie-sesstion",
-	secret: "god",
-	store: new (require('connect-mongo')(expressSession))({
-		url: dbConfig.url
-	})
-});
-app.use(sessionMiddleware)
+//parsers
+app.use(logger('dev'));
+app.use(bodyParser({
+  detectJSON: function (ctx) {
+    return /\.json$/i.test(ctx.path);
+  }
+}));
+require('./passport/auth');
+var passport = require('koa-passport');
+app.keys = ['secrets'];
+app.use(session(app));
+//init passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-//init passport
-var initPassport = require('./passport/init');
-initPassport(passport);
-
-//parsers
-app.use(favicon());
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
-
+app.use(function *(){
+  app.body = this.request.body;
+});
 //for loading local files in public
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(serve(__dirname, 'public'));
+app.use(serve(__dirname, 'views'));
 // connect-flash used for flashing messages
-var flash = require('connect-flash');
-app.use(flash());
+//var flash = require('connect-flash');
+//app.use(flash());
+
 
 //set upu routes with socket
-var http = require('http').Server(app);
-var io  = require('socket.io').listen(http);
-io.use(function(socket, next) {
-		sessionMiddleware(socket.request, {}, next);
-});
+var server = require('http').Server(app.callback()); 
+server.listen(3000);
+var io  = require('socket.io')(server);
 
-var routes = require('./routes/index')(passport, io);
-app.use('/', routes);
-
+//io.use(function(socket, next) {
+//		sessionMiddleware(socket.request, {}, next);
+//});
+var router = require('./routes/index')(passport, io);
+app.use(router.routes()).use(router.allowedMethods());
 //404
-app.use(function(req,res){
-	res.type('text/plain');
-	res.status(404);
-	res.send('404 - you require more vespane gas');
-})
+//app.use(function*(next)){
+//	res.type('text/plain')
+//	res.status(404);
+//	res.send('404 - you require more vespane gas');
+//})
 
 //500
-app.use(function(err,req,res,next){
-	console.error(err.stack);
-	res.type('text/plain');
-	res.status(500);
-	res.send('500 - we require more vespane gas');
-})
-
-http.listen(app.get('port'), function(){
-	console.log('Express has started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate');
-});
-
+//app.use(function(err,req,res,next){
+//	console.error(err.stack);
+//	res.type('text/plain');
+//	res.status(500);
+//	res.send('500 - we require more vespane gas');
+//})
 
 //dev error post
-if (app.get('env') === 'development'){
-	app.use(function(err, req, res, next) {
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: err
-		});
-	});
-}
+//if (app.get('env') === 'development'){
+//	app.use(function(err, req, res, next) {
+//		res.status(err.status || 500);
+//		res.render('error', {
+//			message: err.message,
+//			error: err
+//		});
+//	});
+//}
 module.exports = app;

@@ -1,5 +1,4 @@
-var express = require('express');
-var router = express.Router();
+var router = require('koa-router')();
 var theGame = require('../app_modules/theGame');
 var User = require('../models/user');
 
