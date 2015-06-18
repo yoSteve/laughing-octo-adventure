@@ -1,4 +1,5 @@
 var passport = require('koa-passport');
+var secrets = require('../secrets');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -22,7 +23,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 var GoogleStrategy = require('passport-google-auth').Strategy
 passport.use(new GoogleStrategy({
   clientId: secrets['GOOGLE_CLIENT_ID'],
-  clientSecrete: secrets['GOOGLE_CLIENT_SECRET'],
+  clientSecret: secrets['GOOGLE_CLIENT_SECRET'],
   callbackURL: "http://localhost:3000/auth/google/response"
   },
   function(token, tokenSecret, profile, done) {
@@ -32,7 +33,7 @@ passport.use(new GoogleStrategy({
 ))
 
 
-var findOrCreateUser = function(username, password, oauth}){
+var findOrCreateUser = function(username, password, oauth){
   User.findOne({ 'username': username }, function(err, user){
     if (err) {
       console.error(('Error in signup : ' + err));

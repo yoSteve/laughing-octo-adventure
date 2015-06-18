@@ -3,10 +3,11 @@ var koa = require('koa');
 var app = koa();
 var logger = require('koa-logger');
 var serve = require('koa-static');
-//var cookieParser = require('cookie-parser');
 var bodyParser = require('koa-bodyparser');
 var jade = require('koa-jade');
 var session = require('koa-session');
+
+
 //set up jade need to move to end (load processsss)
 app.use(jade.middleware({
   viewPath: __dirname + '/views',
@@ -40,8 +41,10 @@ app.use(function *(){
   app.body = this.request.body;
 });
 //for loading local files in public
-app.use(serve(__dirname, 'public'));
-app.use(serve(__dirname, 'views'));
+app.use(serve('.'));
+app.use(serve(__dirname + '/public'));
+app.use(serve(__dirname + '/views'));
+
 // connect-flash used for flashing messages
 //var flash = require('connect-flash');
 //app.use(flash());
@@ -49,7 +52,6 @@ app.use(serve(__dirname, 'views'));
 
 //set upu routes with socket
 var server = require('http').Server(app.callback()); 
-server.listen(3000);
 var io  = require('socket.io')(server);
 
 //io.use(function(socket, next) {
@@ -82,4 +84,8 @@ app.use(router.routes()).use(router.allowedMethods());
 //		});
 //	});
 //}
+
+server.listen(3000, function() {
+  console.log('server listening on port 3000');
+});
 module.exports = app;

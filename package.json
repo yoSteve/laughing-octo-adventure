@@ -42,6 +42,7 @@
     "mongoose": "^4.0.5",
     "morgan": "^1.6.0",
     "passport": "^0.2.2",
+    "passport-google-auth": "^1.0.0",
     "passport-google-openidconnect": "0.0.4",
     "passport-local": "^1.0.0",
     "sanitizer": "^0.1.2",

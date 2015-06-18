@@ -2,18 +2,10 @@ var router = require('koa-router')();
 var theGame = require('../app_modules/theGame');
 var User = require('../models/user');
 
-var isAuthenticated = function(req, res, next) {
-	//checks to see if session is authenticated and
-	//lets through to their request
-	//else redirects to login (home)
-	if(req.isAuthenticated())
-    return next();
-	res.redirect('/');
-}
-
+var isAuthenticated = function(){}
 module.exports = function(passport, io){
-	router.get('/', function(req, res) {
-    console.log(req.user, "ashdflakjdshfluaihsdlisuhdflahhhhhhaa");
+	router.get('/', function *(next) {
+    console.log(this.response, "ashdflakjdshfluaihsdlisuhdflahhhhhhaa");
     //redirects logged in users to the lobby, i
     //but assigns the new socket to the useri
     // socket id, may run into problems if 
@@ -24,49 +16,46 @@ module.exports = function(passport, io){
     // have to make user the game is active, or have
     // the user select from a list of active games 
     // if we want them to be able to be playing multiple games at once.
-    if(req.user)
-      res.redirect('lobby');
-		res.render('index', {message: req.flash('message')});
+		this.response.render('index');
 	});
 
 	//google login redirects to google, google directs back
-	router.get('/auth/google', passport.authenticate('google-openidconnect'));
+	router.get('/auth/google', passport.authenticate('google'));
 
 	router.get('/auth/google/response',
-		passport.authenticate('google-openidconnect', {
-			successRedirect: '/lobby',
-			failureRedirect: '/'
-		}));
+		passport.authenticate('google', {
+      successRedirect: '/game_canvas',
+      failureRedirect: '/'
+    })
+  )
 		//handle login
 	router.post('/login',passport.authenticate('login', {
 			successRedirect: '/lobby',
 			failureRedirect: '/',
-			failureFlash: true
 	}));
 
 	//handle Registration
 	router.post('/signup', passport.authenticate('signup', {
 			successRedirect: '/lobby',
 			failureRedirect: '/',
-			failureFlash : true
 	}));
 
-	router.get('/logout', function(req, res) {
+	router.get('/logout', function *(next) {
 		req.logout();
 		res.redirect('/');
 	});
 
-	router.get('/lobby', isAuthenticated, function(req, res) {
+	router.get('/lobby', isAuthenticated, function *(next) {
 		User.find({waiting: true}, function(err, docs){
 				res.render('lobby', {waiting: docs});
 		});
 	});
 	
-	router.get('/game', isAuthenticated, function(req, res) {
+	router.get('/game', isAuthenticated, function *(next) {
 		res.render('game', {user: req.user });
 	});
 
-	router.get('/game_canvas', isAuthenticated, function(req, res) {
+	router.get('/game_canvas', isAuthenticated, function *(next) {
 		res.render('game_canvas');
 	});
 
@@ -75,6 +64,7 @@ module.exports = function(passport, io){
   var games = {};
 	nspLobby.on('connection', function(socket){
     console.log(games);
+    console.log(socket.request.session);
 		if (socket.request.session.passport){
 			User.findById(socket.request.session.passport.user, function(err, currentUser){
         if(currentUser) {
