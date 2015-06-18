@@ -65,10 +65,12 @@ game.Grid = me.Container.extend({
     for(var i = 0; i < this.COLS; i++) {
       this.board[i][rowIndex] = row[i];
     }
+
+    this.sendMessage({ row: rowIndex, movedRight: right });
   },
 
-  shiftCol(column, down) {
-    var col = this.getCol(column);
+  shiftCol(colIndex, down) {
+    var col = this.getCol(colIndex);
 
     if(down) {
       //shift down
@@ -94,6 +96,27 @@ game.Grid = me.Container.extend({
       });
     }
 
-    this.board[column] = col;
+    this.board[colIndex] = col;
+
+    this.sendMessage({ col: colIndex, movedDown: down });
+  },
+
+  sendMessage: function(object) {
+    console.log(object);
+  },
+
+  clearTiles: function(object) {
+    // { pattern: row/column, end: { col: col, row: row }, count: > 3 }
+    if(object.pattern == 'row') {
+      var row = this.getRow(object.end.row);
+      for(var i = object.end.col; i > object.end.col - object.count; i--) {
+        row[i].setCrystal(6);
+      }
+    } else {
+      var col = this.getCol(object.end.col);
+      for(var i = object.end.row; i > object.end.row - object.count; i--) {
+        col[i].setCrystal(6);
+      }
+    }
   }
 });

@@ -26,26 +26,18 @@ game.Tile = me.DraggableEntity.extend({
     if(this.grabbed && !this.moved) {
       //if moved left
       if(this.oldPos.x - this.mousePos.x > 10) {
-        this.pos.y = this.row * game.Tile.height;
-        game.playScreen.grid.shiftRow(this.row, false);
-        this.moved = true;
+        this.moveHorizontal(false);
       //if moved right
       } else if(this.mousePos.x - this.oldPos.x > 10) {
-        this.pos.y = this.row * game.Tile.height;
-        game.playScreen.grid.shiftRow(this.row, true);
-        this.moved = true;
+        this.moveHorizontal(true);
       }
 
       //if moved up 
       if(this.oldPos.y - this.mousePos.y > 10) {
-        this.pos.x = this.col * game.Tile.width;
-        game.playScreen.grid.shiftCol(this.col, false);
-        this.moved = true;
+        this.moveVertical(false);
       //if moved down
       } else if(this.mousePos.y - this.oldPos.y > 10) {
-        this.pos.x = this.col * game.Tile.width;
-        game.playScreen.grid.shiftCol(this.col, true);
-        this.moved = true;
+        this.moveVertical(true);
       }
     }
 
@@ -63,7 +55,6 @@ game.Tile = me.DraggableEntity.extend({
     this._super(me.DraggableEntity, 'dragEnd', [event]);
     this.pos.x = this.col * game.Tile.width;
     this.pos.y = this.row * game.Tile.height;
-    this.newPos = this.pos.clone(); 
     this.grabbed = false;
     this.moved = false;
   },
@@ -72,6 +63,18 @@ game.Tile = me.DraggableEntity.extend({
     this.type = type;
     this.renderable.addAnimation('idle', [type]); 
     this.renderable.setCurrentAnimation('idle');
+  },
+
+  moveHorizontal: function(right) {
+    this.pos.y = this.row * game.Tile.height;
+    game.playScreen.grid.shiftRow(this.row, right);
+    this.moved = true;
+  },
+
+  moveVertical: function(down) {
+    this.pos.x = this.col * game.Tile.width;
+    game.playScreen.grid.shiftCol(this.col, down);
+    this.moved = true;
   }
 });
 
