@@ -3,7 +3,8 @@ var game = {
 
     // an object where to store game information
     data : {
-        score : 0
+      //set which player is connected
+      player: 1
     },
 
 

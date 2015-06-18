@@ -3,7 +3,7 @@ game.Grid = me.Container.extend({
     this.COLS = cols;
     this.ROWS = rows;
     this.board = [];
-    this.hasEmpties = false;
+    this.dead = 0;
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
@@ -14,7 +14,7 @@ game.Grid = me.Container.extend({
       this.clearTiles({ pattern: 'row', end: { col: 3, row: 3 }, count: 3 });
     }
 
-    if(this.hasEmpties) {
+    if(this.dead >= 3) {
       this.shiftEmpties();
     }
 
@@ -119,15 +119,14 @@ game.Grid = me.Container.extend({
     if(object.pattern == 'row') {
       var row = this.getRow(object.end.row);
       for(var i = object.end.col; i > object.end.col - object.count; i--) {
-        row[i].setCrystal(6);
+        row[i].vanishCrystal();
       }
     } else {
       var col = this.getCol(object.end.col);
       for(var i = object.end.row; i > object.end.row - object.count; i--) {
-        col[i].setCrystal(6);
+        col[i].vanishCrystal();
       }
     }
-    this.hasEmpties = true;
   },
 
   shiftEmpties: function() {
@@ -138,15 +137,17 @@ game.Grid = me.Container.extend({
       col = this.getCol(i);
       for(var j = 1; j < this.ROWS; j++) {
         //swap upwards if empty
-        if(col[j].type == 6) {
-          temp = col[j-1].type; 
-          col[j-1].setCrystal(col[j].type);
-          col[j].setCrystal(temp);
+        if(!col[j].alive) {
+          col[j].setCrystal(col[j-1].type);
+          col[j].alive = true;
+          col[j-1].setCrystal(6);
+          col[j-1].alive = false;
           swapped = true;
         }
       }
     }
-
-    this.hasEmpties = swapped;
+    if(!swapped) {
+      this.dead--;
+    }
   }
 });

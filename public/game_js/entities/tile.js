@@ -1,7 +1,7 @@
 game.Tile = me.DraggableEntity.extend({
   init: function(x, y, type, col, row) {
     var settings = {};
-    settings.image = 'crystals-lg';
+    settings.image = 'crystals-animate';
     settings.width = game.Tile.width;
     settings.height = game.Tile.height;
 
@@ -15,6 +15,7 @@ game.Tile = me.DraggableEntity.extend({
     this.mousePos = me.input.mouse.pos;
     this.grabbed = false;
     this.moved = false;
+    this.matched = false;
 
     this.col = col;
     this.row = row;
@@ -68,7 +69,25 @@ game.Tile = me.DraggableEntity.extend({
   setCrystal: function(type) {
     this.type = type;
     this.renderable.addAnimation('idle', [type]); 
+    this.renderable.addAnimation('vanish', [type, type + 7, type + 14, type + 21, type + 28, type + 35], 75); 
+    this.renderable.addAnimation('appear', [type + 35, type + 28, type + 21, type + 14, type + 7, type], 75); 
     this.renderable.setCurrentAnimation('idle');
+  },
+
+  vanishCrystal: function() {
+    var tile = this;
+    this.renderable.setCurrentAnimation('vanish', function() {
+      game.playScreen.grid.dead++;
+      tile.alive = false;
+      return false;
+    });
+  },
+
+  appearCrystal: function() {
+    this.renderable.setCurrentAnimation('appear', function() {
+      return false;
+      this.renderable.setCurrentAnimation('idle');
+    });
   },
 
   moveHorizontal: function(right) {

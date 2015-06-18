@@ -10,6 +10,11 @@ game.resources = [
         "src": "data/img/crystals.png"
     },
     {
+        "name": "crystals-animate",
+        "type": "image",
+        "src": "data/img/crystals-animate.png"
+    },
+    {
         "name": "characters",
         "type": "image",
         "src": "data/img/characters.png"
