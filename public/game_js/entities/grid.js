@@ -3,11 +3,20 @@ game.Grid = me.Container.extend({
     this.COLS = cols;
     this.ROWS = rows;
     this.board = [];
+    this.hasEmpties = false;
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
+
+    if(me.input.isKeyPressed('clear')) {
+      this.clearTiles({ pattern: 'row', end: { col: 3, row: 3 }, count: 3 });
+    }
+
+    if(this.hasEmpties) {
+      this.shiftEmpties();
+    }
 
     return true;
   },
@@ -118,5 +127,26 @@ game.Grid = me.Container.extend({
         col[i].setCrystal(6);
       }
     }
+    this.hasEmpties = true;
+  },
+
+  shiftEmpties: function() {
+    var col;
+    var temp;
+    var swapped = false;
+    for(var i = 0; i < this.COLS; i++) {
+      col = this.getCol(i);
+      for(var j = 1; j < this.ROWS; j++) {
+        //swap upwards if empty
+        if(col[j].type == 6) {
+          temp = col[j-1].type; 
+          col[j-1].setCrystal(col[j].type);
+          col[j].setCrystal(temp);
+          swapped = true;
+        }
+      }
+    }
+
+    this.hasEmpties = swapped;
   }
 });
