@@ -1,18 +1,14 @@
 var Game = require('../models/game');
 var game = function(io, gameId, home, away) {
-  console.log("new game created \n", game.gameId);
-  thisGame = new Game({
+  console.log("new game created \n", gameId);
+  var thisGame =  Game.create({
     gameId: gameId,
     io: io,
     homeUser: home,
     awayUser: away
   });  
+  console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \n', Game);
   this.initialPos, this.finalPos;
-  setInterval(function() {
-    console.log('We are ina  game!!!!!! ', thisGame.gameId);
-  //  thisGame.io.to(gameId).emit('refresh-board', {home: thisGame.home.username, away: thisGame.away.username, gameBoard: thisGame.board});
-  //  console.log(io['sockets']);
-  }, 3000);
   return thisGame;
 }
 
@@ -64,8 +60,9 @@ function move(initPos, finPos) {
       if (matches[i])
     		mana[i] += matches[i];
   		i--;
-
+    }
   }
+ 
 
   function zeroMatches(){
   	var i = 5;

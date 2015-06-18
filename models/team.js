@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Champions = new Schema({
+var ChampionsSchema = new Schema({
 	maxHp: Number,
 	attr: {},//add in the colors, set values
 	specialAttacks: {}, //add mana match moves
@@ -9,15 +9,14 @@ var Champions = new Schema({
 	name: String,
 }); 
 
-var Team = new Schema({
+var TeamSchema = new Schema({
 	mp: Number,
-	champions: [Champions]
+	champions: [ChampionsSchema]
 });
 
-Team.methods.maxHp = function(){
+TeamSchema.methods.maxHp = function(){
   return this.champions.reduce(function(total, champ){
     return total + champ.maxHp;
   });
 }
-mongoose.model('Team', Team);
-module.exports = mongoose.model('Team');
+module.exports = mongoose.model('Team', TeamSchema, 'Team');

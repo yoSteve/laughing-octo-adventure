@@ -75,18 +75,15 @@ module.exports = function(passport, io){
 	var nspLobby = io.of('/lobby');
   var games = {};
 	nspLobby.on('connection', function(socket){
+    console.log(games);
 		if (socket.request.session.passport){
 			User.findById(socket.request.session.passport.user, function(err, currentUser){
         if(currentUser) {
-          console.log("\n\n\n\n\n", currentUser);
           currentUser.socketId = socket.id;
           currentUser.waiting = false;
           currentUser.save();
-          console.log("\n\n\n\n\n After setting to false", currentUser);
           User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
-            console.log("XXXXXXXXXXXXXXXXXX found", user);
             if(user) {
-              console.log('\n\n\n\n\n\n\n', user._id, '\n\n\n', currentUser._id);
               console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
               var gameId = theGame.createGameId(currentUser._id, user._id);
               var game = new theGame.Game(nspLobby, gameId, currentUser, user);
@@ -113,10 +110,10 @@ module.exports = function(passport, io){
     });
 
 		socket.on('disconnect', function() {
+      console.log('someone left the lobby');
       if(socket.request.session.passport){
         User.findById(socket.request.session.passport.user, function(err, currentUser){
           if(currentUser) {
-            console.log('someone left the lobby');
             currentUser.waiting = false;
             currentUser.save();
           }
