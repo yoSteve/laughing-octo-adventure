@@ -11,7 +11,6 @@ game.Tile = me.DraggableEntity.extend({
     this.setCrystal(type);
 
     this.oldPos; 
-    this.newPos;
     this.mousePos = me.input.mouse.pos;
     this.grabbed = false;
     this.moved = false;

@@ -8,6 +8,25 @@ game.Team = me.Container.extend({
     this._super(me.Container, 'init', [0, 0, 0, 0, settings]);
 
     this.buildFromObject(object);
+
+    this.activeCharacter = 0;
+    this.charSwitched = true;
+  },
+
+  update: function(dt) {
+    this._super(me.Container, 'update', [dt]);
+
+    if(this.charSwitched) {
+      var character = this.characters[this.activeCharacter];
+      if(this.playerNum == 1) {
+        character.pos.x += 40;
+      } else {
+        character.pos.x -= 40;
+      }
+      this.charSwitched = false;
+    }
+
+    return true;
   },
 
   buildFromObject: function(object) {
@@ -43,6 +62,20 @@ game.Team = me.Container.extend({
     this.characters.forEach(function(character) {
       character.renderable.setCurrentAnimation('idle'); 
     });
+  },
+
+  setActiveCharacter: function(color) {
+    var max = -1;
+    var index = -1;
+    for(var i = 0; i < this.characters.length; i++) {
+      if(this.characters[i].manaScores[color] > max) {
+        max = this.characters[i].manaScores[color]; 
+        index = i; 
+      }
+    }
+    
+    this.activeCharacter = index;
+    this.charSwitched = true;
   }
 });
 
