@@ -15,8 +15,12 @@ var router = require('./routes/index');
 var socket = require('./routes/socket');
 
 var app = koa();
+app.use(bodyParser({
+  detectJSON: function (ctx) {
+    return /\.json$/i.test(ctx.path);
+  }
+}));
 
-app.use(bodyParser());
 app.use(views('views', {
   default: 'jade'
 }));
@@ -30,16 +34,21 @@ mongoose.connect(dbConfig.url);
 
 //require passport module
 app.keys = ['secrets'];
+debugger;
 app.use(session({
-  store: mongooseSession.create()
+  store: mongooseSession.create({
+    mongoose: mongoose.connection 
+  })
 }));
+
 require('./passport/auth');
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(router(app));
 
+
 var server = http.createServer(app.callback());
 var io = socketIo(server);
-socket(io);
+socket(io, app, this);
 server.listen(process.env.PORT || 3000);
 console.log('server listening on port 3000');

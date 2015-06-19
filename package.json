@@ -40,6 +40,7 @@
     "koa-router": "^5.1.2",
     "koa-session": "^3.2.0",
     "koa-session-mongoose": "^0.5.1",
+    "koa-session-store": "^1.1.1",
     "koa-static": "^1.4.9",
     "koa-views": "^3.0.0",
     "mongoose": "^4.0.5",
