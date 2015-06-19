@@ -3,8 +3,6 @@ var User = require('../models/user');
 var theGame = require('../app_modules/theGame');
 var r = require('../db'); //set up db connection here
 function socket (io) {
-  io.on('connection', function(socket){
-    
     var nspLobby = io.of('/lobby');
     var games = {};
     nspLobby.on('connection', function(socket){
@@ -54,9 +52,7 @@ function socket (io) {
           });
         }
       });
-
     });	
-  });
 }
 
 module.exports = socket;

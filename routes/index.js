@@ -41,8 +41,8 @@ function gen(app){
 	}));
 
 	router.get('/logout', function *(next) {
-		request.logout();
-		response.redirect('/');
+		this.logout();
+		this.redirect('/');
 	});
 
 	router.get('/game', isAuthenticated, function *(next) {

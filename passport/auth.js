@@ -8,7 +8,9 @@ passport.serializeUser(function(user, done) {
 })
 
 passport.deserializeUser(function(id, done) {
-  done(null, user);
+  User.findById(id, function(err, user) {
+    done(null, user);
+  })
 })
 
 var LocalStrategy = require('passport-local').Strategy
