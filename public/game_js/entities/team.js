@@ -18,7 +18,7 @@ game.Team = me.Container.extend({
     var rightSide;
     var x;
 
-    if(this.playerNum == 2) {
+    if(this.playerNum == 1) {
       rightSide = true;
       x = 0;
     } else {
@@ -31,6 +31,18 @@ game.Team = me.Container.extend({
       this.characters.push(tempChar);
       this.addChild(tempChar);
     }
+  },
+
+  setTeamActive: function() {
+    this.characters.forEach(function(character) {
+      character.renderable.setCurrentAnimation('walk');
+    });
+  },
+
+  setTeamInactive: function() {
+    this.characters.forEach(function(character) {
+      character.renderable.setCurrentAnimation('idle'); 
+    });
   }
 });
 

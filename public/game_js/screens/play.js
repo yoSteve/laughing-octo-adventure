@@ -37,7 +37,9 @@ game.PlayScreen = me.ScreenObject.extend({
         { name: 'Kervin', charClass: game.charClasses.BlackMage }
       ] };
 
-      me.game.world.addChild(new game.Team(team1Object));
+      this.team1 = new game.Team(team1Object);
+      this.team1.setTeamActive();
+      me.game.world.addChild(this.team1);
 
       var team2Object = { teamName: 'Derpyderp', playerNum: 2, characters: [ 
         { name: 'Benji', charClass: game.charClasses.WhiteMage },
@@ -46,20 +48,9 @@ game.PlayScreen = me.ScreenObject.extend({
         { name: 'Vance', charClass: game.charClasses.BlackBelt }
       ] };
 
-      me.game.world.addChild(new game.Team(team2Object));
-
-      /*
-      this.character = new game.Character(0, me.game.viewport.height / 4, 'Ted', game.charClasses.Fighter, true);
-      me.game.world.addChild(this.character);
-      me.game.world.addChild(new game.CharName(this.character));
-      me.game.world.addChild(new game.CharHealth(this.character));
-      this.character.renderable.setCurrentAnimation('walk');
-
-      this.character2 = new game.Character(1200, me.game.viewport.height / 4, 'Bill', game.charClasses.BlackBelt, false);
-      me.game.world.addChild(this.character2);
-      me.game.world.addChild(new game.CharName(this.character2));
-      me.game.world.addChild(new game.CharHealth(this.character2));
-      */
+      this.team2 = new game.Team(team2Object);
+      this.team2.setTeamInactive();
+      me.game.world.addChild(this.team2);
     },
 
     onDestroyEvent: function() {
@@ -69,8 +60,13 @@ game.PlayScreen = me.ScreenObject.extend({
     switchTurn: function() {
       if(this.currentPlayer == 1) {
         this.currentPlayer = 2;
+        this.team2.setTeamActive();
+        this.team1.setTeamInactive();
+
       } else {
         this.currentPlayer = 1;
+        this.team1.setTeamActive();
+        this.team2.setTeamInactive();
       }
     }
 });
