@@ -15,15 +15,15 @@ game.Team = me.Container.extend({
     this.teamName = object.teamName;
     this.playerNum = object.playerNum;
 
-    var leftSide;
+    var rightSide;
     var x;
 
-    if(playerNum = 2) {
+    if(this.playerNum == 2) {
       rightSide = true;
       x = 0;
     } else {
       rightSide = false;   
-      x = me.game.viewport.width - 40;
+      x = me.game.viewport.width - 65;
     }
 
     for(var i = 0; i < game.Team.MAX; i++) {

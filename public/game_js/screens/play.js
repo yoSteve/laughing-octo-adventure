@@ -39,6 +39,15 @@ game.PlayScreen = me.ScreenObject.extend({
 
       me.game.world.addChild(new game.Team(team1Object));
 
+      var team2Object = { teamName: 'Derpyderp', playerNum: 2, characters: [ 
+        { name: 'Benji', charClass: game.charClasses.WhiteMage },
+        { name: 'Shames', charClass: game.charClasses.Fighter },
+        { name: 'Brody', charClass: game.charClasses.Thief },
+        { name: 'Vance', charClass: game.charClasses.BlackBelt }
+      ] };
+
+      me.game.world.addChild(new game.Team(team2Object));
+
       /*
       this.character = new game.Character(0, me.game.viewport.height / 4, 'Ted', game.charClasses.Fighter, true);
       me.game.world.addChild(this.character);
