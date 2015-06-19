@@ -18,15 +18,6 @@ game.PlayScreen = me.ScreenObject.extend({
         [2, 3, 4, 5, 0, 1, 2, 3]
       ]
 
-      /*
-      tiles = [
-        [0, 1, 2, 3],
-        [4, 5, 0, 1],
-        [2, 3, 4, 5],
-        [0, 1, 2, 3]
-      ]
-      */
-
       me.input.bindKey(me.input.KEY.X, 'clear', true);
       me.input.bindKey(me.input.KEY.C, 'appear', true);
       me.input.bindKey(me.input.KEY.F1, 'setPlayer1', true);
@@ -35,6 +26,13 @@ game.PlayScreen = me.ScreenObject.extend({
       this.grid = new game.Grid(8, 8);  
       this.grid.populate(tiles);
       me.game.world.addChild(this.grid, 1);
+
+      me.game.world.addChild(new game.TurnUI());
+
+      this.character = new game.Character(0, 0, 'Ted', game.charClasses.Fighter, true);
+      me.game.world.addChild(this.character);
+
+      me.game.world.addChild(new game.CharName());
     },
 
     onDestroyEvent: function() {
