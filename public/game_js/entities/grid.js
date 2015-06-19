@@ -12,12 +12,10 @@ game.Grid = me.Container.extend({
 
     if(me.input.isKeyPressed('setPlayer1')) {
       game.data.player = 1;
-      console.log(game.data.player);
     }
 
     if(me.input.isKeyPressed('setPlayer2')) {
       game.data.player = 2;
-      console.log(game.data.player);
     }
 
     if(me.input.isKeyPressed('clear')) {
@@ -144,7 +142,6 @@ game.Grid = me.Container.extend({
     if(object.pattern == 'row') {
       var row = this.getRow(object.end.row);      
       for(var i = object.end.col, j = object.colors.length - 1; i > object.end.col - object.count; i--, j--) {
-        console.log(object.colors[j]);
         row[i].setCrystal(object.colors[j]);
         row[i].appearCrystal();
       }
@@ -165,7 +162,7 @@ game.Grid = me.Container.extend({
       col = this.getCol(i);
       for(var j = 1; j < this.ROWS; j++) {
         //swap upwards if empty
-        if(!col[j].alive) {
+        if(!col[j].alive && col[j-1].alive) {
           col[j].setCrystal(col[j-1].type);
           col[j].alive = true;
           col[j-1].setCrystal(6);

@@ -7,6 +7,7 @@ game.Character = me.Entity.extend({
     
     this._super(me.Entity, 'init', [x, y, settings]);
 
+    this.startPos = { x: x, y: y};
     this.flipped = flipped;
     this.renderable.flipX(this.flipped);
 
@@ -88,5 +89,17 @@ game.Character = me.Entity.extend({
         this.setAnimations(2);
         break;
     }
+  },
+
+  setActive: function() {
+    if(this.flipped) {
+      this.pos.x = this.startPos.x + 60;
+    } else {
+      this.pos.x = this.startPos.x - 60;
+    }
+  },
+
+  setInactive: function() {
+    this.pos.x = this.startPos.x;
   }
 });

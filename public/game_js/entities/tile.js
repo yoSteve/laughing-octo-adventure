@@ -29,20 +29,24 @@ game.Tile = me.DraggableEntity.extend({
         if(this.oldPos.x - this.mousePos.x > 10) {
           this.moveHorizontal(false);
           game.playScreen.switchTurn();
+          return true;
         //if moved right
         } else if(this.mousePos.x - this.oldPos.x > 10) {
           this.moveHorizontal(true);
           game.playScreen.switchTurn();
+          return true;
         }
 
         //if moved up 
         if(this.oldPos.y - this.mousePos.y > 10) {
           this.moveVertical(false);
           game.playScreen.switchTurn();
+          return true;
         //if moved down
         } else if(this.mousePos.y - this.oldPos.y > 10) {
           this.moveVertical(true);
           game.playScreen.switchTurn();
+          return true;
         }
       }
     }
@@ -55,6 +59,7 @@ game.Tile = me.DraggableEntity.extend({
     this._super(me.DraggableEntity, 'dragStart', [event]);
     this.oldPos = this.mousePos.clone();
     this.grabbed = true;
+    console.log('col: ' + this.col + ', row: ' + this.row + ', alive: ' + this.alive + ', type: ' + this.type);
   },
 
   dragEnd: function(event) {
@@ -83,9 +88,11 @@ game.Tile = me.DraggableEntity.extend({
   },
 
   appearCrystal: function() {
+    var tile = this;
     this.renderable.setCurrentAnimation('appear', function() {
+      tile.renderable.setCurrentAnimation('idle');
+      tile.alive = true;
       return false;
-      this.renderable.setCurrentAnimation('idle');
     });
   },
 

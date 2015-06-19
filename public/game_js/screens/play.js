@@ -23,6 +23,7 @@ game.PlayScreen = me.ScreenObject.extend({
       me.input.bindKey(me.input.KEY.F1, 'setPlayer1', true);
       me.input.bindKey(me.input.KEY.F2, 'setPlayer2', true);
       me.input.bindKey(me.input.KEY.V, 'hurtChar', true);
+      me.input.bindKey(me.input.KEY.B, 'blueMatch', true);
 
       this.grid = new game.Grid(8, 8);  
       this.grid.populate(tiles);

@@ -9,21 +9,17 @@ game.Team = me.Container.extend({
 
     this.buildFromObject(object);
 
-    this.activeCharacter = 0;
-    this.charSwitched = true;
+    this.activeCharacter = this.characters[0];
+    this.activeCharacter.setActive();
   },
 
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(this.charSwitched) {
-      var character = this.characters[this.activeCharacter];
-      if(this.playerNum == 1) {
-        character.pos.x += 40;
-      } else {
-        character.pos.x -= 40;
+    if(me.input.isKeyPressed('blueMatch')) {
+      if(this.playerNum == game.playScreen.currentPlayer) {
+        this.setActiveCharacter('blue');
       }
-      this.charSwitched = false;
     }
 
     return true;
@@ -74,8 +70,9 @@ game.Team = me.Container.extend({
       }
     }
     
-    this.activeCharacter = index;
-    this.charSwitched = true;
+    this.activeCharacter.setInactive();
+    this.activeCharacter = this.characters[index];
+    this.activeCharacter.setActive();
   }
 });
 

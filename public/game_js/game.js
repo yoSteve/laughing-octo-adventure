@@ -46,7 +46,7 @@ var game = {
   },
 
   sendMessage: function(command, object) {
-    console.log(command); 
-    console.log(object);
+//    console.log(command); 
+ //   console.log(object);
   }
 };
