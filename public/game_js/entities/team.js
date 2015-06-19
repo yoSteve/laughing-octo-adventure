@@ -1,19 +1,35 @@
 game.Team = me.Container.extend({
-  init: function(x, y, w, h) {
+  init: function(object) {
     var settings = {};
     
-    this._super(me.Container, 'init', [x, y, w, h, settings]);
+    this.teamName;
+    this.playerNum;
+    this.characters = [];
+    this._super(me.Container, 'init', [0, 0, 0, 0, settings]);
+
+    this.buildFromObject(object);
   },
 
-  createTeam: function(leftSide) {
-    if(leftSide) {
-      for(var i = 0; i < game.Team.MAX; i++) {
-        this.addChild(me.pool.pull('character', 10, me.game.viewport.height / 5 * i + 100, leftSide));
-      }
+  buildFromObject: function(object) {
+    // { teamName: string, playerNum: int, characters: [ { name: string, charClass: charClass }, * 4 ] }
+    this.teamName = object.teamName;
+    this.playerNum = object.playerNum;
+
+    var leftSide;
+    var x;
+
+    if(playerNum = 2) {
+      rightSide = true;
+      x = 0;
     } else {
-      for(var i = 0; i < game.Team.MAX; i++) {
-        this.addChild(me.pool.pull('character', me.game.viewport.width - 74, me.game.viewport.height / 5 * i + 100, leftSide));
-      }
+      rightSide = false;   
+      x = me.game.viewport.width - 40;
+    }
+
+    for(var i = 0; i < game.Team.MAX; i++) {
+      var tempChar = new game.Character(x, me.game.viewport.height / 4 + (i * 100), object.characters[i].name, object.characters[i].charClass, rightSide);
+      this.characters.push(tempChar);
+      this.addChild(tempChar);
     }
   }
 });

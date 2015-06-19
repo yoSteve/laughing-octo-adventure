@@ -30,6 +30,16 @@ game.PlayScreen = me.ScreenObject.extend({
 
       me.game.world.addChild(new game.TurnUI());
 
+      var team1Object = { teamName: 'Squatpump', playerNum: 1, characters: [ 
+        { name: 'Stinky Pete', charClass: game.charClasses.Fighter },
+        { name: 'Shteven', charClass: game.charClasses.RedMage },
+        { name: 'Wheel', charClass: game.charClasses.Thief },
+        { name: 'Kervin', charClass: game.charClasses.BlackMage }
+      ] };
+
+      me.game.world.addChild(new game.Team(team1Object));
+
+      /*
       this.character = new game.Character(0, me.game.viewport.height / 4, 'Ted', game.charClasses.Fighter, true);
       me.game.world.addChild(this.character);
       me.game.world.addChild(new game.CharName(this.character));
@@ -40,6 +50,7 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.character2);
       me.game.world.addChild(new game.CharName(this.character2));
       me.game.world.addChild(new game.CharHealth(this.character2));
+      */
     },
 
     onDestroyEvent: function() {
@@ -49,12 +60,8 @@ game.PlayScreen = me.ScreenObject.extend({
     switchTurn: function() {
       if(this.currentPlayer == 1) {
         this.currentPlayer = 2;
-        this.character.renderable.setCurrentAnimation('idle');
-        this.character2.renderable.setCurrentAnimation('walk');
       } else {
         this.currentPlayer = 1;
-        this.character.renderable.setCurrentAnimation('walk');
-        this.character2.renderable.setCurrentAnimation('idle');
       }
     }
 });
