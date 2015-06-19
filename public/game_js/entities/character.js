@@ -7,7 +7,8 @@ game.Character = me.Entity.extend({
     
     this._super(me.Entity, 'init', [x, y, settings]);
 
-    this.renderable.flipX(flipped);
+    this.flipped = flipped;
+    this.renderable.flipX(this.flipped);
 
     this.name = name;
     this.health;
@@ -21,6 +22,18 @@ game.Character = me.Entity.extend({
 
   update: function(dt) {
     this._super(me.Entity, 'update', [dt]);
+
+    if(this.health > 0 && me.input.isKeyPressed('hurtChar')) {
+      this.health -= 100;
+    }
+
+    if(this.health <= 100) {
+      this.renderable.setCurrentAnimation('wounded');
+    }
+
+    if(this.health <= 0) {
+      this.renderable.setCurrentAnimation('dead');
+    }
 
     this.body.update();
 
