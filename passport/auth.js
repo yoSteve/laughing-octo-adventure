@@ -1,5 +1,7 @@
 var passport = require('koa-passport');
 var secrets = require('../secrets');
+var User = require('../models/user');
+var bCrypt = require('bcrypt-node');
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -12,13 +14,9 @@ passport.deserializeUser(function(id, done) {
 var LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
   //retrieve user
-  findOrCreateUser(username, password, false);
-  if(username === user.username && password === 'test') {
-    done(null, user)
-  } else {
-    done(null, false)
+  findOrCreateUser(username, password, false, done);
   }
-}))
+))
 
 var GoogleStrategy = require('passport-google-auth').Strategy
 passport.use(new GoogleStrategy({
@@ -28,12 +26,12 @@ passport.use(new GoogleStrategy({
   },
   function(token, tokenSecret, profile, done) {
   //retrieve user
-  findOrCreateUser(profile.displayName, profile.id, true);
+  findOrCreateUser(profile.displayName, profile.id, true, done);
   }
 ))
 
 
-var findOrCreateUser = function(username, password, oauth){
+var findOrCreateUser = function(username, password, oauth, done){
   User.findOne({ 'username': username }, function(err, user){
     if (err) {
       console.error(('Error in signup : ' + err));
@@ -43,7 +41,7 @@ var findOrCreateUser = function(username, password, oauth){
     if (user) {
 				if(!isValidPassword(user, password)) {
 					console.log('Invalid Password');
-					return done(null, false, req.flash('message', "login error: username and password do not match)"));
+					return done(null, false)
 				}
 				return done(null, user);
     } else {
@@ -54,7 +52,6 @@ var findOrCreateUser = function(username, password, oauth){
         newUser.password = createHash(password);
       else
         newUser.password = password
-      newUser.email = req.param('email');
 
       //save user
       newUser.save(function(err) {

@@ -1,91 +1,46 @@
 var koa = require('koa');
-
-var app = koa();
+var path = require('path');
 var logger = require('koa-logger');
 var serve = require('koa-static');
 var bodyParser = require('koa-bodyparser');
-var jade = require('koa-jade');
+var views = require('koa-views');
 var session = require('koa-session');
-
-
-//set up jade need to move to end (load processsss)
-app.use(jade.middleware({
-  viewPath: __dirname + '/views',
-  debug: false,
-  pretty: false,
-  compileDebug: false,
-  noCache: process.env === 'development'
-}));
-//set up mondoose
+var passport = require('koa-passport');
+var http = require('http');
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
-mongoose.connect(dbConfig.url);
+var socketIo  = require('socket.io');
+var router = require('./routes/index');
+var socket = require('./routes/socket');
 
-//require passport module
-//parsers
-app.use(logger('dev'));
+var app = koa();
+var server = http.Server(app.callback());
+
+app.use(views('views', {
+  default: 'jade'
+}));
+
+app.use(serve(__dirname + '/public'));
+var io = socketIo(server);
+socket(io);
+//set up jade need to move to end (load processsss)
+
+app.use(logger());
 app.use(bodyParser({
   detectJSON: function (ctx) {
     return /\.json$/i.test(ctx.path);
   }
 }));
-require('./passport/auth');
-var passport = require('koa-passport');
+//set up mondoose
+mongoose.connect(dbConfig.url);
+
+//require passport module
 app.keys = ['secrets'];
 app.use(session(app));
-//init passport
+require('./passport/auth');
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(router(app));
 
-app.use(function *(){
-  app.body = this.request.body;
-});
-//for loading local files in public
-app.use(serve('.'));
-app.use(serve(__dirname + '/public'));
-app.use(serve(__dirname + '/views'));
-
-// connect-flash used for flashing messages
-//var flash = require('connect-flash');
-//app.use(flash());
-
-
-//set upu routes with socket
-var server = require('http').Server(app.callback()); 
-var io  = require('socket.io')(server);
-
-//io.use(function(socket, next) {
-//		sessionMiddleware(socket.request, {}, next);
-//});
-var router = require('./routes/index')(passport, io);
-app.use(router.routes()).use(router.allowedMethods());
-//404
-//app.use(function*(next)){
-//	res.type('text/plain')
-//	res.status(404);
-//	res.send('404 - you require more vespane gas');
-//})
-
-//500
-//app.use(function(err,req,res,next){
-//	console.error(err.stack);
-//	res.type('text/plain');
-//	res.status(500);
-//	res.send('500 - we require more vespane gas');
-//})
-
-//dev error post
-//if (app.get('env') === 'development'){
-//	app.use(function(err, req, res, next) {
-//		res.status(err.status || 500);
-//		res.render('error', {
-//			message: err.message,
-//			error: err
-//		});
-//	});
-//}
-
-server.listen(3000, function() {
-  console.log('server listening on port 3000');
-});
-module.exports = app;
+app.listen(process.env.PORT || 3000);
+console.log('server listening on port 3000');
