@@ -8,12 +8,25 @@ var isAuthenticated = function(req, res, next) {
 	//lets through to their request
 	//else redirects to login (home)
 	if(req.isAuthenticated())
-		return next();
+    return next();
 	res.redirect('/');
 }
 
 module.exports = function(passport, io){
 	router.get('/', function(req, res) {
+    console.log(req.user, "ashdflakjdshfluaihsdlisuhdflahhhhhhaa");
+    //redirects logged in users to the lobby, i
+    //but assigns the new socket to the useri
+    // socket id, may run into problems if 
+    // user has multiple windows or if the user
+    // disconnects and reconnects, maybe store
+    // current game in array and on connect have
+    // the user join the current game,  would then
+    // have to make user the game is active, or have
+    // the user select from a list of active games 
+    // if we want them to be able to be playing multiple games at once.
+    if(req.user)
+      res.redirect('lobby');
 		res.render('index', {message: req.flash('message')});
 	});
 
@@ -50,7 +63,7 @@ module.exports = function(passport, io){
 		});
 	});
 	
-	router.get('/engine/index', isAuthenticated, function(req, res) {
+	router.get('/game', isAuthenticated, function(req, res) {
 		res.render('game', {user: req.user });
 	});
 
@@ -58,47 +71,56 @@ module.exports = function(passport, io){
 		res.render('game_canvas');
 	});
 
-	//////socket work//////
-  var nspGame = io.of('/game');
-	nspGame.on('connection', function(socket) {
-		if (socket.request.session.passport){
-			 User.findById(socket.request.session.passport.user, function(err, currentUser) {
-			console.log("your in the game", currentUser.username);
-			});
-		}
-
-		socket.on('disconnect', function() {
-			console.log('someone left the game');
-		});
-		//start game board
-		socket.on('start-game', function(err) {
-  		var res = theGame.setUp();
-			socket.emit('game-board', res);
-		});
-
-		socket.on('move', function(data){
-			initialPos = data[0]['value'];
-			finalPos = data[1]['value'];      
-      var res = theGame.move(initialPos, finalPos);
-			socket.emit('return-move', res);
-		});
-	});
-
+//socket work using lobby namespace
 	var nspLobby = io.of('/lobby');
+  var games = {};
 	nspLobby.on('connection', function(socket){
+    console.log(games);
 		if (socket.request.session.passport){
 			User.findById(socket.request.session.passport.user, function(err, currentUser){
-				console.log(currentUser.username, " is in the lobby");
+        if(currentUser) {
+          currentUser.socketId = socket.id;
+          currentUser.waiting = false;
+          currentUser.save();
+          User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
+            if(user) {
+              console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
+              var gameId = theGame.createGameId(currentUser._id, user._id);
+              var game = new theGame.Game(nspLobby, gameId, currentUser, user);
+              socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
+              socket.join(game.gameId);
+              user.waiting = false;
+              user.save();
+              games[gameId] = game;
+            } else {
+            currentUser.waiting = true;
+            }
+            currentUser.save();
+          });
+          console.log(currentUser.username, " is in the lobby");
+        }
 			});
 		}
+    // joining the game lobby, initialized of game with user ids (inprogress)
+    socket.on('start-game', function(data){
+        console.log(data['gameId'], " XXXXX NEED TO NKNOW OIEUHFDLS");
+        socket.join(data['gameId']);
+        console.log('logging data passed back ' + games);
+        games[data['gameId']].refreshBoard();
+    });
 
 		socket.on('disconnect', function() {
-			console.log('someone left the lobby');
+      console.log('someone left the lobby');
+      if(socket.request.session.passport){
+        User.findById(socket.request.session.passport.user, function(err, currentUser){
+          if(currentUser) {
+            currentUser.waiting = false;
+            currentUser.save();
+          }
+        });
+      }
 		});
 
-		socket.on('starting-game', function(err, data){
-			console.log('starting game');
-		});
 	});	
 	return router;
 }

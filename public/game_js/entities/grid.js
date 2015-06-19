@@ -1,110 +1,152 @@
 game.Grid = me.Container.extend({
-  init: function() {
-    this.COLS = 8;
-    this.ROWS = 8; 
-    this.board = []; 
+  init: function(cols, rows) {
+    this.COLS = cols;
+    this.ROWS = rows;
+    this.board = [];
+    this.hasEmpties = false;
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
-  createTiles: function() {
-    for(var i = 0; i < this.COLS; i++) {
+  update: function(dt) {
+    this._super(me.Container, 'update', [dt]);
+
+    if(me.input.isKeyPressed('clear')) {
+      this.clearTiles({ pattern: 'row', end: { col: 3, row: 3 }, count: 3 });
+    }
+
+    if(this.hasEmpties) {
+      this.shiftEmpties();
+    }
+
+    return true;
+  },
+
+  populate: function(tiles) {
+    for(var col = 0; col < this.COLS; col++) {
       this.board.push([]);
-      for(var j = 0; j < this.ROWS; j++) {
-        var tile = me.pool.pull('tile', i * game.Tile.width, j * game.Tile.height, i, j, this);
-        this.board[i].push(tile);
+      for(var row = 0; row < this.ROWS; row++) {
+        var tile = me.pool.pull('tile', col * game.Tile.width, row * game.Tile.height, tiles[col][row], col, row);
+        this.board[col].push(tile);
         this.addChild(tile);
       }
     }
   },
 
-  shiftLeft: function(row) {
+  getCol: function(col) {
+    return this.board[col]; 
+  },
+
+  getRow: function(row) {
     var tempArray = [];
-    for(var i = 0; i < this.COLS; i++) {
-       tempArray.push(this.board[i][row]); 
+    for(var col = 0; col < this.COLS; col++) {
+      tempArray.push(this.board[col][row]);
     }
-
-    tempArray.push(tempArray.shift());
-
-    for(var i = 0; i < this.COLS; i++) {
-      tempArray[i].pos.x = i * game.Tile.width;
-
-      if(tempArray[i].col == 0) {
-        tempArray[i].col = this.COLS - 1;
-      } else {
-        tempArray[i].col--; 
-      }
-      
-      this.board[i][row] = tempArray[i];
-    }
+    return tempArray;
   },
 
-  shiftRight: function(row) {
-    var tempArray = [];
+  shiftRow(rowIndex, right) {
+    var row = this.getRow(rowIndex);
+
+    if(right) {
+      //shift right
+      row.unshift(row.pop());
+      row.forEach(function(cell) {
+        if(cell.col == row.length - 1) {
+          cell.col = 0;
+        } else {
+          cell.col++;
+        }
+        cell.pos.x = cell.col * game.Tile.width;
+      });
+    } else {
+      //shift left
+      row.push(row.shift());
+      row.forEach(function(cell) {
+        if(cell.col == 0) {
+          cell.col = row.length - 1;
+        } else {
+          cell.col--;
+        }
+        cell.pos.x = cell.col * game.Tile.width;
+      });
+    }
+
     for(var i = 0; i < this.COLS; i++) {
-       tempArray.push(this.board[i][row]); 
+      this.board[i][rowIndex] = row[i];
     }
 
-    tempArray.unshift(tempArray.pop());
+    this.sendMessage({ row: rowIndex, movedRight: right });
+  },
 
+  shiftCol(colIndex, down) {
+    var col = this.getCol(colIndex);
+
+    if(down) {
+      //shift down
+      col.unshift(col.pop());
+      col.forEach(function(cell) {
+        if(cell.row == col.length - 1) {
+          cell.row = 0;
+        } else {
+          cell.row++;
+        }
+        cell.pos.y = cell.row * game.Tile.height;
+      });
+    } else {
+      //shift up 
+      col.push(col.shift());
+      col.forEach(function(cell) {
+        if(cell.row == 0) {
+          cell.row = col.length - 1;
+        } else {
+          cell.row--; 
+        }
+        cell.pos.y = cell.row * game.Tile.height;
+      });
+    }
+
+    this.board[colIndex] = col;
+
+    this.sendMessage({ col: colIndex, movedDown: down });
+  },
+
+  sendMessage: function(object) {
+    console.log(object);
+  },
+
+  clearTiles: function(object) {
+    // { pattern: row/column, end: { col: col, row: row }, count: > 3 }
+    if(object.pattern == 'row') {
+      var row = this.getRow(object.end.row);
+      for(var i = object.end.col; i > object.end.col - object.count; i--) {
+        row[i].setCrystal(6);
+      }
+    } else {
+      var col = this.getCol(object.end.col);
+      for(var i = object.end.row; i > object.end.row - object.count; i--) {
+        col[i].setCrystal(6);
+      }
+    }
+    this.hasEmpties = true;
+  },
+
+  shiftEmpties: function() {
+    var col;
+    var temp;
+    var swapped = false;
     for(var i = 0; i < this.COLS; i++) {
-      tempArray[i].pos.x = i * game.Tile.width;
-
-      if(tempArray[i].col == this.COLS - 1) {
-        tempArray[i].col = 0;
-      } else {
-        tempArray[i].col++; 
-      }
-      
-      this.board[i][row] = tempArray[i];
-    }
-  },
-
-  shiftUp: function(col) {
-    this.board[col].push(this.board[col].shift());
-
-    for(var i = 0; i < this.ROWS; i++) {
-
-      if(this.board[col][i].row == 0) {
-        this.board[col][i].row = this.ROWS - 1;
-      } else {
-        this.board[col][i].row--;
-      }
-
-      this.board[col][i].pos.y = i * game.Tile.height;
-    }
-  },
-
-  shiftDown: function(col) {
-    this.board[col].unshift(this.board[col].pop());
-
-    for(var i = 0; i < this.ROWS; i++) {
-
-      if(this.board[col][i].row == this.ROWS - 1) {
-        this.board[col][i].row = 0;
-      } else {
-        this.board[col][i].row++;
-      }
-
-      this.board[col][i].pos.y = i * game.Tile.height;
-    }
-  },
-
-  getMatches: function() {
-    var cell;
-    for(var col = 2; col < this.COLS; col++) {
-      for(var row = 0; row < this.ROWS; row++) {
-        cell = this.board[col][row]; 
-        if(cell.type == this.board[col-1][row].type &&
-            cell.type == this.board[col-2][row].type) {
-          console.log('match at ' + col + ':' + row);
+      col = this.getCol(i);
+      for(var j = 1; j < this.ROWS; j++) {
+        //swap upwards if empty
+        if(col[j].type == 6) {
+          temp = col[j-1].type; 
+          col[j-1].setCrystal(col[j].type);
+          col[j].setCrystal(temp);
+          swapped = true;
         }
       }
     }
-  },
 
-  update: function(dt) {
-    this._super(me.Container, 'update', [dt]);
-    
-    return true;
+    this.hasEmpties = swapped;
   }
 });

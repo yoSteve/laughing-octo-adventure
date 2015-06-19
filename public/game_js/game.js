@@ -3,13 +3,12 @@ var game = {
 
     // an object where to store game information
     data : {
-        // score
         score : 0
     },
 
 
     // Run on page load.
-    "onload" : function () {
+    onload: function () {
     // Initialize the video.
     if (!me.video.init(1280, 720, {wrapper : "screen", scale : "auto"})) {
         alert("Your browser does not support HTML5 canvas.");
@@ -35,18 +34,16 @@ var game = {
     // Initialize melonJS and display a loading screen.
     me.state.change(me.state.LOADING);
 
+    // disable gravity
     me.sys.gravity = 0;
 },
 
     // Run on game resources loaded.
-    "loaded" : function () {
-        me.state.set(me.state.MENU, new game.TitleScreen());
-        me.state.set(me.state.PLAY, new game.PlayScreen());
+    loaded: function () {
+        this.playScreen = new game.PlayScreen();
+        me.state.set(me.state.PLAY, this.playScreen);
 
-        me.pool.register('tile', game.Tile);
-        me.pool.register('grid', game.Grid);
-        me.pool.register('tile group', game.TileGroup);
-        me.pool.register('character', game.Character);
+        me.pool.register('tile', game.Tile, true);
 
         // Start the game.
         me.state.change(me.state.PLAY);

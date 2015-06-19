@@ -1,6 +1,4 @@
 extends ./layout.jade
-block header
-  script(type='text/javascript' src='sockets/gameSocket.js')
 block content
   h1 Welcome #{user.username}
   p your email is #{user.email}
@@ -8,7 +6,7 @@ block content
   a(href='/logout') Logout
   button(id='start') start
 
-#game-board
+  #game-board
     span Enemy
     span#enemy-hp
     br

@@ -1,52 +1,40 @@
 game.PlayScreen = me.ScreenObject.extend({
-    /**
-     *  action to perform on state change
-     */
+    init: function() {
+      this.grid;
+      this.player1Turn = true;
+    }, 
+
     onResetEvent: function() {
-        // reset the score
-        game.data.score = 0;
+      me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
-        // change bg
-        //me.game.world.addChild(new me.ColorLayer('background', '#333333'), 0);
-        me.game.world.addChild(new me.ImageLayer(0, 0, { image: 'background2' }, 0)); 
+      tiles = [
+        [0, 1, 2, 3, 4, 5, 0, 1], 
+        [4, 5, 0, 1, 2, 3, 4, 5], 
+        [2, 3, 4, 5, 0, 1, 2, 3],
+        [0, 1, 2, 3, 4, 5, 0, 1],
+        [2, 3, 4, 5, 0, 1, 2, 3],
+        [4, 5, 0, 1, 2, 3, 4, 5],
+        [0, 1, 2, 3, 4, 5, 0, 1],
+        [2, 3, 4, 5, 0, 1, 2, 3]
+      ]
 
-        // add our HUD to the game world
-        this.HUD = new game.HUD.Container();
-        me.game.world.addChild(this.HUD);
+      /*
+      tiles = [
+        [0, 1, 2, 3],
+        [4, 5, 0, 1],
+        [2, 3, 4, 5],
+        [0, 1, 2, 3]
+      ]
+      */
 
-        // add a grid
-        this.grid = new game.Grid();
-        this.grid.createTiles();
-        me.game.world.addChild(this.grid, 2);
+      me.input.bindKey(me.input.KEY.X, 'clear', true);
 
-        // add teams
-        this.team1 = new game.Team(0, 0, 0, 0);
-        this.team1.createTeam(true);
-        me.game.world.addChild(this.team1, 3);
-
-        this.team2 = new game.Team(0, 0, 0, 0);
-        this.team2.createTeam(false);
-        me.game.world.addChild(this.team2, 3);
-
-        // add sprites
-        /*
-        me.game.world.addChild(me.pool.pull('character', 10, 100, true));
-        me.game.world.addChild(me.pool.pull('character', 10, 200, true));
-        me.game.world.addChild(me.pool.pull('character', 10, 300, true));
-        me.game.world.addChild(me.pool.pull('character', 10, 400, true));
-
-        me.game.world.addChild(me.pool.pull('character', 890, 100, false));
-        me.game.world.addChild(me.pool.pull('character', 890, 200, false));
-        me.game.world.addChild(me.pool.pull('character', 890, 300, false));
-        me.game.world.addChild(me.pool.pull('character', 890, 400, false));
-        */
+      this.grid = new game.Grid(8, 8);  
+      this.grid.populate(tiles);
+      me.game.world.addChild(this.grid, 1);
     },
 
-    /**
-     *  action to perform when leaving this screen (state change)
-     */
     onDestroyEvent: function() {
-        // remove the HUD from the game world
-        me.game.world.removeChild(this.HUD);
+      me.game.world.removeChild(this.grid); 
     }
 });
