@@ -20,6 +20,16 @@ game.resources = [
         "src": "data/img/characters.png"
     },
     {
+        "name": "CharSpritesDetailed",
+        "type": "image",
+        "src": "data/img/CharSpritesDetailed.png"
+    },
+    {
+        "name": "CharFightingSprites",
+        "type": "image",
+        "src": "data/img/CharFightingSprites.png"
+    },
+    {
         "name": "characters-lg",
         "type": "image",
         "src": "data/img/characters-lg.png"
