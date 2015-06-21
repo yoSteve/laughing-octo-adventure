@@ -50,13 +50,17 @@ game.Team = me.Container.extend({
 
   setTeamActive: function() {
     this.characters.forEach(function(character) {
-      character.renderable.setCurrentAnimation('walk');
+      if(character.health > 100) { 
+        character.renderable.setCurrentAnimation('walk');
+      }
     });
   },
 
   setTeamInactive: function() {
     this.characters.forEach(function(character) {
-      character.renderable.setCurrentAnimation('idle'); 
+      if(character.health > 100) {
+        character.renderable.setCurrentAnimation('idle'); 
+      }
     });
   },
 

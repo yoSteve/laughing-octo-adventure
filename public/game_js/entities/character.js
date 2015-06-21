@@ -27,16 +27,15 @@ game.Character = me.Entity.extend({
     this._super(me.Entity, 'update', [dt]);
 
     if(this.health > 0 && me.input.isKeyPressed('hurtChar')) {
-      this.renderable.
       this.health -= 100;
-    }
 
-    if(this.health <= 100) {
-      this.renderable.setCurrentAnimation('wounded');
-    }
+      if(this.health <= 100) {
+        this.renderable.setCurrentAnimation('wounded');
+      }
 
-    if(this.health <= 0) {
-      this.renderable.setCurrentAnimation('dead');
+      if(this.health <= 0) {
+        this.renderable.setCurrentAnimation('dead');
+      }
     }
 
     this.body.update();
@@ -112,5 +111,7 @@ game.Character = me.Entity.extend({
   createUI: function() {
     this.nameUI = new game.CharName(this);
     me.game.world.addChild(this.nameUI);
+    this.healthUI = new game.CharHealth(this);
+    me.game.world.addChild(this.healthUI);
   }
 });
