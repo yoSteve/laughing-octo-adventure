@@ -1,4 +1,5 @@
 var game = {
+
   data: {
   //set which player is connected
     player: 1
@@ -36,6 +37,8 @@ var game = {
 
   // Run on game resources loaded.
   loaded: function () {
+      
+      this.socket = io('http://localhost:3000/lobby');
       me.state.set(me.state.MENU, new game.TitleScreen());
 
       this.playScreen = new game.PlayScreen();
