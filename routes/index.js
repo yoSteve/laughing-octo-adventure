@@ -24,11 +24,13 @@ function gen(app){
 	router.get('/auth/google', passport.authenticate('google'));
 
 	router.get('/auth/google/response',
-		passport.authenticate('google', {
-      successRedirect: '/game_canvas',
-      failureRedirect: '/'
-    })
-  )
+      passport.authenticate('google', {
+        failureRedirect: '/'
+      }),
+      function *(next) {
+        this.redirect('/game_canvas');
+      }
+  );
 		//handle login
 	router.post('/login', passport.authenticate('local'), function* (next) {
     yield this.render('game_canvas');
@@ -46,10 +48,10 @@ function gen(app){
 	});
 
 	router.get('/game', isAuthenticated, function *(next) {
-		res.render('game', {user: req.user });
+		res.render('game', { user: req.user });
 	});
 
-	router.get('/game_canvas', isAuthenticated, function *(next) {
+	router.get('/game_canvas', function *(next) {
 		yield this.render('game_canvas');
 	});
 

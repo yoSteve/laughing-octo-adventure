@@ -41,10 +41,17 @@ var findOrCreateUser = function(username, password, oauth, done){
     }
 
     if (user) {
+      if(!oauth){
 				if(!isValidPassword(user, password)) {
 					console.log('Invalid Password');
-					return done(null, false)
+					return done(null, false);
 				}
+      } else {
+        if(!isValidToken(user, password)) {
+            console.log('Invalid Passowrd');
+            return done(null, false);
+        }
+      }
 				return done(null, user);
     } else {
       var newUser = new User();
@@ -76,4 +83,9 @@ var createHash = function(password){
 
 var isValidPassword = function(user, password){
   return bCrypt.compareSync(password, user.password);
+}
+
+var isValidToken = function(user, password){
+  console.log(password, user.password);
+  return (0 === user.password.localeCompare(password));
 }
