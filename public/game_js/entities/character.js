@@ -1,9 +1,9 @@
 game.Character = me.Entity.extend({
   init: function(x, y, name, charClass, flipped) {
     var settings = {};
-    settings.image = 'characters-lg';
-    settings.width = 64;
-    settings.height = 64;
+    settings.image = 'CharSpritesDetailed';
+    settings.width = 128;
+    settings.height = 128;
     
     this._super(me.Entity, 'init', [x, y, settings]);
 
@@ -25,6 +25,7 @@ game.Character = me.Entity.extend({
     this._super(me.Entity, 'update', [dt]);
 
     if(this.health > 0 && me.input.isKeyPressed('hurtChar')) {
+      this.renderable.
       this.health -= 100;
     }
 
@@ -42,11 +43,13 @@ game.Character = me.Entity.extend({
   },
 
   setAnimations: function(num) {
-    this.renderable.addAnimation('idle', [num * 6]);
-    this.renderable.addAnimation('walk', [num * 6 + 2, num * 6], 250);
-    this.renderable.addAnimation('attack', [num * 6 + 3]);
-    this.renderable.addAnimation('wounded', [num * 6 + 4]);
-    this.renderable.addAnimation('dead', [num * 6 + 5]);
+    this.renderable.addAnimation('idle', [num]);
+    this.renderable.addAnimation('walk', [num, num + 2, num, num + 4], 250);
+    this.renderable.addAnimation('attack', [num + 3]);
+    this.renderable.addAnimation('wounded', [num + 8]);
+    this.renderable.addAnimation('takeDamage', [num + 9]);
+    this.renderable.addAnimation('dead', [num + 10]);
+    this.renderable.addAnimation('whisper', [num + 5, num + 6]);
     this.renderable.setCurrentAnimation('idle');
   },
 
@@ -62,32 +65,33 @@ game.Character = me.Entity.extend({
         this.health = game.charClasses.Thief.health;
         this.manaScores = game.charClasses.Thief.manaScores;
         this.specials = game.charClasses.Thief.specials;
-        this.setAnimations(4);
+        this.setAnimations(11);
         break;
       case game.charClasses.BlackBelt:
         this.health = game.charClasses.BlackBelt.health;
         this.manaScores = game.charClasses.BlackBelt.manaScores;
         this.specials = game.charClasses.BlackBelt.specials;
-        this.setAnimations(5);
-        break;
-      case game.charClasses.BlackMage:
-        this.health = game.charClasses.BlackMage.health;
-        this.manaScores = game.charClasses.BlackMage.manaScores;
-        this.specials = game.charClasses.BlackMage.specials;
-        this.setAnimations(1);
-        break;
-      case game.charClasses.WhiteMage:
-        this.health = game.charClasses.WhiteMage.health;
-        this.manaScores = game.charClasses.WhiteMage.manaScores;
-        this.specials = game.charClasses.WhiteMage.specials;
-        this.setAnimations(3);
+        this.setAnimations(22);
         break;
       case game.charClasses.RedMage:
         this.health = game.charClasses.RedMage.health;
         this.manaScores = game.charClasses.RedMage.manaScores;
         this.specials = game.charClasses.RedMage.specials;
-        this.setAnimations(2);
+        this.setAnimations(33);
         break;
+      case game.charClasses.WhiteMage:
+        this.health = game.charClasses.WhiteMage.health;
+        this.manaScores = game.charClasses.WhiteMage.manaScores;
+        this.specials = game.charClasses.WhiteMage.specials;
+        this.setAnimations(44);
+        break;
+      case game.charClasses.BlackMage:
+        this.health = game.charClasses.BlackMage.health;
+        this.manaScores = game.charClasses.BlackMage.manaScores;
+        this.specials = game.charClasses.BlackMage.specials;
+        this.setAnimations(55);
+        break;
+     
     }
   },
 
