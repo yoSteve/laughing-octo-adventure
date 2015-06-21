@@ -4,6 +4,7 @@ var User = require('../models/user');
 var bCrypt = require('bcrypt-node');
 
 passport.serializeUser(function(user, done) {
+  console.log('serialized');
   console.log(user.id);
   done(null, user.id);
 })

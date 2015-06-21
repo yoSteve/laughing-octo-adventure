@@ -7,12 +7,16 @@ function socket (io, app, session) {
     var games = {};
     nspLobby.on('connection', function(socket){
       console.log(games);
+
       var cookies = socket.request.headers.cookie;
+      console.log(cookies);
       var regEx = /passport"\:\{"user"\:"(.+?)"\}/g
       var userIdMatches = regEx.exec(cookies);
+
       if(userIdMatches && userIdMatches.length > 1) {
         var userId = userIdMatches[1];
         if (userId){
+          console.log('user id found', userId);
           User.findById(userId, function(err, currentUser){
             if(currentUser) {
               currentUser.socketId = socket.id;
@@ -23,7 +27,10 @@ function socket (io, app, session) {
                   console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
                   var gameId = theGame.createGameId(currentUser._id, user._id);
                   var game = new theGame.Game(nspLobby, gameId, currentUser, user);
+                  //broadcast to the opponent (away)
                   socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
+                  //automatically joins the game room, when the opponent joins the game, he will automatically be taken to the 
+                  //game page on start game
                   socket.join(game.gameId);
                   user.waiting = false;
                   user.save();
@@ -44,6 +51,14 @@ function socket (io, app, session) {
           socket.join(data['gameId']);
           console.log('logging data passed back ' + games);
           games[data['gameId']].refreshBoard();
+          nspLobby(data['gameId'])
+
+      });
+
+      socket.on('move', function(data) {
+        //receives the move information
+        //emits matches to room,
+        //emits refreshed board (game state) to room 
       });
 
       socket.on('disconnect', function() {

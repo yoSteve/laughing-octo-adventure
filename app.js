@@ -34,12 +34,7 @@ mongoose.connect(dbConfig.url);
 
 //require passport module
 app.keys = ['secrets'];
-debugger;
-app.use(session({
-  store: mongooseSession.create({
-    mongoose: mongoose.connection 
-  })
-}));
+app.use(session());
 
 require('./passport/auth');
 app.use(passport.initialize());
