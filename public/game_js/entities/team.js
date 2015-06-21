@@ -38,7 +38,7 @@ game.Team = me.Container.extend({
       x = 0;
     } else {
       rightSide = false;   
-      x = me.game.viewport.width - 65;
+      x = me.game.viewport.width - 130;
     }
 
     for(var i = 0; i < game.Team.MAX; i++) {
