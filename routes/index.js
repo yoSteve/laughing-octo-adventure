@@ -1,4 +1,10 @@
-var isAuthenticated = function(){}
+var isAuthenticated = function *(next){
+  if(this.isAuthenticated()) {
+     yield next;
+  } else {
+    this.redirect('/');
+  }
+}
 var passport = require('koa-passport');
 
 function gen(app){
