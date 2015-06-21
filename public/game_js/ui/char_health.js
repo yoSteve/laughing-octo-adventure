@@ -11,10 +11,10 @@ game.CharHealth = me.Renderable.extend({
     this.y;
 
     if(this.character.flipped) {
-      this.x = this.character.pos.x + 200; 
+      this.x = this.character.pos.x + 350; 
       this.y = this.character.pos.y + 30;
     } else {
-      this.x = this.character.pos.x - 160;
+      this.x = this.character.pos.x - 250;
       this.y = this.character.pos.y + 30;
       this.font.textAlign = 'left';
     }
