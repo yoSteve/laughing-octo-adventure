@@ -12,6 +12,7 @@ game.Character = me.Entity.extend({
     this.renderable.flipX(this.flipped);
 
     this.name = name;
+    this.nameUI;
     this.health;
     this.healthUI;
     this.charClass;
@@ -19,6 +20,7 @@ game.Character = me.Entity.extend({
     this.manaScores;
 
     this.buildFromClass(charClass);
+    this.createUI();
   },
 
   update: function(dt) {
@@ -105,5 +107,10 @@ game.Character = me.Entity.extend({
 
   setInactive: function() {
     this.pos.x = this.startPos.x;
+  },
+
+  createUI: function() {
+    this.nameUI = new game.CharName(this);
+    me.game.world.addChild(this.nameUI);
   }
 });
