@@ -2,7 +2,7 @@ var game = {
 
   data: {
   //set which player is connected
-    player: 1
+    player: 0 
   },
 
   onload: function () {
@@ -37,9 +37,10 @@ var game = {
 
   // Run on game resources loaded.
   loaded: function () {
-      
       this.socket = io('http://localhost:3000/lobby');
-      me.state.set(me.state.MENU, new game.TitleScreen());
+
+      this.titleScreen = new game.TitleScreen();
+      me.state.set(me.state.MENU, this.titleScreen);
 
       this.playScreen = new game.PlayScreen();
       me.state.set(me.state.PLAY, this.playScreen);
@@ -51,7 +52,7 @@ var game = {
   },
 
   sendMessage: function(command, object) {
-//    console.log(command); 
- //   console.log(object);
+    object.gameId = this.gameId;
+    socket.emit(command, object);
   }
 };
