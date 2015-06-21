@@ -91,7 +91,6 @@ game.Tile = me.DraggableEntity.extend({
   appearCrystal: function() {
     var tile = this;
     this.renderable.setCurrentAnimation('appear', function() {
-      console.log('appear!');
       tile.renderable.setCurrentAnimation('idle');
       game.playScreen.grid.needsShifting = true;
       tile.alive = true;
