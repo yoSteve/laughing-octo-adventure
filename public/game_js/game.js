@@ -36,13 +36,15 @@ var game = {
 
   // Run on game resources loaded.
   loaded: function () {
+      me.state.set(me.state.MENU, new game.TitleScreen());
+
       this.playScreen = new game.PlayScreen();
       me.state.set(me.state.PLAY, this.playScreen);
 
       me.pool.register('tile', game.Tile, true);
 
       // Start the game.
-      me.state.change(me.state.PLAY);
+      me.state.change(me.state.MENU);
   },
 
   sendMessage: function(command, object) {

@@ -81,8 +81,9 @@ game.Tile = me.DraggableEntity.extend({
   vanishCrystal: function() {
     var tile = this;
     this.renderable.setCurrentAnimation('vanish', function() {
-      game.playScreen.grid.dead++;
+      tile.setCrystal(6);
       tile.alive = false;
+      game.playScreen.grid.needsShifting = true;
       return false;
     });
   },
@@ -90,7 +91,9 @@ game.Tile = me.DraggableEntity.extend({
   appearCrystal: function() {
     var tile = this;
     this.renderable.setCurrentAnimation('appear', function() {
+      console.log('appear!');
       tile.renderable.setCurrentAnimation('idle');
+      game.playScreen.grid.needsShifting = true;
       tile.alive = true;
       return false;
     });

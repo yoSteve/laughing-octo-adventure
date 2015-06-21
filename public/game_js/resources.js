@@ -43,5 +43,10 @@ game.resources = [
         "name": "background2",
         "type": "image",
         "src": "data/img/background2.jpg"
+    },
+    {
+        "name": "button",
+        "type": "image",
+        "src": "data/img/button.png"
     }
 ];
