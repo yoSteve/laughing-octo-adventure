@@ -1,20 +1,17 @@
-var express = require('express');
-var router = express.Router();
-var theGame = require('../app_modules/theGame');
-var User = require('../models/user');
-
-var isAuthenticated = function(req, res, next) {
-	//checks to see if session is authenticated and
-	//lets through to their request
-	//else redirects to login (home)
-	if(req.isAuthenticated())
-    return next();
-	res.redirect('/');
+var isAuthenticated = function *(next){
+  if(this.isAuthenticated()) {
+     yield next;
+  } else {
+    this.redirect('/');
+  }
 }
+var passport = require('koa-passport');
 
-module.exports = function(passport, io){
-	router.get('/', function(req, res) {
-    console.log(req.user, "ashdflakjdshfluaihsdlisuhdflahhhhhhaa");
+function gen(app){
+  var router = require('koa-router')(app);
+  //init passport
+	router.get('/', function *(next) {
+    console.log("ashdflakjdshfluaihsdlisuhdflahhhhhhaa");
     //redirects logged in users to the lobby, i
     //but assigns the new socket to the useri
     // socket id, may run into problems if 
@@ -25,102 +22,46 @@ module.exports = function(passport, io){
     // have to make user the game is active, or have
     // the user select from a list of active games 
     // if we want them to be able to be playing multiple games at once.
-    if(req.user)
-      res.redirect('lobby');
-		res.render('index', {message: req.flash('message')});
+      yield this.render('index');
+
 	});
 
 	//google login redirects to google, google directs back
-	router.get('/auth/google', passport.authenticate('google-openidconnect'));
+	router.get('/auth/google', passport.authenticate('google'));
 
 	router.get('/auth/google/response',
-		passport.authenticate('google-openidconnect', {
-			successRedirect: '/lobby',
-			failureRedirect: '/'
-		}));
+      passport.authenticate('google', {
+        failureRedirect: '/'
+      }),
+      function *(next) {
+        this.redirect('/game_canvas');
+      }
+  );
 		//handle login
-	router.post('/login',passport.authenticate('login', {
-			successRedirect: '/lobby',
-			failureRedirect: '/',
-			failureFlash: true
-	}));
+	router.post('/login', passport.authenticate('local'), function* (next) {
+    yield this.render('game_canvas');
+	});
 
 	//handle Registration
-	router.post('/signup', passport.authenticate('signup', {
-			successRedirect: '/lobby',
+	router.post('/signup', passport.authenticate('local', {
+			successRedirect: '/game_canvas',
 			failureRedirect: '/',
-			failureFlash : true
 	}));
 
-	router.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
+	router.get('/logout', function *(next) {
+		this.logout();
+		this.redirect('/');
 	});
 
-	router.get('/lobby', isAuthenticated, function(req, res) {
-		User.find({waiting: true}, function(err, docs){
-				res.render('lobby', {waiting: docs});
-		});
-	});
-	
-	router.get('/game', isAuthenticated, function(req, res) {
-		res.render('game', {user: req.user });
+	router.get('/game', isAuthenticated, function *(next) {
+		res.render('game', { user: req.user });
 	});
 
-	router.get('/game_canvas', isAuthenticated, function(req, res) {
-		res.render('game_canvas');
+	router.get('/game_canvas', function *(next) {
+		yield this.render('game_canvas');
 	});
 
 //socket work using lobby namespace
-	var nspLobby = io.of('/lobby');
-  var games = {};
-	nspLobby.on('connection', function(socket){
-    console.log(games);
-		if (socket.request.session.passport){
-			User.findById(socket.request.session.passport.user, function(err, currentUser){
-        if(currentUser) {
-          currentUser.socketId = socket.id;
-          currentUser.waiting = false;
-          currentUser.save();
-          User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
-            if(user) {
-              console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
-              var gameId = theGame.createGameId(currentUser._id, user._id);
-              var game = new theGame.Game(nspLobby, gameId, currentUser, user);
-              socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
-              socket.join(game.gameId);
-              user.waiting = false;
-              user.save();
-              games[gameId] = game;
-            } else {
-            currentUser.waiting = true;
-            }
-            currentUser.save();
-          });
-          console.log(currentUser.username, " is in the lobby");
-        }
-			});
-		}
-    // joining the game lobby, initialized of game with user ids (inprogress)
-    socket.on('start-game', function(data){
-        console.log(data['gameId'], " XXXXX NEED TO NKNOW OIEUHFDLS");
-        socket.join(data['gameId']);
-        console.log('logging data passed back ' + games);
-        games[data['gameId']].refreshBoard();
-    });
-
-		socket.on('disconnect', function() {
-      console.log('someone left the lobby');
-      if(socket.request.session.passport){
-        User.findById(socket.request.session.passport.user, function(err, currentUser){
-          if(currentUser) {
-            currentUser.waiting = false;
-            currentUser.save();
-          }
-        });
-      }
-		});
-
-	});	
-	return router;
+  return router.routes();
 }
+module.exports = gen;
