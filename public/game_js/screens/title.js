@@ -15,9 +15,9 @@ game.TitleScreen = me.ScreenObject.extend({
 
       game.socket.on('match-message', function(gameId) {
         game.gameId = gameId; 
-        this.message = 'Game Found! :D';
+        game.titleScreen.message = 'Game Found! :D';
 
-        this.startButton = new game.StartButton(50, 50);
+        this.startButton = new game.StartButton(me.game.viewport.width / 2, me.game.viewport.height / 2);
         me.game.world.addChild(this.startButton);
       });
 
