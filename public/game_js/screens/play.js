@@ -44,7 +44,8 @@ game.PlayScreen = me.ScreenObject.extend({
 
       console.log(game.data.player);
 
-      game.socket.on('switchTurn', function(data) {
+      game.socket.on('switch-turn', function(data) {
+        console.log('change places!');
         game.playScreen.switchTurn();
       });
     },

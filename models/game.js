@@ -40,16 +40,17 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
+  console.log('moving');
   this.resolveMatches();
-  addMana();
-  zeroMatches();
-  console.log(mana);
+  this.addMana();
+  this.zeroMatches();
+  console.log(this.mana);
   this.refreshBoard();
 
-  this.io.to(this.gameId).emit('switch-turn');
+  this.io.to(this.gameId).emit('switch-turn', { derp: 'derp' } );
 
   //respond with emit matches and board state
-  return [gameBoard, mana];
+  return [this.gameBoard, this.mana];
 }
 
 GameSchema.methods.boardSetup = function(){
@@ -61,7 +62,7 @@ GameSchema.methods.boardSetup = function(){
 GameSchema.methods.zeroMana = function(mana){
   	var i = 5;
   	while(i >= 0){
-  		mana[i] = 0;
+  		this.mana[i] = 0;
   		i--;
   	}
   }
@@ -69,8 +70,8 @@ GameSchema.methods.zeroMana = function(mana){
 GameSchema.methods.addMana =function() {
   	var i = 5;
   	while(i >= 0){
-      if (matches[i])
-    		mana[i] += matches[i];
+      if (this.matches[i])
+        this.mana[i] += this.matches[i];
   		i--;
     }
   }
@@ -78,7 +79,7 @@ GameSchema.methods.addMana =function() {
 GameSchema.methods.zeroMatches = function(){
   	var i = 5;
   	while(i >= 0){
-  		matches[i] = 0;
+  		this.matches[i] = 0;
   		i--;
   	}
   }
@@ -219,8 +220,9 @@ GameSchema.methods.resolveMatches = function() {
   this.checkNullSpace();      
   this.assignCrystalsToBoard();
   //add matches to current matches this turn
-  if (matches)
+  if (matches) {
     this.matches.concat(matches);
+  }
   return matches;
 }
 
