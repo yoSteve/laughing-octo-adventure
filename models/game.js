@@ -11,7 +11,7 @@ var GameSchema = new Schema({
   away: Object,
   size: Number,
   board: Array,
-  currentPlayer: String
+  currentPlayer: Number 
 });
 
 GameSchema.statics.create = function (gameVars){
@@ -40,7 +40,7 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
-  if (this.currentplayer == 1)
+  if (this.currentplayer === 1)
     this.currentPlayer = 2;
   else
     this.currentPlayer = 1;
