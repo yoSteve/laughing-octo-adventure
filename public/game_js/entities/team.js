@@ -3,6 +3,7 @@ game.Team = me.Container.extend({
     var settings = {};
     
     this.teamName;
+    this.teamNameUI;
     this.playerNum;
     this.characters = [];
     this._super(me.Container, 'init', [0, 0, 0, 0, settings]);
@@ -11,6 +12,8 @@ game.Team = me.Container.extend({
 
     this.activeCharacter = this.characters[0];
     this.activeCharacter.setActive();
+
+    this.createUI();
   },
 
   update: function(dt) {
@@ -77,6 +80,11 @@ game.Team = me.Container.extend({
     this.activeCharacter.setInactive();
     this.activeCharacter = this.characters[index];
     this.activeCharacter.setActive();
+  },
+
+  createUI: function() {
+    this.teamNameUI = new game.TeamName(this); 
+    me.game.world.addChild(this.teamNameUI);
   }
 });
 
