@@ -22,6 +22,7 @@ GameSchema.statics.create = function (gameVars){
 //  game.away = JSON.parse(JSON.stringify(gameVars.awayUser.teams));
 //  game.home.hp = game.home.maxHp();
 //  game.away.hp = game.away.maxHp(); 
+  game.matches = [];
   game.turn = game.randomPlayer();
   game.homeMana = 0;
   game.awayMana = 0;
@@ -35,34 +36,19 @@ GameSchema.statics.create = function (gameVars){
 }
 
 GameSchema.methods.randomPlayer = function() {
- 
+  return this.homeUser; 
 }
 
-//GameSchema.methods.refreshBoard = function() {
-//  //sends out new game board, hps, mana pools, and current player turn
-//    this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
-//      awayMana: this.awayMana,
-//      gameId: this.gameId, 
-//      home: this.awayUser.username, 
-//      away: this.homeUser.username, 
-//      gameBoard: this.board,
-//      turn: this.turn
-//    });
-//}
-
-
-
-GameSchema.methods.move = function(initPos, finPos) {
-  initialPos = initPos;
-  finalPos = finPos;
-  getMoveFromUser();
-  findAllMatches(gameBoard);
-  refreshBoard(gameBoard);
+GameSchema.methods.move = function(data) {
+  this.resolveMatches();
   addMana();
   zeroMatches();
   console.log(mana);
+  this.refreshBoard();
 
   this.io.to(this.gameId).emit('switch-turn');
+
+  //respond with emit matches and board state
   return [gameBoard, mana];
 }
 
@@ -126,26 +112,18 @@ GameSchema.methods.checkNullSpace = function() {
     } 
   }
 
-GameSchema.methods.dropNewCrystals = function(board) {
-      for (var col = 0; col < SIZE; col++) {
-          if (board[col][0] == null) {
-              board[col][0] = getRandomCrystal;
+GameSchema.methods.dropNewCrystals = function() {
+      for (var col = 0; col < this.size; col++) {
+          if (this.board[col][0] == null) {
+              this.board[col][0] = this.getRandomCrystal;
           };
       } console.log("inside dropNewCrystals");
       return board;
   }
 
 GameSchema.methods.refreshBoard = function() {
-       for (var col = 0; col < this.size; col++) {
-          for (var row = 0; row < this.size; row++) {
-              do {
-                  //this.findAllMatches();
-                  this.checkNullSpace();      
-                  this.assignCrystalsToBoard();
-              } while (this.board[col][row] == null);
-          } 
-      } 
 
+    while (this.resolveMatches().length > 0){}
     this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
       awayMana: this.awayMana,
       gameId: this.gameId, 
@@ -156,4 +134,97 @@ GameSchema.methods.refreshBoard = function() {
     });
   }
 
+<<<<<<< HEAD
+=======
+GameSchema.methods.getRowMatches = function() {
+  var resultArray = [];
+  var prevType;
+  var currCell;
+  var count;
+
+  for(var row = 0; row < this.size; row++) {
+    count = 1;
+    prevType = this.board[0][row];
+    for(var col = 1; col < this.size; col++) {
+      currCell = this.board[col][row];
+      if(currCell == prevType) {
+        count++;
+        if(col == this.size -1 ) {
+          if(count >= 3) {
+            resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col, row: row }});
+          }
+        }
+      } else { 
+        if(count >= 3) {
+          resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col - 1, row: row }});
+        }
+        prevType = currCell;
+        count = 1;
+      }
+    }
+  }
+
+  return resultArray;
+} 
+
+GameSchema.methods.getColMatches = function() {
+  var resultArray = [];
+  var prevType;
+  var currCell;
+  var count;
+
+  for(var col = 0; col < this.size; col++) {
+    count = 1;
+    prevType = this.board[col][0];
+    for(var row = 1; row < this.size; row++) {
+       currCell = this.board[col][row]; 
+       if(currCell == prevType) {
+         count++;
+         if(row == this.size - 1) {
+           if(count >= 3) {
+             resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row }});
+           }
+         }
+       } else {
+         if(count >= 3) {
+           resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row - 1 }});
+         }
+         prevType = currCell;
+         count = 1;
+       }
+    }
+  }
+  return resultArray;
+}
+
+GameSchema.methods.resolveMatches = function() {
+  var matches = [];
+  matches = this.getRowMatches().concat(this.getColMatches()); 
+  console.log(matches);
+  var match, endCol, endRow, count;
+  for(var i = 0; i < matches.length; i++) {
+    endCol = matches[i].end.col;
+    endRow = matches[i].end.row;
+    count = matches[i].count;
+
+    if(matches[i].pattern == 'row') {
+      for(var j = endCol; j > endCol - count; j--) {
+        this.board[j][endRow] = null;
+      }
+    } else {
+      for(var j = endRow; j > endRow - count; j--) {
+        this.board[endCol][j] = null;
+      }
+    }
+  }
+
+  this.checkNullSpace();      
+  this.assignCrystalsToBoard();
+  //add matches to current matches this turn
+  if (matches)
+    this.matches.concat(matches);
+  return matches;
+}
+
+>>>>>>> f0d6887a6b27116909f528ad16598e1e9512ac51
 module.exports = mongoose.model('Game', GameSchema, 'Game');
