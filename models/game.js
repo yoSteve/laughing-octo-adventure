@@ -30,7 +30,7 @@ GameSchema.statics.create = function (gameVars){
   for (var i = game.board.length-1; i >= 0 ; i--) {
     game.board[i] = new Array(game.size);
   }    
-  game.setup(); 
+  game.boardSetup(); 
   return game;  
 }
 
@@ -50,7 +50,6 @@ GameSchema.methods.randomPlayer = function() {
 //    });
 //}
 
-module.exports = mongoose.model('Game', GameSchema, 'Game');
 
 
 GameSchema.methods.move = function(initPos, finPos) {
@@ -102,19 +101,19 @@ GameSchema.methods.getRandomCrystal = function() {
   }
 
 GameSchema.methods.assignCrystalsToBoard = function() {
-      for (var col = 0; col < board.length; col++) {
-          for (var row = 0; row < board[col].length; row++) {
+      for (var col = 0; col < this.board.length; col++) {
+          for (var row = 0; row < this.board[col].length; row++) {
               if (this.board[col][row] == null) {
-                  this.board[col][row] = getRandomCrystal();
+                  this.board[col][row] = this.getRandomCrystal();
               }
           } 
       }
   }
 
 GameSchema.methods.checkNullSpace = function() {
-    for (var col = SIZE -1; col >= 0; col--) {
+    for (var col = this.size -1; col >= 0; col--) {
         var nullCount = 0;
-        for (var row = SIZE -1 ; row >= 0; row--) {
+        for (var row = this.size -1 ; row >= 0; row--) {
             if (this.board[col][row] == null) {
                 nullCount++;
             } else if (this.board[col][row] != null && nullCount > 0) { this.board[col][row + nullCount] = this.board[col][row];
@@ -136,8 +135,8 @@ GameSchema.methods.dropNewCrystals = function(board) {
   }
 
 GameSchema.methods.refreshBoard = function() {
-       for (var col = 0; col < SIZE; col++) {
-          for (var row = 0; row < SIZE; row++) {
+       for (var col = 0; col < this.size; col++) {
+          for (var row = 0; row < this.size; row++) {
               do {
                   //this.findAllMatches();
                   this.checkNullSpace();      
@@ -155,3 +154,7 @@ GameSchema.methods.refreshBoard = function() {
       turn: this.turn
     });
   }
+
+
+
+module.exports = mongoose.model('Game', GameSchema, 'Game');
