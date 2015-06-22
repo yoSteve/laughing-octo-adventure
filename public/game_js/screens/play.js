@@ -42,13 +42,6 @@ game.PlayScreen = me.ScreenObject.extend({
       this.team2.setTeamInactive();
       me.game.world.addChild(this.team2);
 
-      console.log(game.data.player);
-
-      game.socket.on('switch-turn', function(data) {
-        console.log('change places!');
-        game.playScreen.switchTurn();
-      });
-
       game.socket.on('refresh-board', function(gameObject) {
         console.log(gameObject.gameBoard);
         game.playScreen.grid.replaceBoard(gameObject.gameBoard);

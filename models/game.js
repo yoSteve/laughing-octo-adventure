@@ -40,6 +40,13 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
+  if (this.currentplayer == this.awayUser.username)
+    this.currentPlayer = this.homeUser.username;
+  else
+    this.currentPlayer = this.awayUser.username;
+  console.log(data);
+  //if row shiftRow(index, right?)
+  //if col shiftCol(index, down)?
   console.log('moving');
   this.resolveMatches();
   this.addMana();
@@ -47,7 +54,7 @@ GameSchema.methods.move = function(data) {
   console.log(this.mana);
   this.refreshBoard();
 
-  this.io.to(this.gameId).emit('switch-turn', { derp: 'derp' } );
+  //this.io.to(this.gameId).emit('switch-turn', { derp: 'derp' } );
 
   //respond with emit matches and board state
   return [this.gameBoard, this.mana];
@@ -131,7 +138,7 @@ GameSchema.methods.refreshBoard = function() {
       home: this.awayUser.username, 
       away: this.homeUser.username, 
       gameBoard: this.board,
-      turn: this.turn
+      turn: this.currentPlayer
     });
   }
 
@@ -224,6 +231,49 @@ GameSchema.methods.resolveMatches = function() {
     this.matches.concat(matches);
   }
   return matches;
+}
+
+
+GamSchema.statics.getCol = function(col) {
+  return this.board[col]; 
+}
+
+GameSchema.statics.getRow = function(row) {
+  var tempArray = [];
+  for(var col = 0; col < this.size; col++) {
+    tempArray.push(this.board[col][row]);
+  }
+  return tempArray;
+}
+
+GameSchema.methods.shiftRow = function(rowIndex, right) {
+  var row = this.getRow(rowIndex);
+
+  if(right) {
+    //shift right
+    row.unshift(row.pop());
+  } else {
+    //shift left
+    row.push(row.shift());
+  }
+
+  for(var i = 0; i < this.size; i++) {
+    this.board[i][rowIndex] = row[i];
+  }
+}
+
+GameSchema.methods.shiftCol = function(colIndex, down) {
+  var col = this.getCol(colIndex);
+
+  if(down) {
+    //shift down
+    col.unshift(col.pop());
+  } else {
+    //shift up 
+    col.push(col.shift());
+  }
+
+  this.board[colIndex] = col;
 }
 
 module.exports = mongoose.model('Game', GameSchema, 'Game');
