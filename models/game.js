@@ -35,22 +35,8 @@ GameSchema.statics.create = function (gameVars){
 }
 
 GameSchema.methods.randomPlayer = function() {
- 
+  return this.homeUser; 
 }
-
-//GameSchema.methods.refreshBoard = function() {
-//  //sends out new game board, hps, mana pools, and current player turn
-//    this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
-//      awayMana: this.awayMana,
-//      gameId: this.gameId, 
-//      home: this.awayUser.username, 
-//      away: this.homeUser.username, 
-//      gameBoard: this.board,
-//      turn: this.turn
-//    });
-//}
-
-
 
 GameSchema.methods.move = function(initPos, finPos) {
   initialPos = initPos;
@@ -125,10 +111,10 @@ GameSchema.methods.checkNullSpace = function() {
     } 
   }
 
-GameSchema.methods.dropNewCrystals = function(board) {
-      for (var col = 0; col < SIZE; col++) {
-          if (board[col][0] == null) {
-              board[col][0] = getRandomCrystal;
+GameSchema.methods.dropNewCrystals = function() {
+      for (var col = 0; col < this.size; col++) {
+          if (this.board[col][0] == null) {
+              this.board[col][0] = this.getRandomCrystal;
           };
       } console.log("inside dropNewCrystals");
       return board;
@@ -138,7 +124,7 @@ GameSchema.methods.refreshBoard = function() {
        for (var col = 0; col < this.size; col++) {
           for (var row = 0; row < this.size; row++) {
               do {
-                  //this.findAllMatches();
+                  this.resolveMatches(this.getRowMatches(), this.getColMatches());
                   this.checkNullSpace();      
                   this.assignCrystalsToBoard();
               } while (this.board[col][row] == null);
@@ -155,6 +141,89 @@ GameSchema.methods.refreshBoard = function() {
     });
   }
 
+GameSchema.methods.getRowMatches = function() {
+  var resultArray = [];
+  var prevType;
+  var currCell;
+  var count;
 
+  for(var row = 0; row < this.size; row++) {
+    count = 1;
+    prevType = this.board[0][row].type;
+    for(var col = 1; col < this.size; col++) {
+      currCell = this.board[col][row];
+      if(currCell.type == prevType) {
+        count++;
+        if(col == this.COLS -1 ) {
+          if(count >= 3) {
+            resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col, row: row }});
+          }
+        }
+      } else { 
+        if(count >= 3) {
+          resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col - 1, row: row }});
+        }
+        prevType = currCell.type;
+        count = 1;
+      }
+    }
+  }
+
+  return resultArray;
+} 
+
+GameSchema.methods.getColMatches = function() {
+  var resultArray = [];
+  var prevType;
+  var currCell;
+  var count;
+
+  for(var col = 0; col < this.size; col++) {
+    count = 1;
+    prevType = this.board[col][0].type;
+    for(var row = 1; row < this.size; row++) {
+       currCell = this.board[col][row]; 
+       if(currCell.type == prevType) {
+         count++;
+         if(row == this.ROWS - 1) {
+           if(count >= 3) {
+             resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row }});
+           }
+         }
+       } else {
+         if(count >= 3) {
+           resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row - 1 }});
+         }
+         prevType = currCell.type;
+         count = 1;
+       }
+    }
+  }
+
+  return resultArray;
+}
+
+GameSchema.methods.resolveMatches = function(rowMatches, colMatches) {
+  console.log('row matches', rowMatches, '\ncol matches', colMatches);
+  var matches = rowMatches.concat(colMatches); 
+
+  var match, endCol, endRow, count;
+  for(var i = 0; i < matches.length; i++) {
+    endCol = matches[i].end.col;
+    endRow = matches[i].end.row;
+    count = matches[i].count;
+
+    if(matches[i].pattern == 'row') {
+      for(var j = endCol; j > endCol - count; j--) {
+        this.board[j][endRow].setCrystal(6);
+      }
+    } else {
+      for(var j = endRow; j > endRow - count; j--) {
+        this.board[endCol][j].setCrystal(6);
+      }
+    }
+  }
+
+}
 
 module.exports = mongoose.model('Game', GameSchema, 'Game');
