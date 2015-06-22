@@ -164,5 +164,11 @@ game.Grid = me.Container.extend({
       }
     }
     this.needsShifting = swapped;
+  },
+
+  resolveMatches: function(matches) {
+    matches.forEach(function(match) {
+      this.clearTiles(matches);
+    });
   }
 });

@@ -11,8 +11,6 @@ game.PlayScreen = me.ScreenObject.extend({
 
       me.input.bindKey(me.input.KEY.X, 'clear', true);
       me.input.bindKey(me.input.KEY.C, 'appear', true);
-      me.input.bindKey(me.input.KEY.F1, 'setPlayer1', true);
-      me.input.bindKey(me.input.KEY.F2, 'setPlayer2', true);
       me.input.bindKey(me.input.KEY.V, 'hurtChar', true);
       me.input.bindKey(me.input.KEY.B, 'blueMatch', true);
 
@@ -45,6 +43,10 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       console.log(game.data.player);
+
+      game.socket.on('switchTurn', function(data) {
+        game.playScreen.switchTurn();
+      });
     },
 
     onDestroyEvent: function() {

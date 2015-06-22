@@ -23,6 +23,7 @@ game.TitleScreen = me.ScreenObject.extend({
       });
 
       game.socket.on('refresh-board', function(gameObject) {
+        console.log('-------------------------------------------------derp');
         if(game.data.player == 0) {
           game.data.player = 2; 
         }

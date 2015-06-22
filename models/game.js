@@ -61,6 +61,8 @@ GameSchema.methods.move = function(initPos, finPos) {
   addMana();
   zeroMatches();
   console.log(mana);
+
+  this.io.to(this.gameId).emit('switch-turn');
   return [gameBoard, mana];
 }
 
@@ -86,7 +88,6 @@ GameSchema.methods.addMana =function() {
   		i--;
     }
   }
- 
 
 GameSchema.methods.zeroMatches = function(){
   	var i = 5;
@@ -154,7 +155,5 @@ GameSchema.methods.refreshBoard = function() {
       turn: this.turn
     });
   }
-
-
 
 module.exports = mongoose.model('Game', GameSchema, 'Game');
