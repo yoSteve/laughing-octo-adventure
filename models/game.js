@@ -40,10 +40,10 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
-  if (this.currentplayer == this.awayUser.username)
-    this.currentPlayer = this.homeUser.username;
+  if (this.currentplayer == 1)
+    this.currentPlayer = 2;
   else
-    this.currentPlayer = this.awayUser.username;
+    this.currentPlayer = 1;
   console.log(data);
   //if row shiftRow(index, right?)
   //if col shiftCol(index, down)?
