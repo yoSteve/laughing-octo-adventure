@@ -40,15 +40,11 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
-  console.log(this.currentPlayer);
   if (this.currentPlayer == 1) {
-    console.log('SWITCH TO TWO');
     this.currentPlayer = 2;
   } else {
     this.currentPlayer = 1;
-    console.log('SWITCH TO ONE');
   }
-  console.log(data);
   //if row shiftRow(index, right?)
   //if col shiftCol(index, down)?
   if(data['pattern'] === 'row')
@@ -83,12 +79,12 @@ GameSchema.methods.zeroMana = function(mana){
   }
 
 GameSchema.methods.addMana =function() {
-  	var i = 5;
-  	while(i >= 0){
-      if (this.matches[i])
-        this.mana[i] += this.matches[i];
-  		i--;
-    }
+//  	var i = 5;
+//  	while(i >= 0){
+//      if (this.matches[i])
+//        this.mana[i] += this.matches[i];
+//  		i--;
+//    }
   }
 
 GameSchema.methods.zeroMatches = function(){
@@ -138,13 +134,23 @@ GameSchema.methods.dropNewCrystals = function() {
   }
 
 GameSchema.methods.refreshBoard = function() {
-
-    while (this.resolveMatches().length > 0){}
+    var allMatches = [];
+    var cascadeBoards = [];
+    do { 
+      var cascade = this.resolveMatches();
+      allMatches.push(cascade[0]);
+      console.log(cascade[0]);
+      cascadeBoards.push(cascade[1]);
+    } while (cascade[0].length > 0);
+    console.log('allmatches', allMatches);
+    console.log('cascade board', cascadeBoards);
     this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
       awayMana: this.awayMana,
       gameId: this.gameId, 
       home: this.awayUser.username, 
       away: this.homeUser.username, 
+      matches: allMatches,
+      cascadeBoards: cascadeBoards,
       gameBoard: this.board,
       turn: this.currentPlayer
     });
@@ -212,9 +218,8 @@ GameSchema.methods.getColMatches = function() {
 }
 
 GameSchema.methods.resolveMatches = function() {
-  var matches = [];
+  var matches;
   matches = this.getRowMatches().concat(this.getColMatches()); 
-  console.log(matches);
   var match, endCol, endRow, count;
   for(var i = 0; i < matches.length; i++) {
     endCol = matches[i].end.col;
@@ -234,11 +239,9 @@ GameSchema.methods.resolveMatches = function() {
 
   this.checkNullSpace();      
   this.assignCrystalsToBoard();
+  var boardCascade = this.board.slice(0); 
   //add matches to current matches this turn
-  if (matches) {
-    this.matches.concat(matches);
-  }
-  return matches;
+  return [matches, boardCascade];
 }
 
 
