@@ -53,7 +53,7 @@ function socket (io, app, session) {
       });
 
       socket.on('move', function(data) {
-        //receives the move information
+        console.log(data);
         //emits matches to room,
         //emits refreshed board (game state) to room 
       });

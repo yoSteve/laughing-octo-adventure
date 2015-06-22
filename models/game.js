@@ -22,6 +22,7 @@ GameSchema.statics.create = function (gameVars){
 //  game.away = JSON.parse(JSON.stringify(gameVars.awayUser.teams));
 //  game.home.hp = game.home.maxHp();
 //  game.away.hp = game.away.maxHp(); 
+  game.matches = [];
   game.turn = game.randomPlayer();
   game.homeMana = 0;
   game.awayMana = 0;
@@ -38,16 +39,13 @@ GameSchema.methods.randomPlayer = function() {
   return this.homeUser; 
 }
 
-GameSchema.methods.move = function(initPos, finPos) {
-  initialPos = initPos;
-  finalPos = finPos;
-  getMoveFromUser();
-  findAllMatches(gameBoard);
-  refreshBoard(gameBoard);
+GameSchema.methods.move = function(data) {
+  this.resolveMatches();
   addMana();
   zeroMatches();
   console.log(mana);
-  return [gameBoard, mana];
+  this.refreshBoard();
+  //respond with emit matches and board state
 }
 
 GameSchema.methods.boardSetup = function(){
@@ -121,16 +119,8 @@ GameSchema.methods.dropNewCrystals = function() {
   }
 
 GameSchema.methods.refreshBoard = function() {
-       for (var col = 0; col < this.size; col++) {
-          for (var row = 0; row < this.size; row++) {
-              do {
-                  this.resolveMatches(this.getRowMatches(), this.getColMatches());
-                  this.checkNullSpace();      
-                  this.assignCrystalsToBoard();
-              } while (this.board[col][row] == null);
-          } 
-      } 
 
+    while (this.resolveMatches().length > 0){}
     this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
       awayMana: this.awayMana,
       gameId: this.gameId, 
@@ -149,12 +139,12 @@ GameSchema.methods.getRowMatches = function() {
 
   for(var row = 0; row < this.size; row++) {
     count = 1;
-    prevType = this.board[0][row].type;
+    prevType = this.board[0][row];
     for(var col = 1; col < this.size; col++) {
       currCell = this.board[col][row];
-      if(currCell.type == prevType) {
+      if(currCell == prevType) {
         count++;
-        if(col == this.COLS -1 ) {
+        if(col == this.size -1 ) {
           if(count >= 3) {
             resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col, row: row }});
           }
@@ -163,7 +153,7 @@ GameSchema.methods.getRowMatches = function() {
         if(count >= 3) {
           resultArray.push({ pattern: 'row', count: count, type: prevType, end: { col: col - 1, row: row }});
         }
-        prevType = currCell.type;
+        prevType = currCell;
         count = 1;
       }
     }
@@ -180,12 +170,12 @@ GameSchema.methods.getColMatches = function() {
 
   for(var col = 0; col < this.size; col++) {
     count = 1;
-    prevType = this.board[col][0].type;
+    prevType = this.board[col][0];
     for(var row = 1; row < this.size; row++) {
        currCell = this.board[col][row]; 
-       if(currCell.type == prevType) {
+       if(currCell == prevType) {
          count++;
-         if(row == this.ROWS - 1) {
+         if(row == this.size - 1) {
            if(count >= 3) {
              resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row }});
            }
@@ -194,19 +184,18 @@ GameSchema.methods.getColMatches = function() {
          if(count >= 3) {
            resultArray.push({ pattern: 'column', count: count, type: prevType, end: { col: col, row: row - 1 }});
          }
-         prevType = currCell.type;
+         prevType = currCell;
          count = 1;
        }
     }
   }
-
   return resultArray;
 }
 
-GameSchema.methods.resolveMatches = function(rowMatches, colMatches) {
-  console.log('row matches', rowMatches, '\ncol matches', colMatches);
-  var matches = rowMatches.concat(colMatches); 
-
+GameSchema.methods.resolveMatches = function() {
+  var matches = [];
+  matches = this.getRowMatches().concat(this.getColMatches()); 
+  console.log(matches);
   var match, endCol, endRow, count;
   for(var i = 0; i < matches.length; i++) {
     endCol = matches[i].end.col;
@@ -215,15 +204,21 @@ GameSchema.methods.resolveMatches = function(rowMatches, colMatches) {
 
     if(matches[i].pattern == 'row') {
       for(var j = endCol; j > endCol - count; j--) {
-        this.board[j][endRow].setCrystal(6);
+        this.board[j][endRow] = null;
       }
     } else {
       for(var j = endRow; j > endRow - count; j--) {
-        this.board[endCol][j].setCrystal(6);
+        this.board[endCol][j] = null;
       }
     }
   }
 
+  this.checkNullSpace();      
+  this.assignCrystalsToBoard();
+  //add matches to current matches this turn
+  if (matches)
+    this.matches.concat(matches);
+  return matches;
 }
 
 module.exports = mongoose.model('Game', GameSchema, 'Game');
