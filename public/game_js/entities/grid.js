@@ -10,14 +10,6 @@ game.Grid = me.Container.extend({
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(me.input.isKeyPressed('setPlayer1')) {
-      game.data.player = 1;
-    }
-
-    if(me.input.isKeyPressed('setPlayer2')) {
-      game.data.player = 2;
-    }
-
     if(me.input.isKeyPressed('clear')) {
       this.clearTiles({ pattern: 'row', end: { col: 3, row: 3 }, count: 3 });
     }

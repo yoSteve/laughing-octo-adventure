@@ -9,17 +9,6 @@ game.PlayScreen = me.ScreenObject.extend({
       console.log(gameObject);
       me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
-      tiles = [
-        [0, 1, 2, 3, 4, 5, 0, 1], 
-        [4, 5, 0, 1, 2, 3, 4, 5], 
-        [2, 3, 4, 5, 0, 1, 2, 3],
-        [0, 1, 2, 3, 4, 5, 0, 1],
-        [2, 3, 4, 5, 0, 1, 2, 3],
-        [4, 5, 0, 1, 2, 3, 4, 5],
-        [0, 1, 2, 3, 4, 5, 0, 1],
-        [2, 3, 4, 5, 0, 1, 2, 3]
-      ]
-
       me.input.bindKey(me.input.KEY.X, 'clear', true);
       me.input.bindKey(me.input.KEY.C, 'appear', true);
       me.input.bindKey(me.input.KEY.F1, 'setPlayer1', true);
@@ -28,7 +17,7 @@ game.PlayScreen = me.ScreenObject.extend({
       me.input.bindKey(me.input.KEY.B, 'blueMatch', true);
 
       this.grid = new game.Grid(8, 8);  
-      this.grid.populate(tiles);
+      this.grid.populate(gameObject.gameBoard);
       me.game.world.addChild(this.grid, 1);
 
       me.game.world.addChild(new game.TurnUI());
@@ -54,6 +43,8 @@ game.PlayScreen = me.ScreenObject.extend({
       this.team2 = new game.Team(team2Object);
       this.team2.setTeamInactive();
       me.game.world.addChild(this.team2);
+
+      console.log(game.data.player);
     },
 
     onDestroyEvent: function() {

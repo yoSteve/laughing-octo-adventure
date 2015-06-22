@@ -14,6 +14,7 @@ game.TitleScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.messageUI);
 
       game.socket.on('match-message', function(gameId) {
+        game.data.player = 1;
         game.gameId = gameId; 
         game.titleScreen.message = 'Game Found! :D';
 
@@ -22,6 +23,9 @@ game.TitleScreen = me.ScreenObject.extend({
       });
 
       game.socket.on('refresh-board', function(gameObject) {
+        if(game.data.player == 0) {
+          game.data.player = 2; 
+        }
         game.data.gameObject = gameObject;
         me.state.change(me.state.PLAY);
       });
