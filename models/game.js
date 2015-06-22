@@ -47,6 +47,10 @@ GameSchema.methods.move = function(data) {
   console.log(data);
   //if row shiftRow(index, right?)
   //if col shiftCol(index, down)?
+  if(data['pattern'] === 'row')
+    this.shiftRow(data['row'], data['movedRight']);
+  else
+    this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
   this.resolveMatches();
   this.addMana();
@@ -234,11 +238,11 @@ GameSchema.methods.resolveMatches = function() {
 }
 
 
-GameSchema.statics.getCol = function(col) {
+GameSchema.methods.getCol = function(col) {
   return this.board[col]; 
 }
 
-GameSchema.statics.getRow = function(row) {
+GameSchema.methods.getRow = function(row) {
   var tempArray = [];
   for(var col = 0; col < this.size; col++) {
     tempArray.push(this.board[col][row]);
