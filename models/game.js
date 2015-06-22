@@ -38,7 +38,7 @@ GameSchema.methods.Board = function() {
 
 GameSchema.methods.refreshBoard = function() {
   //sends out new game board, hps, mana pools, and current player turn
-    this.io.to(game.gameId).emit('refresh-board', {homeMana: this.homeMana,
+    this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
       awayMana: this.awayMana,
       gameId: this.gameId, 
       home: this.awayUser.username, 

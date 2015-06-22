@@ -46,13 +46,10 @@ function socket (io, app, session) {
         }
       }
       // joining the game lobby, initialized of game with user ids (inprogress)
-      socket.on('start-game', function(data){
-          console.log(data['gameId'], " XXXXX NEED TO NKNOW OIEUHFDLS");
-          socket.join(data['gameId']);
-          console.log('logging data passed back ' + games);
-          games[data['gameId']].refreshBoard();
-          nspLobby(data['gameId'])
-
+      socket.on('start-game', function(gameId){
+          socket.join(gameId);
+          console.log('logging data passed back ' + gameId);
+          games[gameId].refreshBoard();
       });
 
       socket.on('move', function(data) {
