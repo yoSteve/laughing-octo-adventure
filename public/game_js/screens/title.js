@@ -20,6 +20,11 @@ game.TitleScreen = me.ScreenObject.extend({
         this.startButton = new game.StartButton(50, 50);
         me.game.world.addChild(this.startButton);
       });
+
+      game.socket.on('refresh-board', function(gameObject) {
+        game.data.gameObject = gameObject;
+        me.state.change(me.state.PLAY);
+      });
     },
 
     onDestroyEvent: function() {

@@ -2,7 +2,8 @@ var game = {
 
   data: {
   //set which player is connected
-    player: 0 
+    player: 0,
+    gameObject: null
   },
 
   onload: function () {
