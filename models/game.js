@@ -40,10 +40,13 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
-  if (this.currentplayer === 1) {
+  console.log(this.currentPlayer);
+  if (this.currentPlayer == 1) {
+    console.log('SWITCH TO TWO');
     this.currentPlayer = 2;
   } else {
     this.currentPlayer = 1;
+    console.log('SWITCH TO ONE');
   }
   console.log(data);
   //if row shiftRow(index, right?)
