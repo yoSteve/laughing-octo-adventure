@@ -5,6 +5,8 @@ game.PlayScreen = me.ScreenObject.extend({
     }, 
 
     onResetEvent: function() {
+      var gameObject = game.data.gameObject;
+      console.log(gameObject);
       me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
       tiles = [
