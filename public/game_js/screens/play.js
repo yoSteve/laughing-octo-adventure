@@ -43,6 +43,7 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       game.socket.on('refresh-board', function(gameObject) {
+        console.log(gameObject);
         game.playScreen.currentPlayer = gameObject.turn;
         game.playScreen.grid.replaceBoard(gameObject.gameBoard);
       });
