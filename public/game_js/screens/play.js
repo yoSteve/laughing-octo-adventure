@@ -44,10 +44,10 @@ game.PlayScreen = me.ScreenObject.extend({
 
       console.log(game.data.player);
 
-      game.socket.on('switch-turn', function(data) {
-        console.log('change places!');
-        game.playScreen.switchTurn();
-      });
+      //jgame.socket.on('switch-turn', function(data) {
+       // console.log('change places!');
+       //game.playScreen.switchTurn();
+      //});
     },
 
     onDestroyEvent: function() {

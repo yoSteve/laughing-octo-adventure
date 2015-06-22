@@ -54,7 +54,7 @@ function socket (io, app, session) {
 
       socket.on('move', function(data) {
         console.log(data.gameId);
-        games[data.gameId].move({ initPos: 'fake', finPos: 'fake' });
+        games[data.gameId].move(data);
         //receives the move information
         //emits matches to room,
         //emits refreshed board (game state) to room 
