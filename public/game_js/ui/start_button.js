@@ -9,6 +9,7 @@ game.StartButton = me.GUI_Object.extend({
   },
 
   onClick: function(event) {
+    game.sendMessage('start-game', game.gameId);
     me.state.change(me.state.PLAY);
   }
 });

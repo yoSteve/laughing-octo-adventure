@@ -13,14 +13,17 @@ game.TitleScreen = me.ScreenObject.extend({
       this.messageUI = new game.MessageUI();
       me.game.world.addChild(this.messageUI);
 
-      game.socket.on('match-message', function(data) {
-        game.gameId = data.gameId; 
+      game.socket.on('match-message', function(gameId) {
+        game.gameId = gameId; 
         this.message = 'Game Found! :D';
-        me.state.change(me.state.PLAY);
+
+        this.startButton = new game.StartButton(50, 50);
+        me.game.world.addChild(this.startButton);
       });
     },
 
     onDestroyEvent: function() {
       me.game.world.removeChild(this.background); 
+      me.game.world.removeChild(this.message); 
     }
 });

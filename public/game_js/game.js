@@ -53,6 +53,6 @@ var game = {
 
   sendMessage: function(command, object) {
     object.gameId = this.gameId;
-    socket.emit(command, object);
+    this.socket.emit(command, object);
   }
 };
