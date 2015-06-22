@@ -234,7 +234,7 @@ GameSchema.methods.resolveMatches = function() {
 }
 
 
-GamSchema.statics.getCol = function(col) {
+GameSchema.statics.getCol = function(col) {
   return this.board[col]; 
 }
 
