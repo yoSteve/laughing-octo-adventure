@@ -134,8 +134,6 @@ GameSchema.methods.refreshBoard = function() {
     });
   }
 
-<<<<<<< HEAD
-=======
 GameSchema.methods.getRowMatches = function() {
   var resultArray = [];
   var prevType;
@@ -226,5 +224,4 @@ GameSchema.methods.resolveMatches = function() {
   return matches;
 }
 
->>>>>>> f0d6887a6b27116909f528ad16598e1e9512ac51
 module.exports = mongoose.model('Game', GameSchema, 'Game');
