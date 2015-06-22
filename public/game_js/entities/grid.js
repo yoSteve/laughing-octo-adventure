@@ -36,6 +36,14 @@ game.Grid = me.Container.extend({
     }
   },
 
+  replaceBoard: function(board) {
+    for(var col = 0; col < this.COLS; col++) {
+      for(var row = 0; row < this.ROWS; row++) {
+        this.board[col][row].type = board[col][row].type;
+      }
+    }
+  },
+
   getCol: function(col) {
     return this.board[col]; 
   },

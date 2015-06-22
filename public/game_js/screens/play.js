@@ -48,6 +48,11 @@ game.PlayScreen = me.ScreenObject.extend({
         console.log('change places!');
         game.playScreen.switchTurn();
       });
+
+      game.socket.on('refresh-board', function(gameObject) {
+        console.log(gameObject.gameBoard);
+        game.playScreen.grid.replaceBoard(gameObject.gameBoard);
+      });
     },
 
     onDestroyEvent: function() {
