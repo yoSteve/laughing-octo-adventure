@@ -81,8 +81,14 @@ function socket (io, app, session) {
         getCurrentUser(socket, function(currentUser) {
           console.log('it was ', currentUser);
             if(currentUser) {
-              forEach(currentUser.activeGames, function(game) {
-                io.to(game.gameId).emit("disconnect");
+              currentUser.activeGames.forEach(function(game) {
+                console.log(game, 'why I print soo much');
+                if(games[game]){
+                  console.log(games[game].gameId, ' in process of being set inactive');
+                  games[game].active = false;
+                  games[game].save;
+                  delete games[game];
+                }
               });
               currentUser.activeGames = [];
               currentUser.waiting = false;
