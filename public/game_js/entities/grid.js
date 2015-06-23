@@ -130,6 +130,8 @@ game.Grid = me.Container.extend({
       var row = this.getRow(object.end.row);
       for(var i = object.end.col; i > object.end.col - object.count; i--) {
         row[i].vanishCrystal();
+        //insert particle burst here?
+
       }
     } else {
       var col = this.getCol(object.end.col);
