@@ -1,18 +1,21 @@
 var router = require('koa-router');
 var User = require('../models/user');
-var theGame = require('../app_modules/theGame');
+var Game = require('../models/game');
 var r = require('../db'); //set up db connection here
 function socket (io, app, session) {
     var nspLobby = io.of('/lobby');
     var games = {};
     nspLobby.on('connection', function(socket){
       console.log(games);
+
       var cookies = socket.request.headers.cookie;
       var regEx = /passport"\:\{"user"\:"(.+?)"\}/g
       var userIdMatches = regEx.exec(cookies);
+
       if(userIdMatches && userIdMatches.length > 1) {
         var userId = userIdMatches[1];
         if (userId){
+          console.log('user id found', userId);
           User.findById(userId, function(err, currentUser){
             if(currentUser) {
               currentUser.socketId = socket.id;
@@ -21,9 +24,16 @@ function socket (io, app, session) {
               User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
                 if(user) {
                   console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
-                  var gameId = theGame.createGameId(currentUser._id, user._id);
-                  var game = new theGame.Game(nspLobby, gameId, currentUser, user);
+                  var gameId = Game.createGameId(currentUser._id, user._id);
+                  var game = Game.create({ io: nspLobby, 
+                    gameId: gameId, 
+                    homeUser: currentUser, 
+                    awayUser: user
+                  });
+                  //broadcast to the opponent (away)
                   socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
+                  //automatically joins the game room, when the opponent joins the game, he will automatically be taken to the 
+                  //game page on start game
                   socket.join(game.gameId);
                   user.waiting = false;
                   user.save();
@@ -39,11 +49,21 @@ function socket (io, app, session) {
         }
       }
       // joining the game lobby, initialized of game with user ids (inprogress)
-      socket.on('start-game', function(data){
-          console.log(data['gameId'], " XXXXX NEED TO NKNOW OIEUHFDLS");
-          socket.join(data['gameId']);
-          console.log('logging data passed back ' + games);
-          games[data['gameId']].refreshBoard();
+      socket.on('start-game', function(gameId){
+          socket.join(gameId);
+          games[gameId].refreshBoard();
+      });
+
+      socket.on('create-team', function(teamData) {
+        //create and add to to current user
+        });
+
+      socket.on('move', function(data) {
+        console.log(data.gameId);
+        games[data.gameId].move(data);
+        //receives the move information
+        //emits matches to room,
+        //emits refreshed board (game state) to room 
       });
 
       socket.on('disconnect', function() {

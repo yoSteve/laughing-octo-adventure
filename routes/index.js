@@ -31,6 +31,7 @@ function gen(app){
 
 	router.get('/auth/google/response',
       passport.authenticate('google', {
+        successRedirect: '/game_canvas',
         failureRedirect: '/'
       }),
       function *(next) {
@@ -53,11 +54,7 @@ function gen(app){
 		this.redirect('/');
 	});
 
-	router.get('/game', isAuthenticated, function *(next) {
-		res.render('game', { user: req.user });
-	});
-
-	router.get('/game_canvas', function *(next) {
+	router.get('/game_canvas', isAuthenticated, function *(next) {
 		yield this.render('game_canvas');
 	});
 

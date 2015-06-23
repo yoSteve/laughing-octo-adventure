@@ -5,28 +5,12 @@ game.PlayScreen = me.ScreenObject.extend({
     }, 
 
     onResetEvent: function() {
+      var gameObject = game.data.gameObject;
+      console.log(gameObject);
       me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
-      tiles = [
-        [0, 1, 2, 3, 4, 5, 0, 1], 
-        [4, 5, 0, 1, 2, 3, 4, 5], 
-        [2, 3, 4, 5, 0, 1, 2, 3],
-        [0, 1, 2, 3, 4, 5, 0, 1],
-        [2, 3, 4, 5, 0, 1, 2, 3],
-        [4, 5, 0, 1, 2, 3, 4, 5],
-        [0, 1, 2, 3, 4, 5, 0, 1],
-        [2, 3, 4, 5, 0, 1, 2, 3]
-      ]
-
-      me.input.bindKey(me.input.KEY.X, 'clear', true);
-      me.input.bindKey(me.input.KEY.C, 'appear', true);
-      me.input.bindKey(me.input.KEY.F1, 'setPlayer1', true);
-      me.input.bindKey(me.input.KEY.F2, 'setPlayer2', true);
-      me.input.bindKey(me.input.KEY.V, 'hurtChar', true);
-      me.input.bindKey(me.input.KEY.B, 'blueMatch', true);
-
       this.grid = new game.Grid(8, 8);  
-      this.grid.populate(tiles);
+      this.grid.populate(gameObject.gameBoard);
       me.game.world.addChild(this.grid, 1);
 
       me.game.world.addChild(new game.TurnUI());
@@ -52,20 +36,29 @@ game.PlayScreen = me.ScreenObject.extend({
       this.team2 = new game.Team(team2Object);
       this.team2.setTeamInactive();
       me.game.world.addChild(this.team2);
+
+      game.socket.on('refresh-board', function(gameObject) {
+        console.log(gameObject);
+        //game.playScreen.grid.matchPairs = gameObject.matches;
+
+        console.log(gameObject.turn);
+        game.playScreen.currentPlayer = gameObject.turn;
+        game.playScreen.switchTurn();
+      });
     },
 
     onDestroyEvent: function() {
       me.game.world.removeChild(this.grid); 
+      me.game.world.removeChild(this.team1); 
+      me.game.world.removeChild(this.team2); 
     },
 
     switchTurn: function() {
       if(this.currentPlayer == 1) {
-        this.currentPlayer = 2;
         this.team2.setTeamActive();
         this.team1.setTeamInactive();
 
       } else {
-        this.currentPlayer = 1;
         this.team1.setTeamActive();
         this.team2.setTeamInactive();
       }
