@@ -139,9 +139,11 @@ GameSchema.methods.refreshBoard = function() {
   do { 
     console.log('we here');
     var cascade = this.resolveMatches();
-      allMatches.push(cascade[0]);
-      cascadeBoards.push(cascade[1]);
-    } while(cascade[0].length > 0);
+    if(cascade && cascade[0] && cascade[0].length > 0) {
+        allMatches.push(cascade[0]);
+        cascadeBoards.push(cascade[1]);
+    }
+  } while(cascade[0].length > 0);
   console.log('allmatches', allMatches);
   console.log('cascade board', cascadeBoards);
   this.io.to(this.gameId).emit('refresh-board', {
