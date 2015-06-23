@@ -12,7 +12,8 @@ var GameSchema = new Schema({
   away: Object,
   size: Number,
   board: Array,
-  currentPlayer: Number 
+  currentPlayer: Number,
+  active: Boolean
 });
 
 GameSchema.statics.create = function (gameVars){
@@ -23,6 +24,8 @@ GameSchema.statics.create = function (gameVars){
 //  game.away = JSON.parse(JSON.stringify(gameVars.awayUser.teams));
 //  game.home.hp = game.home.maxHp();
 //  game.away.hp = game.away.maxHp(); 
+//
+  game.active = true;
   game.matches = [];
   game.currentPlayer = 1;
   game.homeMana = 0;
