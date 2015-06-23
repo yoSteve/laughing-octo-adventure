@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var User = require('./user');
+var deepClone = require('../app_modules/deepClone');
 
 var GameSchema = new Schema({
   gameId: String,
@@ -240,7 +241,7 @@ for(var i = 0; i < matches.length; i++) {
 
   this.checkNullSpace();      
   this.assignCrystalsToBoard();
-  var boardCascade = this.board.slice(0); 
+  var boardCascade = deepClone(this.board); 
   //add matches to current matches this turn
   return [matches, boardCascade];
 }
