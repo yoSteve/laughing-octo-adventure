@@ -29,6 +29,9 @@ game.TitleScreen = me.ScreenObject.extend({
           game.data.player = 2; 
         }
         game.data.gameObject = gameObject;
+
+        game.socket.removeListener('refresh-board');
+
         me.state.change(me.state.PLAY);
       });
     },

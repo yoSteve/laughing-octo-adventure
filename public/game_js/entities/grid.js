@@ -5,7 +5,8 @@ game.Grid = me.Container.extend({
     this.board = [];
     this.needsShifting = false;
     this.currentMatches = 0;
-    this.matchPairs = [];
+    this.cascadeMatches = [];
+    this.cascadeBoards = [];
 
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
@@ -17,11 +18,16 @@ game.Grid = me.Container.extend({
       this.shiftEmpties();
     }
 
-    if(this.matchPairs[0] != null && this.currentMatches == 0) {
-      this.currentMatches = this.matchPairs[0].matches.length;
-      this.matchPairs[0].matches.forEach(function(tile) {
-        clearTiles(tile); 
-      });
+    //if there's matches
+    if(this.cascadeMatches[0] != null) {
+      //shift first off array
+      var match = this.cascadeMatches.shift();
+      console.log(match);
+
+      //handle one set
+     // match.forEach(function(matchObject) {
+     //   clearTiles(matchObject);
+     // });
     }
 
     return true;
@@ -41,7 +47,7 @@ game.Grid = me.Container.extend({
   replaceBoard: function(board) {
     for(var col = 0; col < this.COLS; col++) {
       for(var row = 0; row < this.ROWS; row++) {
-        this.board[col][row].type = board[col][row].type;
+        this.board[col][row].setCrystal(board[col][row]);
       }
     }
   },

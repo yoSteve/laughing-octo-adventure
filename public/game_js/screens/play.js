@@ -6,7 +6,6 @@ game.PlayScreen = me.ScreenObject.extend({
 
     onResetEvent: function() {
       var gameObject = game.data.gameObject;
-      console.log(gameObject);
       me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
       this.grid = new game.Grid(8, 8);  
@@ -38,10 +37,13 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       game.socket.on('refresh-board', function(gameObject) {
-        console.log(gameObject);
-        //game.playScreen.grid.matchPairs = gameObject.matches;
+        console.log('play refresh');
+        game.playScreen.grid.cascadeMatches = gameObject.matches;
+        game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
 
-        console.log(gameObject.turn);
+        console.log(gameObject.gameBoard);
+        game.playScreen.grid.replaceBoard(gameObject.gameBoard);
+
         game.playScreen.currentPlayer = gameObject.turn;
         game.playScreen.switchTurn();
       });
