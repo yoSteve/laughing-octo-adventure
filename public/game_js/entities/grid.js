@@ -4,22 +4,24 @@ game.Grid = me.Container.extend({
     this.ROWS = rows;
     this.board = [];
     this.needsShifting = false;
+    this.currentMatches = 0;
+    this.matchPairs = [];
+
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(me.input.isKeyPressed('clear')) {
-      this.clearTiles({ pattern: 'row', end: { col: 3, row: 3 }, count: 3 });
-    }
-
-    if(me.input.isKeyPressed('appear')) {
-      this.fillTiles({ pattern: 'row', end: { col: 3, row: 0}, count: 3, colors: [1, 2, 3] });
-    }
-
     if(this.needsShifting) {
       this.shiftEmpties();
+    }
+
+    if(this.matchPairs[0] != null && this.currentMatches == 0) {
+      this.currentMatches = this.matchPairs[0].matches.length;
+      this.matchPairs[0].matches.forEach(function(tile) {
+        clearTiles(tile); 
+      });
     }
 
     return true;
@@ -172,11 +174,5 @@ game.Grid = me.Container.extend({
       }
     }
     this.needsShifting = swapped;
-  },
-
-  resolveMatches: function(matches) {
-    matches.forEach(function(match) {
-      this.clearTiles(matches);
-    });
   }
 });
