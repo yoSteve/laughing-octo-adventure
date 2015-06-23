@@ -1,6 +1,6 @@
 var router = require('koa-router');
 var User = require('../models/user');
-var theGame = require('../app_modules/theGame');
+var Game = require('../models/game');
 var r = require('../db'); //set up db connection here
 function socket (io, app, session) {
     var nspLobby = io.of('/lobby');
@@ -24,8 +24,12 @@ function socket (io, app, session) {
               User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
                 if(user) {
                   console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
-                  var gameId = theGame.createGameId(currentUser._id, user._id);
-                  var game = new theGame.Game(nspLobby, gameId, currentUser, user);
+                  var gameId = Game.createGameId(currentUser._id, user._id);
+                  var game = Game.create({ io: nspLobby, 
+                    gameId: gameId, 
+                    homeUser: currentUser, 
+                    awayUser: user
+                  });
                   //broadcast to the opponent (away)
                   socket.broadcast.to(user.socketId).emit('match-message', game.gameId);
                   //automatically joins the game room, when the opponent joins the game, he will automatically be taken to the 

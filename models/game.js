@@ -64,6 +64,14 @@ GameSchema.methods.move = function(data) {
   return [this.gameBoard, this.mana];
 }
 
+GameSchema.statics.createGameId = function(id1, id2) {
+  console.log(id1);
+  console.log(id2);
+  if(id1 > id2)
+    return id1 + id2;
+  return id2 + id1;
+}
+
 GameSchema.methods.boardSetup = function(){
   mana = new Array(6);
   this.assignCrystalsToBoard();
