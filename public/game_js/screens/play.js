@@ -9,11 +9,6 @@ game.PlayScreen = me.ScreenObject.extend({
       console.log(gameObject);
       me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
-      me.input.bindKey(me.input.KEY.X, 'clear', true);
-      me.input.bindKey(me.input.KEY.C, 'appear', true);
-      me.input.bindKey(me.input.KEY.V, 'hurtChar', true);
-      me.input.bindKey(me.input.KEY.B, 'blueMatch', true);
-
       this.grid = new game.Grid(8, 8);  
       this.grid.populate(gameObject.gameBoard);
       me.game.world.addChild(this.grid, 1);
@@ -43,15 +38,19 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       game.socket.on('refresh-board', function(gameObject) {
+        console.log(gameObject);
+        //game.playScreen.grid.matchPairs = gameObject.matches;
+
         console.log(gameObject.turn);
         game.playScreen.currentPlayer = gameObject.turn;
         game.playScreen.switchTurn();
-        game.playScreen.grid.replaceBoard(gameObject.gameBoard);
       });
     },
 
     onDestroyEvent: function() {
       me.game.world.removeChild(this.grid); 
+      me.game.world.removeChild(this.team1); 
+      me.game.world.removeChild(this.team2); 
     },
 
     switchTurn: function() {
