@@ -9,7 +9,6 @@ function socket (io, app, session) {
       console.log(games);
 
       var cookies = socket.request.headers.cookie;
-      console.log(cookies);
       var regEx = /passport"\:\{"user"\:"(.+?)"\}/g
       var userIdMatches = regEx.exec(cookies);
 
@@ -48,9 +47,12 @@ function socket (io, app, session) {
       // joining the game lobby, initialized of game with user ids (inprogress)
       socket.on('start-game', function(gameId){
           socket.join(gameId);
-          console.log('logging data passed back ' + gameId);
           games[gameId].refreshBoard();
       });
+
+      socket.on('create-team', function(teamData) {
+        //create and add to to current user
+        });
 
       socket.on('move', function(data) {
         console.log(data.gameId);

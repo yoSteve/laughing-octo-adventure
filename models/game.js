@@ -53,7 +53,6 @@ GameSchema.methods.move = function(data) {
   else
     this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
-  this.resolveMatches();
   this.addMana();
   this.zeroMatches();
   console.log(this.mana);
@@ -137,13 +136,12 @@ GameSchema.methods.dropNewCrystals = function() {
 GameSchema.methods.refreshBoard = function() {
   var allMatches = [];
   var cascadeBoards = [];
-  while(true) { 
+  do { 
+    console.log('we here');
     var cascade = this.resolveMatches();
-    if(cascade[0].length < 1) 
-        break;
       allMatches.push(cascade[0]);
       cascadeBoards.push(cascade[1]);
-    }
+    } while(cascade[0].length > 0);
   console.log('allmatches', allMatches);
   console.log('cascade board', cascadeBoards);
   this.io.to(this.gameId).emit('refresh-board', {homeMana: this.homeMana,
