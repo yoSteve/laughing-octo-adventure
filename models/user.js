@@ -6,6 +6,7 @@ var User = new Schema({
 	username: String,
 	email: String,
 	password: String,
+  activeGames: Array,
 	stats: {
 		wins: Number,
 		losses: Number,

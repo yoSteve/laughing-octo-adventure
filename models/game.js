@@ -16,7 +16,7 @@ var GameSchema = new Schema({
 });
 
 GameSchema.statics.create = function (gameVars){
-  console.log('new instance of a new game created', gameVars);
+  console.log('new instance of a new game created', gameVars.gameId);
   // create clones of the team
   var game = new this(gameVars);
 //  game.home = JSON.parse(JSON.stringify(gameVars.homeUser.teams));
@@ -46,22 +46,24 @@ GameSchema.methods.move = function(data) {
   } else {
     this.currentPlayer = 1;
   }
-  //if row shiftRow(index, right?)
-  //if col shiftCol(index, down)?
   if(data['pattern'] === 'row')
     this.shiftRow(data['row'], data['movedRight']);
   else
     this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
-  this.addMana();
-  this.zeroMatches();
-  console.log(this.mana);
   this.refreshBoard();
-
-  //this.io.to(this.gameId).emit('switch-turn', { derp: 'derp' } );
-
   //respond with emit matches and board state
   return [this.gameBoard, this.mana];
+}
+
+var countMana = function(allMatches) {
+  var mana = [0,0,0,0,0,0];
+  allMatches.forEach(function(matches){
+    matches.forEach(function(match){
+      mana[match.type] = match.count; 
+    });
+  });  
+  return mana;
 }
 
 GameSchema.statics.createGameId = function(id1, id2) {
@@ -86,22 +88,6 @@ GameSchema.methods.zeroMana = function(mana){
   }
 }
 
-GameSchema.methods.addMana = function() {
-//  	var i = 5;
-//  	while(i >= 0){
-//      if (this.matches[i])
-//        this.mana[i] += this.matches[i];
-//  		i--;
-//    }
-  }
-
-GameSchema.methods.zeroMatches = function(){
-  var i = 5;
-  while(i >= 0) {
-    this.matches[i] = 0;
-    i--;
-  }
-}
   ///////GAME BOARD LOGIC//////////////////
 GameSchema.methods.getRandomCrystal = function() {
   return Math.round(Math.random() * 5);
@@ -132,28 +118,16 @@ GameSchema.methods.checkNullSpace = function() {
   } 
 }
 
-GameSchema.methods.dropNewCrystals = function() {
-  for (var col = 0; col < this.size; col++) {
-      if (this.board[col][0] == null) {
-          this.board[col][0] = this.getRandomCrystal;
-      };
-  } console.log("inside dropNewCrystals");
-  return board;
-}
-
 GameSchema.methods.refreshBoard = function() {
   var allMatches = [];
   var cascadeBoards = [];
   do { 
-    console.log('we here');
     var cascade = this.resolveMatches();
     if(cascade && cascade[0] && cascade[0].length > 0) {
         allMatches.push(cascade[0]);
         cascadeBoards.push(cascade[1]);
     }
   } while(cascade[0].length > 0);
-  console.log('allmatches', allMatches);
-  console.log('cascade board', cascadeBoards);
   this.io.to(this.gameId).emit('refresh-board', {
     homeMana: this.homeMana,
     awayMana: this.awayMana,
@@ -161,6 +135,7 @@ GameSchema.methods.refreshBoard = function() {
     home: this.awayUser.username, 
     away: this.homeUser.username, 
     matches: allMatches,
+    turnMana: countMana(allMatches),
     cascadeBoards: cascadeBoards,
     gameBoard: this.board,
     turn: this.currentPlayer

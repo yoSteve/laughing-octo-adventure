@@ -2,6 +2,7 @@ var passport = require('koa-passport');
 var secrets = require('../secrets');
 var User = require('../models/user');
 var bCrypt = require('bcrypt-node');
+var sanitize = require('sanitize-html');
 
 passport.serializeUser(function(user, done) {
   console.log('serialized');
@@ -17,7 +18,7 @@ passport.deserializeUser(function(id, done) { User.findById(id, function(err, us
 var LocalStrategy = require('passport-local').Strategy
 passport.use(new LocalStrategy(function(username, password, done) {
   //retrieve user
-  findOrCreateUser(username, password, false, done);
+  findOrCreateUser(username, password, done);
   }
 ))
 
@@ -29,13 +30,14 @@ passport.use(new GoogleStrategy({
   },
   function(token, tokenSecret, profile, done) {
   //retrieve user
-  findOrCreateUser(profile.displayName, profile.id, true, done);
+  findOrCreateUser(profile.displayName, profile.id, done, true);
   }
 ))
 
 
-var findOrCreateUser = function(username, password, oauth, done){
-  User.findOne({ 'username': username }, function(err, user){
+var findOrCreateUser = function(username, password, done, oauth){
+  oauth = typeof oauth !== 'undefined' ?  oauth : false;
+  User.findOne({ 'username': sanitize(username) }, function(err, user){
     if (err) {
       console.error(('Error in signup : ' + err));
       return done(err);
@@ -57,11 +59,11 @@ var findOrCreateUser = function(username, password, oauth, done){
     } else {
       var newUser = new User();
       //set credentials
-      newUser.username = username;
+      newUser.username = sanitize(username);
       if (!oauth)
-        newUser.password = createHash(password);
+        newUser.password = createHash(sanitize(password));
       else
-        newUser.password = password
+        newUser.password = santize(password);
 
       //save user
       newUser.save(function(err) {
@@ -78,15 +80,18 @@ var findOrCreateUser = function(username, password, oauth, done){
 
 
 var createHash = function(password){
+  password = santitize(password);
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
 
 
 var isValidPassword = function(user, password){
+  password = sanitize(password);
   return bCrypt.compareSync(password, user.password);
 }
 
 var isValidToken = function(user, password){
+  password = sanitize(password);
   console.log(password, user.password);
   return (0 === user.password.localeCompare(password));
 }
