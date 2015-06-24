@@ -144,7 +144,7 @@ GameSchema.methods.refreshBoard = function() {
     cascadeBoards: cascadeBoards,
     gameBoard: this.board,
     turn: this.currentPlayer,
-    lastMove: lastMove
+    lastMove: this.lastMove
   });
 }
 
