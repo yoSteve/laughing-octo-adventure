@@ -3,18 +3,22 @@ var game = {
   data: {
   //set which player is connected
     player: 0,
-    team1:  { teamName: 'Squatpump', playerNum: 1, characters: [ 
-        { name: 'Stinky Pete', charClass: game.charClasses.Fighter },
-        { name: 'Shteven', charClass: game.charClasses.RedMage },
-        { name: 'Wheel', charClass: game.charClasses.Thief },
-        { name: 'Kervin', charClass: game.charClasses.BlackMage }
-      ] },
-    team2:  { teamName: 'Derpyderp', playerNum: 2, characters: [ 
-        { name: 'Benji', charClass: game.charClasses.WhiteMage },
-        { name: 'Shames', charClass: game.charClasses.Fighter },
-        { name: 'Brody', charClass: game.charClasses.Thief },
-        { name: 'Vance', charClass: game.charClasses.BlackBelt }
-      ] }
+    team1:  { teamName: 'Squatpump', playerNum: 1, characters: 
+      [ 
+        { name: 'Stinky Pete', charClass: 'fighter' },
+        { name: 'Shteven', charClass: 'red-mage' },
+        { name: 'Wheel', charClass: 'thief' },
+        { name: 'Kervin', charClass: 'black-mage' }
+      ]
+    },
+    team2:  { teamName: 'Derpyderp', playerNum: 2, characters: 
+      [ 
+        { name: 'Benji', charClass: 'white-mage' },
+        { name: 'Shames', charClass: 'fighter' },
+        { name: 'Brody', charClass: 'thief' },
+        { name: 'Vance', charClass: 'black-belt' }
+      ] 
+    }
   },
 
   onload: function () {
