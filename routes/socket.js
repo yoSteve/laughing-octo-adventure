@@ -54,19 +54,20 @@ function nsp (io) {
   nspLobby = io.of('/lobby'); 
   nspLobby.on('connection', function(socket){
     console.log('new connection, current active games: ',games.length);
-    var currentUser;    
-    getCurrentUser(socket, function(foundUser) {
-      if(currentUser) {
-        currentUser = foundUser;
-        currentUser.socketId = socket.id;
-        currentUser.waiting = false;
-        currentUser.save();
-      }
-    });
+
 
     socket.on('team-chosen', function(teamInfo) {
-     //assign team info => enter matchmaking  }
-     enterMatchmaking(socket, currentUser);
+      console.log(teamInfo);
+      getCurrentUser(socket, function(foundUser) {
+        if(currentUser) {
+          var currentUser = foundUser;
+          //assign current team
+          currentUser.socketId = socket.id;
+          currentUser.waiting = false;
+          currentUser.save();
+          enterMatchmaking(socket, currentUser);
+        }
+      });
     });
 
     // joining the game lobby, initialized of game with user ids (inprogress)
