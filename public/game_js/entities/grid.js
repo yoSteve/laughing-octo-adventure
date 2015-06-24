@@ -35,7 +35,7 @@ game.Grid = me.Container.extend({
     } 
 
     this.lastMove = null;
-
+    
     //if animating appearance or vanishes
     if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
       console.log('animating!', this.cellsVanishing, this.cellsAppearing);
@@ -46,6 +46,7 @@ game.Grid = me.Container.extend({
     if(this.needsShifting) {
       console.log('shifting!');
       this.shiftEmpties();
+
       return true;
     }
 
@@ -62,9 +63,6 @@ game.Grid = me.Container.extend({
       }
     } else {
       if(this.lastBoard != null) {
-        this.printBoard();
-        this.printLastBoard();
-        
         console.log('replace board');
         this.replaceBoard(this.lastBoard);
         this.lastBoard = null;
@@ -226,6 +224,7 @@ game.Grid = me.Container.extend({
         }
       }
     }
+
   },
 
   shiftEmpties: function() {
@@ -254,6 +253,24 @@ game.Grid = me.Container.extend({
       printBoard += '[ ';
       for(var col = 0; col < this.COLS; col++) {
         printBoard += this.board[col][row].type + ', ';
+      }
+      printBoard += ']\n'
+    }
+
+    console.log(printBoard);
+  },
+
+  printCurrentBoard: function() {
+    if(this.cascadeBoards[this.currentBoard] == null) {
+      console.log('none'); 
+      return false;
+    }
+
+    var printBoard = '';
+    for(var row = 0; row < this.ROWS; row++) {
+      printBoard += '[ ';
+      for(var col = 0; col < this.COLS; col++) {
+        printBoard += this.cascadeBoards[this.currentBoard][col][row] + ', ';
       }
       printBoard += ']\n'
     }
