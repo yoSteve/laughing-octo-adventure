@@ -8,6 +8,8 @@ game.Grid = me.Container.extend({
     this.cellsVanishing = 0;
     this.cellsAppearing = 0;
 
+    this.lastMove;
+
     this.currentMatch = 0;
     this.cascadeMatches = [];
 
@@ -19,6 +21,11 @@ game.Grid = me.Container.extend({
 
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
+
+    if(this.lastMove != null) {
+      this.handleMove();    
+      this.lastMove = null;
+    }
 
     //if animating appearance or vanishes
     if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
@@ -44,13 +51,18 @@ game.Grid = me.Container.extend({
         this.currentBoard++;
       }
     } else {
-      this.currentMatch = 0;
-      this.cascadeMatches = [];
-      this.currentBoard = 0;
-      this.cascadeBoards = [];
+      this.replaceBoard(game.data.gameObject.gameBoard);
+      //this.currentMatch = 0;
+      //this.cascadeMatches = [];
+      //this.currentBoard = 0;
+      //this.cascadeBoards = [];
     }
 
     return true;
+  },
+
+  handleMove: function() {
+     
   },
 
   handleCascadeMatch: function(index) {

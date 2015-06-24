@@ -37,8 +37,6 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       game.socket.on('refresh-board', function(gameObject) {
-        game.playScreen.grid.replaceBoard(gameObject.gameBoard);
-
         game.data.gameObject = gameObject;
         game.playScreen.grid.cascadeMatches = gameObject.matches;
         game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
