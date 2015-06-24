@@ -22,7 +22,7 @@ game.Grid = me.Container.extend({
 
     //if animating appearance or vanishes
     if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
-      console.log('animating!');
+      console.log('animating!', this.cellsVanishing, this.cellsAppearing);
       return true;
     }
 
@@ -83,6 +83,7 @@ game.Grid = me.Container.extend({
   replaceBoard: function(board) {
     for(var col = 0; col < this.COLS; col++) {
       for(var row = 0; row < this.ROWS; row++) {
+        this.board[col][row].alive = true;
         this.board[col][row].setCrystal(board[col][row]);
       }
     }
@@ -191,8 +192,7 @@ game.Grid = me.Container.extend({
       for(var row = 0; row < this.ROWS; row++) {
         var cell = this.board[col][row];
         if(cell.type == 6) {
-          cell.setCrystal(diffBoard[col][row]);
-          cell.appearCrystal();
+          cell.appearCrystal(diffBoard[col][row]);
         }
       }
     }
@@ -216,5 +216,17 @@ game.Grid = me.Container.extend({
       }
     }
     this.needsShifting = swapped;
+  },
+
+  printBoard: function() {
+    var printBoard = [];
+    for(var col = 0; col < this.COLS; col++) {
+      printBoard.push([]);
+      for(var row = 0; row < this.ROWS; row++) {
+        printBoard[col].push(this.board[col][row].type);
+      }
+    }
+
+    console.log(printBoard);
   }
 });

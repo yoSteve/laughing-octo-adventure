@@ -86,8 +86,9 @@ game.Tile = me.DraggableEntity.extend({
     });
   },
 
-  appearCrystal: function() {
+  appearCrystal: function(type) {
     var tile = this;
+    tile.setCrystal(type);
     game.playScreen.grid.cellsAppearing++;
     this.renderable.setCurrentAnimation('appear', function() {
       tile.renderable.setCurrentAnimation('idle');

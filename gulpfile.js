@@ -42,5 +42,5 @@ gulp.task('scripts', function() {
     .pipe(rename('combined.min.js'))
     .pipe(uglify())
     .pipe(header(headerValue))
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('dist'));
 });
