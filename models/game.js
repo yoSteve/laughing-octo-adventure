@@ -13,7 +13,8 @@ var GameSchema = new Schema({
   size: Number,
   board: Array,
   currentPlayer: Number,
-  active: Boolean
+  active: Boolean,
+  lastMove: Object
 });
 
 GameSchema.statics.create = function (gameVars){
@@ -54,6 +55,7 @@ GameSchema.methods.move = function(data) {
   else
     this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
+  game.lastMove = data;
   this.refreshBoard();
   //respond with emit matches and board state
   return [this.gameBoard, this.mana];
@@ -141,7 +143,8 @@ GameSchema.methods.refreshBoard = function() {
     turnMana: countMana(allMatches),
     cascadeBoards: cascadeBoards,
     gameBoard: this.board,
-    turn: this.currentPlayer
+    turn: this.currentPlayer,
+    lastMove: this.lastMove
   });
 }
 
