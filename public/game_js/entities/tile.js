@@ -76,10 +76,10 @@ game.Tile = me.DraggableEntity.extend({
 
   vanishCrystal: function() {
     var tile = this;
+    tile.alive = false;
     game.playScreen.grid.cellsVanishing++;
     this.renderable.setCurrentAnimation('vanish', function() {
       tile.setCrystal(6);
-      tile.alive = false;
       game.playScreen.grid.needsShifting = true;
       game.playScreen.grid.cellsVanishing--;
       return false;
