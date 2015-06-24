@@ -55,7 +55,7 @@ GameSchema.methods.move = function(data) {
   else
     this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
-  game.lastMove = data;
+  this.lastMove = data;
   this.refreshBoard();
   //respond with emit matches and board state
   return [this.gameBoard, this.mana];

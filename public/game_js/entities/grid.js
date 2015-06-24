@@ -8,6 +8,9 @@ game.Grid = me.Container.extend({
     this.cellsVanishing = 0;
     this.cellsAppearing = 0;
 
+    this.doStuff = false;
+
+    this.lastBoard = null;
     this.lastMove;
 
     this.currentMatch = 0;
@@ -22,10 +25,16 @@ game.Grid = me.Container.extend({
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(this.lastMove != null) {
-      this.handleMove();    
-      this.lastMove = null;
+    if(!this.doStuff) {
+      return true;
     }
+
+    if(this.lastMove != null && game.playScreen.currentPlayer == game.data.player) {
+      console.log('net move');
+      this.handleMove();    
+    } 
+
+    this.lastMove = null;
 
     //if animating appearance or vanishes
     if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
@@ -39,19 +48,27 @@ game.Grid = me.Container.extend({
       this.shiftEmpties();
       return true;
     }
+
     
     if(this.cascadeMatches.length > 0) {
       if(this.currentMatch == this.currentBoard && this.currentMatch < this.cascadeMatches.length) {
-        console.log('matches!', this.currentMatch);
+        console.log('handling match', this.currentMatch);
         this.handleCascadeMatch(this.currentMatch);
         this.currentMatch++;
       } else if(this.currentMatch != this.currentBoard && this.currentBoard < this.cascadeBoards.length) {
-        console.log('boards!', this.currentBoard);
+        console.log('handling board', this.currentBoard);
         this.handleCascadeBoard(this.currentBoard);
         this.currentBoard++;
       }
     } else {
-      this.replaceBoard(game.data.gameObject.gameBoard);
+      if(this.lastBoard != null) {
+        this.printBoard();
+        this.printLastBoard();
+        
+        console.log('replace board');
+        this.replaceBoard(this.lastBoard);
+        this.lastBoard = null;
+      }
       //this.currentMatch = 0;
       //this.cascadeMatches = [];
       //this.currentBoard = 0;
@@ -62,7 +79,13 @@ game.Grid = me.Container.extend({
   },
 
   handleMove: function() {
-     
+    var move = this.lastMove;
+
+    if(move.pattern == 'row') {
+      this.shiftRow(move.row, move.movedRight);
+    } else {
+      this.shiftCol(move.col, move.movedDown);
+    }
   },
 
   handleCascadeMatch: function(index) {
@@ -76,7 +99,6 @@ game.Grid = me.Container.extend({
 
   handleCascadeBoard: function(index) {
     var diffBoard = game.playScreen.grid.cascadeBoards[index];  
-    console.log(diffBoard);
 
     game.playScreen.grid.tileFall(diffBoard);
   },
@@ -143,8 +165,6 @@ game.Grid = me.Container.extend({
     for(var i = 0; i < this.COLS; i++) {
       this.board[i][rowIndex] = row[i];
     }
-
-    game.sendMessage('move', { pattern: 'row', row: rowIndex, movedRight: right });
   },
 
   shiftCol(colIndex, down) {
@@ -175,8 +195,6 @@ game.Grid = me.Container.extend({
     }
 
     this.board[colIndex] = col;
-
-    game.sendMessage('move', { pattern: 'column', col: colIndex, movedDown: down });
   },
 
   clearTiles: function(object) {
@@ -231,12 +249,26 @@ game.Grid = me.Container.extend({
   },
 
   printBoard: function() {
-    var printBoard = [];
-    for(var col = 0; col < this.COLS; col++) {
-      printBoard.push([]);
-      for(var row = 0; row < this.ROWS; row++) {
-        printBoard[col].push(this.board[col][row].type);
+    var printBoard = '';
+    for(var row = 0; row < this.ROWS; row++) {
+      printBoard += '[ ';
+      for(var col = 0; col < this.COLS; col++) {
+        printBoard += this.board[col][row].type + ', ';
       }
+      printBoard += ']\n'
+    }
+
+    console.log(printBoard);
+  },
+
+  printLastBoard: function() {
+    var printBoard = '';
+    for(var row = 0; row < this.ROWS; row++) {
+      printBoard += '[ ';
+      for(var col = 0; col < this.COLS; col++) {
+        printBoard += this.lastBoard[col][row] + ', ';
+      }
+      printBoard += ']\n'
     }
 
     console.log(printBoard);

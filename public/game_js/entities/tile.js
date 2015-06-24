@@ -55,7 +55,7 @@ game.Tile = me.DraggableEntity.extend({
     this._super(me.DraggableEntity, 'dragStart', [event]);
     this.oldPos = this.mousePos.clone();
     this.grabbed = true;
-    console.log('col: ' + this.col + ', row: ' + this.row + ', alive: ' + this.alive + ', type: ' + this.type);
+    //console.log('col: ' + this.col + ', row: ' + this.row + ', alive: ' + this.alive + ', type: ' + this.type);
   },
 
   dragEnd: function(event) {
@@ -102,12 +102,14 @@ game.Tile = me.DraggableEntity.extend({
   moveHorizontal: function(right) {
     this.pos.y = this.row * game.Tile.height;
     game.playScreen.grid.shiftRow(this.row, right);
+    game.sendMessage('move', { pattern: 'row', row: this.row, movedRight: right });
     this.moved = true;
   },
 
   moveVertical: function(down) {
     this.pos.x = this.col * game.Tile.width;
     game.playScreen.grid.shiftCol(this.col, down);
+    game.sendMessage('move', { pattern: 'column', col: this.col, movedDown: down });
     this.moved = true;
   }
 });
