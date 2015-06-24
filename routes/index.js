@@ -22,11 +22,12 @@ function gen(app){
     // have to make user the game is active, or have
     // the user select from a list of active games 
     // if we want them to be able to be playing multiple games at once.
-    if(this.request.user){
+    if(this.session.passport.user){
       yield this.render('/game_canvas');
-    }
-      console.log(this.session);
+    } else {
+      console.log('logging this section' , this.session.passport.user);
       yield this.render('index');
+    }
 
 	});
 
