@@ -55,7 +55,6 @@ game.Tile = me.DraggableEntity.extend({
     this._super(me.DraggableEntity, 'dragStart', [event]);
     this.oldPos = this.mousePos.clone();
     this.grabbed = true;
-    //console.log('col: ' + this.col + ', row: ' + this.row + ', alive: ' + this.alive + ', type: ' + this.type);
   },
 
   dragEnd: function(event) {

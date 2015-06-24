@@ -44,7 +44,6 @@ game.PlayScreen = me.ScreenObject.extend({
 
         game.playScreen.grid.lastBoard = gameObject.gameBoard;
         game.playScreen.grid.lastMove = gameObject.lastMove;
-        console.log(gameObject.matches);
         game.playScreen.grid.cascadeMatches = gameObject.matches;
         game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
 

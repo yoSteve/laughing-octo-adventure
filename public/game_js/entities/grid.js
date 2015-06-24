@@ -30,7 +30,6 @@ game.Grid = me.Container.extend({
     }
 
     if(this.lastMove != null && game.playScreen.currentPlayer == game.data.player) {
-      console.log('net move');
       this.handleMove();    
     } 
 
@@ -38,13 +37,11 @@ game.Grid = me.Container.extend({
     
     //if animating appearance or vanishes
     if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
-      console.log('animating!', this.cellsVanishing, this.cellsAppearing);
       return true;
     }
 
     //after animations, shift
     if(this.needsShifting) {
-      console.log('shifting!');
       this.shiftEmpties();
 
       return true;
@@ -53,17 +50,14 @@ game.Grid = me.Container.extend({
     
     if(this.cascadeMatches.length > 0) {
       if(this.currentMatch == this.currentBoard && this.currentMatch < this.cascadeMatches.length) {
-        console.log('handling match', this.currentMatch);
         this.handleCascadeMatch(this.currentMatch);
         this.currentMatch++;
       } else if(this.currentMatch != this.currentBoard && this.currentBoard < this.cascadeBoards.length) {
-        console.log('handling board', this.currentBoard);
         this.handleCascadeBoard(this.currentBoard);
         this.currentBoard++;
       }
     } else {
       if(this.lastBoard != null) {
-        console.log('replace board');
         this.replaceBoard(this.lastBoard);
         this.lastBoard = null;
       }
