@@ -67,10 +67,6 @@ game.Grid = me.Container.extend({
         this.replaceBoard(this.lastBoard);
         this.lastBoard = null;
       }
-      //this.currentMatch = 0;
-      //this.cascadeMatches = [];
-      //this.currentBoard = 0;
-      //this.cascadeBoards = [];
     }
 
     return true;
