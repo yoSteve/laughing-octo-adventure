@@ -14,24 +14,12 @@ game.PlayScreen = me.ScreenObject.extend({
 
       me.game.world.addChild(new game.TurnUI());
 
-      var team1Object = { teamName: 'Squatpump', playerNum: 1, characters: [ 
-        { name: 'Stinky Pete', charClass: game.charClasses.Fighter },
-        { name: 'Shteven', charClass: game.charClasses.RedMage },
-        { name: 'Wheel', charClass: game.charClasses.Thief },
-        { name: 'Kervin', charClass: game.charClasses.BlackMage }
-      ] };
-
+      var team1Object = game.data.team1;
       this.team1 = new game.Team(team1Object);
       this.team1.setTeamActive();
       me.game.world.addChild(this.team1);
 
-      var team2Object = { teamName: 'Derpyderp', playerNum: 2, characters: [ 
-        { name: 'Benji', charClass: game.charClasses.WhiteMage },
-        { name: 'Shames', charClass: game.charClasses.Fighter },
-        { name: 'Brody', charClass: game.charClasses.Thief },
-        { name: 'Vance', charClass: game.charClasses.BlackBelt }
-      ] };
-
+      var team2Object = game.data.team2; 
       this.team2 = new game.Team(team2Object);
       this.team2.setTeamInactive();
       me.game.world.addChild(this.team2);
