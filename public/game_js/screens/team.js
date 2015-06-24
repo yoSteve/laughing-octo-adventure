@@ -7,8 +7,11 @@ game.TeamScreen = me.ScreenObject.extend({
     this.pageTitleUI = new game.PageTitle();
     me.game.world.addChild(this.pageTitleUI);
 
-    game.sendMessage('team-chosen', game.data.team1); 
-    game.sendMessage('team-chosen', game.data.team2);
+    this.team1Button = new game.ChooseTeam1(0, 300); 
+    me.game.world.addChild(this.team1Button);
+
+    this.team2Button = new game.ChooseTeam2(650, 300); 
+    me.game.world.addChild(this.team2Button);
   },
 
   onDestroyEvent: function() {
