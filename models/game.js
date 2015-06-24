@@ -211,7 +211,7 @@ GameSchema.methods.getColMatches = function() {
 
 GameSchema.methods.resolveMatches = function() {
   var matches;
-
+  console.log('BOARD BEFORE RESOLVE', this.board)
   matches = this.getRowMatches().concat(this.getColMatches()); 
 
   var match, endCol, endRow, count;
@@ -230,9 +230,12 @@ GameSchema.methods.resolveMatches = function() {
       }
     }
   }
-
+  console.log('current matches', matches);
+  console.log('BOARD AFTER RESOLVE', this.board);
   this.checkNullSpace();      
+  console.log('BOARD AFTER MOVING NULL SPACE', this.board);
   this.assignCrystalsToBoard();
+  console.log('BOARD AFTER ASSIGN CRYSTALS', this.board);
   var boardCascade = deepClone(this.board); 
   //add matches to current matches this turn
   return [matches, boardCascade];
