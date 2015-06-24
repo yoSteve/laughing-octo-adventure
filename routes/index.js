@@ -22,6 +22,10 @@ function gen(app){
     // have to make user the game is active, or have
     // the user select from a list of active games 
     // if we want them to be able to be playing multiple games at once.
+    if(this.request.user){
+      yield this.render('/game_canvas');
+    }
+      console.log(this.session);
       yield this.render('index');
 
 	});
@@ -35,12 +39,15 @@ function gen(app){
         failureRedirect: '/'
       }),
       function *(next) {
-        this.redirect('/game_canvas');
+        console.log('SHOULDNT GET HERE');
+        this.redirect('/');
       }
   );
 		//handle login
-	router.post('/login', passport.authenticate('local'), function* (next) {
-    yield this.render('game_canvas');
+	router.post('/login', passport.authenticate('local',
+        { failureRedirect: '/'}), function* (next) {
+    console.log(next, 'just printed next');
+    yield this.render('/game_canvas');
 	});
 
 	//handle Registration
@@ -51,6 +58,7 @@ function gen(app){
 
 	router.get('/logout', function *(next) {
 		this.logout();
+    this.session = null;
 		this.redirect('/');
 	});
 

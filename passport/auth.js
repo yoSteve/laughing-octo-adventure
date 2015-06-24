@@ -6,7 +6,6 @@ var sanitize = require('sanitize-html');
 
 passport.serializeUser(function(user, done) {
   console.log('serialized');
-  console.log(user.id);
   done(null, user.id);
 })
 
@@ -63,7 +62,7 @@ var findOrCreateUser = function(username, password, done, oauth){
       if (!oauth)
         newUser.password = createHash(sanitize(password));
       else
-        newUser.password = santize(password);
+        newUser.password = sanitize(password);
 
       //save user
       newUser.save(function(err) {
@@ -80,7 +79,7 @@ var findOrCreateUser = function(username, password, done, oauth){
 
 
 var createHash = function(password){
-  password = santitize(password);
+  password = sanitize(password);
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
 

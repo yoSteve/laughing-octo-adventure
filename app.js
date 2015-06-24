@@ -13,7 +13,7 @@ var mongoose = require('mongoose');
 var socketIo  = require('socket.io');
 var router = require('./routes/index');
 var socket = require('./routes/socket');
-
+var flash = require('koa-flash');
 var app = koa();
 app.use(bodyParser({
   detectJSON: function (ctx) {
@@ -35,7 +35,7 @@ mongoose.connect(dbConfig.url);
 //require passport module
 app.keys = ['secrets'];
 app.use(session());
-
+app.use(flash());
 require('./passport/auth');
 app.use(passport.initialize());
 app.use(passport.session());
