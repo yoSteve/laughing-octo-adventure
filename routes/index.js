@@ -25,7 +25,6 @@ function gen(app){
     if(this.session.passport.user){
       yield this.render('/game_canvas');
     } else {
-      console.log('logging this section' , this.session.passport.user);
       yield this.render('index');
     }
 
