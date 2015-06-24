@@ -37,12 +37,11 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       game.socket.on('refresh-board', function(gameObject) {
-        console.log('play refresh');
+        game.playScreen.grid.replaceBoard(gameObject.gameBoard);
+
+        game.data.gameObject = gameObject;
         game.playScreen.grid.cascadeMatches = gameObject.matches;
         game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
-
-        console.log(gameObject.gameBoard);
-        game.playScreen.grid.replaceBoard(gameObject.gameBoard);
 
         game.playScreen.currentPlayer = gameObject.turn;
         game.playScreen.switchTurn();
@@ -57,12 +56,11 @@ game.PlayScreen = me.ScreenObject.extend({
 
     switchTurn: function() {
       if(this.currentPlayer == 1) {
-        this.team2.setTeamActive();
-        this.team1.setTeamInactive();
-
-      } else {
         this.team1.setTeamActive();
         this.team2.setTeamInactive();
+      } else {
+        this.team2.setTeamActive();
+        this.team1.setTeamInactive();
       }
     }
 });

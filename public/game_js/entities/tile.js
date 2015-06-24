@@ -55,7 +55,7 @@ game.Tile = me.DraggableEntity.extend({
     this._super(me.DraggableEntity, 'dragStart', [event]);
     this.oldPos = this.mousePos.clone();
     this.grabbed = true;
-    //console.log('col: ' + this.col + ', row: ' + this.row + ', alive: ' + this.alive + ', type: ' + this.type);
+    console.log('col: ' + this.col + ', row: ' + this.row + ', alive: ' + this.alive + ', type: ' + this.type);
   },
 
   dragEnd: function(event) {
@@ -76,19 +76,23 @@ game.Tile = me.DraggableEntity.extend({
 
   vanishCrystal: function() {
     var tile = this;
+    game.playScreen.grid.cellsVanishing++;
     this.renderable.setCurrentAnimation('vanish', function() {
       tile.setCrystal(6);
       tile.alive = false;
       game.playScreen.grid.needsShifting = true;
+      game.playScreen.grid.cellsVanishing--;
       return false;
     });
   },
 
   appearCrystal: function() {
     var tile = this;
+    game.playScreen.grid.cellsAppearing++;
     this.renderable.setCurrentAnimation('appear', function() {
       tile.renderable.setCurrentAnimation('idle');
       game.playScreen.grid.needsShifting = true;
+      game.playScreen.grid.cellsAppearing--;
       tile.alive = true;
       return false;
     });

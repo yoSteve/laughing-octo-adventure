@@ -4,8 +4,14 @@ game.Grid = me.Container.extend({
     this.ROWS = rows;
     this.board = [];
     this.needsShifting = false;
-    this.currentMatches = 0;
+
+    this.cellsVanishing = 0;
+    this.cellsAppearing = 0;
+
+    this.currentMatch = 0;
     this.cascadeMatches = [];
+
+    this.currentBoard = 0;
     this.cascadeBoards = [];
 
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
@@ -14,23 +20,53 @@ game.Grid = me.Container.extend({
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(this.needsShifting) {
-      this.shiftEmpties();
+    //if animating appearance or vanishes
+    if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
+      console.log('animating!');
+      return true;
     }
 
-    //if there's matches
-    if(this.cascadeMatches[0] != null) {
-      //shift first off array
-      var match = this.cascadeMatches.shift();
-      console.log(match);
-
-      //handle one set
-     // match.forEach(function(matchObject) {
-     //   clearTiles(matchObject);
-     // });
+    //after animations, shift
+    if(this.needsShifting) {
+      console.log('shifting!');
+      this.shiftEmpties();
+      return true;
+    }
+    
+    if(this.cascadeMatches.length > 0) {
+      if(this.currentMatch == this.currentBoard && this.currentMatch < this.cascadeMatches.length) {
+        console.log('matches!', this.currentMatch);
+        this.handleCascadeMatch(this.currentMatch);
+        this.currentMatch++;
+      } else if(this.currentMatch != this.currentBoard && this.currentBoard < this.cascadeBoards.length) {
+        console.log('boards!', this.currentBoard);
+        this.handleCascadeBoard(this.currentBoard);
+        this.currentBoard++;
+      }
+    } else {
+      this.currentMatch = 0;
+      this.cascadeMatches = [];
+      this.currentBoard = 0;
+      this.cascadeBoards = [];
     }
 
     return true;
+  },
+
+  handleCascadeMatch: function(index) {
+    var matchSet = this.cascadeMatches[index];
+
+    //handle one set
+    matchSet.forEach(function(matchObject) {
+      game.playScreen.grid.clearTiles(matchObject);
+    });
+  },
+
+  handleCascadeBoard: function(index) {
+    var diffBoard = game.playScreen.grid.cascadeBoards[index];  
+    console.log(diffBoard);
+
+    game.playScreen.grid.tileFall(diffBoard);
   },
 
   populate: function(tiles) {
@@ -135,29 +171,29 @@ game.Grid = me.Container.extend({
     if(object.pattern == 'row') {
       var row = this.getRow(object.end.row);
       for(var i = object.end.col; i > object.end.col - object.count; i--) {
-        row[i].vanishCrystal();
+        if(row[i].alive) {
+          row[i].vanishCrystal();
+        }
       }
     } else {
       var col = this.getCol(object.end.col);
       for(var i = object.end.row; i > object.end.row - object.count; i--) {
-        col[i].vanishCrystal();
+        if(col[i].alive) {
+          col[i].vanishCrystal();
+        }
       }
     }
   },
 
-  fillTiles: function(object) {
-    // { pattern: row/column, end: { col: col, row: row }, count: > 3, colors: [1, 2, 3] }
-    if(object.pattern == 'row') {
-      var row = this.getRow(object.end.row);      
-      for(var i = object.end.col, j = object.colors.length - 1; i > object.end.col - object.count; i--, j--) {
-        row[i].setCrystal(object.colors[j]);
-        row[i].appearCrystal();
-      }
-    } else {
-      var col = this.getCol(object.end.col);      
-      for(var i = object.end.row; i > object.end.row - object.count; i--) {
-        col[i].setCrystal(object.colors[i]);
-        col[i].appearCrystal();
+  tileFall: function(diffBoard) {
+    //get differences in boards
+    for(var col = 0; col < this.COLS; col++) {
+      for(var row = 0; row < this.ROWS; row++) {
+        var cell = this.board[col][row];
+        if(cell.type == 6) {
+          cell.setCrystal(diffBoard[col][row]);
+          cell.appearCrystal();
+        }
       }
     }
   },
