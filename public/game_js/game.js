@@ -3,6 +3,8 @@ var game = {
   data: {
   //set which player is connected
     player: 0,
+    team1: null, 
+    team2: null 
   },
 
   onload: function () {
@@ -38,6 +40,27 @@ var game = {
   // Run on game resources loaded.
   loaded: function () {
       this.socket = io('http://localhost:3000/lobby');
+      
+      this.data.team1 = { teamName: 'Squatpump', playerNum: 1, characters: 
+        [ 
+          { name: 'Stinky Pete', charClass: game.charClasses.Fighter },
+          { name: 'Shteven', charClass: game.charClasses.RedMage },
+          { name: 'Wheel', charClass: game.charClasses.Thief },
+          { name: 'Kervin', charClass: game.charClasses.BlackMage }
+        ]
+      }
+
+      this.data.team2 = { teamName: 'Derpyderp', playerNum: 2, characters: 
+        [ 
+          { name: 'Benji', charClass: game.charClasses.WhiteMage },
+          { name: 'Shames', charClass: game.charClasses.Fighter },
+          { name: 'Brody', charClass: game.charClasses.Thief },
+          { name: 'Vance', charClass: game.charClasses.BlackBelt }
+        ] 
+      }
+
+      this.teamScreen = new game.TeamScreen();
+      me.state.set(me.state.READY, this.teamScreen);
 
       this.titleScreen = new game.TitleScreen();
       me.state.set(me.state.MENU, this.titleScreen);
@@ -48,7 +71,7 @@ var game = {
       me.pool.register('tile', game.Tile, true);
 
       // Start the game.
-      me.state.change(me.state.MENU);
+      me.state.change(me.state.READY);
   },
 
   sendMessage: function(command, object) {

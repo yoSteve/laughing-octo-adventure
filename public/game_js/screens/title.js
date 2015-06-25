@@ -38,6 +38,7 @@ game.TitleScreen = me.ScreenObject.extend({
 
     onDestroyEvent: function() {
       me.game.world.removeChild(this.background); 
+      me.game.world.removeChild(this.messageUI); 
       me.game.world.removeChild(this.message); 
     }
 });

@@ -11,7 +11,8 @@ var ChampionsSchema = new Schema({
 
 var TeamSchema = new Schema({
 	mp: Number,
-	champions: [ChampionsSchema]
+  teamName: String,
+	champions: Array
 });
 
 TeamSchema.methods.maxHp = function(){

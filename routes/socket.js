@@ -2,7 +2,7 @@ var router = require('koa-router');
 var User = require('../models/user');
 var Game = require('../models/game');
 var r = require('../db'); //set up db connection here
-
+var Team = require('../models/team');
 
 var nspLobby;
 var games = {};
@@ -24,6 +24,7 @@ var getCurrentUser = function(socket, cb){
 }
 
 var enterMatchmaking = function(socket, currentUser) {
+  console.log(currentUser.username, ' has entered matchmaking \nwith ', currentUser.team);
   User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
     if(user) {
       console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
@@ -54,18 +55,26 @@ function nsp (io) {
   nspLobby = io.of('/lobby'); 
   nspLobby.on('connection', function(socket){
     console.log('new connection, current active games: ',games.length);
-        
-    getCurrentUser(socket, function(currentUser) {
-      if(currentUser) {
-        currentUser.socketId = socket.id;
-        currentUser.waiting = false;
-        currentUser.save();
-     //socket.on('team-chosen' function(team info) {
-     //assign team info => enter matchmaking  }
-     enterMatchmaking(socket, currentUser);
 
-      }
+
+    socket.on('team-chosen', function(teamInfo) {
+      getCurrentUser(socket, function(currentUser) {
+        if(currentUser) {
+          team = new Team({
+            teamName: teamInfo.teamName,
+            champions: teamInfo.characters
+          }); 
+          
+          currentUser.team = team;
+          //assign current team
+          currentUser.socketId = socket.id;
+          currentUser.waiting = false;
+          currentUser.save();
+          enterMatchmaking(socket, currentUser);
+        }
+      });
     });
+
     // joining the game lobby, initialized of game with user ids (inprogress)
     socket.on('start-game', function(gameId){
         socket.join(gameId);
