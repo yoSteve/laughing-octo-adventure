@@ -65,6 +65,18 @@ GameSchema.methods.move = function(data) {
   return [this.gameBoard, this.mana];
 }
 
+GameSchema.methods.attack = function(data) {
+  console.log(data);
+  // conditional statement to grab correct user
+  this.home[data.charName].hp -= data.damage;
+  //if ^^ hp <0 set as dead
+  //if no active teammates end game 
+}
+
+GameSchema.methods.end = function(winner) {
+  io.to(this.gameId).emit('game-over', winner);
+}
+
 var countMana = function(allMatches) {
   var mana = [0,0,0,0,0,0];
   allMatches.forEach(function(matches){
