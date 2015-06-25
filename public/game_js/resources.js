@@ -20,6 +20,41 @@ game.resources = [
         "src": "data/img/characters.png"
     },
     {
+        "name": "particles-crystal",
+        "type": "image",
+        "src": "data/img/particles-crystal.png"
+    },
+    {
+        "name": "particle-red",
+        "type": "image",
+        "src": "data/img/particle-red.png"
+    },
+    {
+        "name": "particle-blue",
+        "type": "image",
+        "src": "data/img/particle-blue.png"
+    },
+    {
+        "name": "particle-yellow",
+        "type": "image",
+        "src": "data/img/particle-yellow.png"
+    },
+    {
+        "name": "particle-green",
+        "type": "image",
+        "src": "data/img/particle-green.png"
+    },
+    {
+        "name": "particle-white",
+        "type": "image",
+        "src": "data/img/particle-white.png"
+    },
+    {
+        "name": "particle-black",
+        "type": "image",
+        "src": "data/img/particle-black.png"
+    },
+    {
         "name": "CharSpritesDetailed",
         "type": "image",
         "src": "data/img/CharSpritesDetailed.png"
@@ -45,9 +80,9 @@ game.resources = [
         "src": "data/img/font/16x16_font.png"
     },
     {
-        "name": "background",
+        "name": "lobby-bg",
         "type": "image",
-        "src": "data/img/background.png"
+        "src": "data/img/lobby-bg.png"
     },
     {
         "name": "background2",
@@ -55,8 +90,13 @@ game.resources = [
         "src": "data/img/background2.jpg"
     },
     {
-        "name": "button",
+        "name": "StartButton",
         "type": "image",
-        "src": "data/img/button.png"
+        "src": "data/img/StartButton.png"
+    },
+     {
+        "name": "StartButton-pushed",
+        "type": "image",
+        "src": "data/img/StartButton-pushed.png"
     }
 ];

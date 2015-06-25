@@ -1,6 +1,11 @@
+
 extends ./layout.jade
 
 block content
-  include _signin
-  include _signup
-  include _googleAuth
+  .logo(style="width:512px;height:312px")
+
+  #google-button
+    include _googleAuth
+
+      
+      
