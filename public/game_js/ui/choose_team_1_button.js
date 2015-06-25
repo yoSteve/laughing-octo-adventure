@@ -10,6 +10,7 @@ game.ChooseTeam1 = me.GUI_Object.extend({
 
   onClick: function(event) {
     game.sendMessage('team-chosen', game.data.team1); 
+    me.state.change(me.state.MENU);
   }
 });
 
