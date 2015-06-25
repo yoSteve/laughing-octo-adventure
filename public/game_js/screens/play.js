@@ -33,6 +33,8 @@ game.PlayScreen = me.ScreenObject.extend({
 
         game.playScreen.grid.attacked = false;
 
+        game.playScreen.grid.resetTurnMana();
+
         game.playScreen.grid.lastBoard = gameObject.gameBoard;
         game.playScreen.grid.lastMove = gameObject.lastMove;
         game.playScreen.grid.cascadeMatches = gameObject.matches;

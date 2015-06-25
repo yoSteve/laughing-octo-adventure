@@ -15,6 +15,15 @@ game.Grid = me.Container.extend({
 
     this.attacked = false;
 
+    this.turnMana = {
+      red: 0,
+      blue: 0,
+      yellow: 0,
+      green: 0,
+      white: 0,
+      black: 0
+    }
+
     this.currentMatch = 0;
     this.cascadeMatches = [];
 
@@ -60,9 +69,11 @@ game.Grid = me.Container.extend({
 
       //if it's done the last change
       if(this.currentMatch == this.cascadeMatches.length && this.currentBoard == this.cascadeBoards.length && !this.attacked) {
-        console.log('attack!');
-
-        //trigger attack
+        if(game.playScreen.currentPlayer == 2) {
+          game.playScreen.team1.attack(this.turnMana); 
+        } else {
+          game.playScreen.team2.attack(this.turnMana); 
+        }
 
         this.attacked = true;
       }
@@ -74,6 +85,15 @@ game.Grid = me.Container.extend({
     }
 
     return true;
+  },
+
+  resetTurnMana: function() {
+    this.turnMana.red = 0;
+    this.turnMana.blue = 0;
+    this.turnMana.yellow = 0;
+    this.turnMana.green = 0;
+    this.turnMana.white = 0;
+    this.turnMana.black = 0;
   },
 
   handleMove: function() {
@@ -88,6 +108,7 @@ game.Grid = me.Container.extend({
 
   handleCascadeMatch: function(index) {
     var matchSet = this.cascadeMatches[index];
+    var turnMana = this.turnMana;
 
     //handle one set
     matchSet.forEach(function(matchObject) {
@@ -95,42 +116,54 @@ game.Grid = me.Container.extend({
       if(game.playScreen.currentPlayer == 2) {
         switch(type) {
           case 0: 
+            turnMana.red += matchObject.count;
             game.playScreen.team1.manaScores.red += matchObject.count;    
             break;
           case 1:
+            turnMana.blue += matchObject.count;
             game.playScreen.team1.manaScores.blue += matchObject.count;    
             break;
           case 2:
+            turnMana.yellow += matchObject.count;
             game.playScreen.team1.manaScores.yellow += matchObject.count;    
             break;
           case 3:
+            turnMana.green += matchObject.count;
             game.playScreen.team1.manaScores.green += matchObject.count;    
             break;
           case 4:
+            turnMana.white += matchObject.count;
             game.playScreen.team1.manaScores.white += matchObject.count;    
             break;
           case 5:
+            turnMana.black += matchObject.count;
             game.playScreen.team1.manaScores.black += matchObject.count;    
             break;
         }
       } else {
         switch(type) {
           case 0: 
+            turnMana.red += matchObject.count;
             game.playScreen.team2.manaScores.red += matchObject.count;    
             break;
           case 1:
+            turnMana.blue += matchObject.count;
             game.playScreen.team2.manaScores.blue += matchObject.count;    
             break;
           case 2:
+            turnMana.yellow += matchObject.count;
             game.playScreen.team2.manaScores.yellow += matchObject.count;    
             break;
           case 3:
+            turnMana.green += matchObject.count;
             game.playScreen.team2.manaScores.green += matchObject.count;    
             break;
           case 4:
+            turnMana.white += matchObject.count;
             game.playScreen.team2.manaScores.white += matchObject.count;    
             break;
           case 5:
+            turnMana.black += matchObject.count;
             game.playScreen.team2.manaScores.black += matchObject.count;    
             break;
         }

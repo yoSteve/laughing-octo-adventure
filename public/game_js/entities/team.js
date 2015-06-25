@@ -39,6 +39,41 @@ game.Team = me.Container.extend({
     return true;
   },
 
+  attack: function(turnMana) {
+    var attacks = [];
+    //iterate through colors, creating objects of best characters to attack.
+    if(turnMana.red > 0) {
+      attacks.push({ type: 0, mana: turnMana.red });
+    }
+
+    if(turnMana.blue > 0) {
+      attacks.push({ type: 1, mana: turnMana.blue });
+    }
+
+    if(turnMana.yellow > 0) {
+      attacks.push({ type: 2, mana: turnMana.yellow });
+    }
+
+    if(turnMana.green > 0) {
+      attacks.push({ type: 3, mana: turnMana.green });
+    }
+
+    if(turnMana.white > 0) {
+      attacks.push({ type: 4, mana: turnMana.white });
+    }
+
+    if(turnMana.black > 0) {
+      attacks.push({ type: 5, mana: turnMana.black });
+    }
+
+    //trigger attack animation for each attack object
+    attacks.forEach(function(attack) {
+      console.log(attack);
+    });
+
+    //on attack finish, send attacked message to server
+  },
+
   buildFromObject: function(object) {
     // { teamName: string, playerNum: int, characters: [ { name: string, charClass: charClass }, * 4 ] }
     this.teamName = object.teamName;
@@ -60,15 +95,6 @@ game.Team = me.Container.extend({
       this.characters.push(tempChar);
       this.addChild(tempChar);
     }
-  },
-
-  resetMana: function() {
-    this.manaScores.red = 0;
-    this.manaScores.blue = 0;
-    this.manaScores.yellow = 0;
-    this.manaScores.green = 0;
-    this.manaScores.white = 0;
-    this.manaScores.black = 0;
   },
 
   //not sure this goes here
@@ -96,6 +122,7 @@ game.Team = me.Container.extend({
     });
   },
 
+  //TODO edit for type integers. needs a switch
   setActiveCharacter: function(color) {
     var max = -1;
     var index = -1;
