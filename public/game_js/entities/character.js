@@ -1,5 +1,5 @@
 game.Character = me.Entity.extend({
-  init: function(x, y, name, charClass, flipped) {
+  init: function(x, y, team, name, charClass, flipped) {
     var settings = {};
     settings.image = 'CharSpritesDetailed';
     settings.width = 128;
@@ -11,6 +11,7 @@ game.Character = me.Entity.extend({
     this.flipped = flipped;
     this.renderable.flipX(this.flipped);
 
+    this.team = team;
     this.name = name;
     this.nameUI;
     this.health;
@@ -43,10 +44,74 @@ game.Character = me.Entity.extend({
     return true;
   },
 
+  isDead: function() {
+    return this.health <= 0;
+  },
+
+  takeDamage: function(damage) {
+    this.health -= damage; 
+
+    if(this.health <= 0) {
+      this.renderable.setCurrentAnimation('dead');
+      //if no more alive, game is over
+      if(!this.team.setNextAlive()) {
+        game.sendMessage('game-over', { winner: this.playerNum % 2 + 1 }); 
+      }
+    } else if(this.health < 25) { //100 for realz
+      this.renderable.setCurrentAnimation('wounded'); 
+    }
+  },
+
+  doAttack: function(type, amount) {
+    var prevAnimation = 'walk';
+    var damage = 0;
+
+    switch(type) {
+      case 0:
+        damage += this.manaScores.red * amount; 
+        break;
+      case 1:
+        damage += this.manaScores.blue * amount; 
+        break;
+      case 2:
+        damage += this.manaScores.yellow * amount; 
+        break;
+      case 3:
+        damage += this.manaScores.green * amount; 
+        break;
+      case 4:
+        damage += this.manaScores.white * amount; 
+        break;
+      case 5:
+        damage += this.manaScores.black * amount; 
+        break;
+    }
+
+    if(this.renderable.isCurrentAnimation('idle')) {
+      prevAnimation = 'idle';
+    } else if(this.renderable.isCurrentAnimation('wounded')) {
+      prevAnimation = 'wounded';
+    }
+
+    var character = this;
+
+    game.playScreen.grid.charactersAttacking++;
+    this.renderable.setCurrentAnimation('attack', function() {
+      //deal damage
+      character.team.hurt(damage);
+
+      //send message to server about damage
+      game.sendMessage('attack', { player: character.team.playerNum, damage: damage });  
+            
+      game.playScreen.grid.charactersAttacking--;
+      character.renderable.setCurrentAnimation(prevAnimation); 
+    });
+  },
+
   setAnimations: function(num) {
     this.renderable.addAnimation('idle', [num]);
     this.renderable.addAnimation('walk', [num, num + 2, num, num + 4], 250);
-    this.renderable.addAnimation('attack', [num + 3]);
+    this.renderable.addAnimation('attack', [num, num + 3]);
     this.renderable.addAnimation('wounded', [num + 8]);
     this.renderable.addAnimation('takeDamage', [num + 9]);
     this.renderable.addAnimation('dead', [num + 10]);

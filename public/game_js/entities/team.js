@@ -66,12 +66,32 @@ game.Team = me.Container.extend({
       attacks.push({ type: 5, mana: turnMana.black });
     }
 
+    var team = this;
     //trigger attack animation for each attack object
     attacks.forEach(function(attack) {
-      console.log(attack);
+      team.getBestAttacker(attack.type).doAttack(attack.type, attack.mana);
     });
 
     //on attack finish, send attacked message to server
+  },
+
+  hurt: function(damage) {
+    if(game.playScreen.currentPlayer == 2) {
+      game.playScreen.team2.activeCharacter.takeDamage(damage);
+    } else {
+      game.playScreen.team1.activeCharacter.takeDamage(damage);
+    }
+  },
+
+  setNextAlive: function() {
+    for(var i = 0; i < this.characters.length; i++) {
+      if(!this.characters[i].alive) {
+        continue;
+      }
+      this.setActive(this.characters[i]); 
+      return true;
+    }
+    return false;
   },
 
   buildFromObject: function(object) {
@@ -91,20 +111,77 @@ game.Team = me.Container.extend({
     }
 
     for(var i = 0; i < game.Team.MAX; i++) {
-      var tempChar = new game.Character(x, me.game.viewport.height / 4 + (i * 100), object.characters[i].name, object.characters[i].charClass, rightSide);
+      var tempChar = new game.Character(x, me.game.viewport.height / 4 + (i * 100), this, object.characters[i].name, object.characters[i].charClass, rightSide);
       this.characters.push(tempChar);
       this.addChild(tempChar);
     }
   },
 
-  //not sure this goes here
-//  chooseAttacker: function(manaType) {
-//    return this.characters.reduce(function(max, character) {
-//      if(character.type == manaType && character.type.value > max.type.value) {
-//        return character;
-//      } 
-//    });
-//  }
+  //chooseAttacker: function(manaType) {
+  //  return this.characters.reduce(function(max, character) {
+  //    if(character.type == manaType && character.type.value > max.type.value) {
+  //      return character;
+  //    } 
+  //  });
+  //},
+
+  getBestAttacker: function(manaType) {
+    var character;
+    var max = -1;
+
+    switch(manaType) {
+      case 0:
+        for(var i = 0; i < this.characters.length; i++) {
+          if(this.characters[i].manaScores.red > max) {
+            character = this.characters[i];
+            max = character.manaScores.red;
+          }
+        }
+        break;
+      case 1:
+        for(var i = 0; i < this.characters.length; i++) {
+          if(this.characters[i].manaScores.blue > max) {
+            character = this.characters[i];
+            max = character.manaScores.blue;
+          }
+        }
+        break;
+      case 2:
+        for(var i = 0; i < this.characters.length; i++) {
+          if(this.characters[i].manaScores.yellow > max) {
+            character = this.characters[i];
+            max = character.manaScores.yellow;
+          }
+        }
+        break;
+      case 3:
+        for(var i = 0; i < this.characters.length; i++) {
+          if(this.characters[i].manaScores.green > max) {
+            character = this.characters[i];
+            max = character.manaScores.green;
+          }
+        }
+        break;
+      case 4:
+        for(var i = 0; i < this.characters.length; i++) {
+          if(this.characters[i].manaScores.white > max) {
+            character = this.characters[i];
+            max = character.manaScores.white;
+          }
+        }
+        break;
+      case 5:
+        for(var i = 0; i < this.characters.length; i++) {
+          if(this.characters[i].manaScores.black > max) {
+            character = this.characters[i];
+            max = character.manaScores.black;
+          }
+        }
+        break;
+    }
+
+    return character;
+  },
 
   setTeamActive: function() {
     this.characters.forEach(function(character) {
@@ -120,22 +197,6 @@ game.Team = me.Container.extend({
         character.renderable.setCurrentAnimation('idle'); 
       }
     });
-  },
-
-  //TODO edit for type integers. needs a switch
-  setActiveCharacter: function(color) {
-    var max = -1;
-    var index = -1;
-    for(var i = 0; i < this.characters.length; i++) {
-      if(this.characters[i].manaScores[color] > max) {
-        max = this.characters[i].manaScores[color]; 
-        index = i; 
-      }
-    }
-    
-    this.activeCharacter.setInactive();
-    this.activeCharacter = this.characters[index];
-    this.activeCharacter.setActive();
   },
 
   createUI: function() {

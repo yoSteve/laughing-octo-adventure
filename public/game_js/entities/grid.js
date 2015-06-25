@@ -7,8 +7,9 @@ game.Grid = me.Container.extend({
 
     this.cellsVanishing = 0;
     this.cellsAppearing = 0;
+    this.charactersAttacking = 0;
 
-    this.doStuff = false;
+    this.dataReady = false;
 
     this.lastBoard = null;
     this.lastMove;
@@ -30,13 +31,15 @@ game.Grid = me.Container.extend({
     this.currentBoard = 0;
     this.cascadeBoards = [];
 
+    this.grabbedCrystal;
+
     this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(!this.doStuff) {
+    if(!this.dataReady) {
       return true;
     }
 
@@ -47,7 +50,8 @@ game.Grid = me.Container.extend({
     this.lastMove = null;
     
     //if animating appearance or vanishes
-    if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
+    if(this.cellsVanishing > 0 || this.cellsAppearing > 0 || this.charactersAttacking > 0) {
+      console.log(this.charactersAttacking);
       return true;
     }
 
@@ -69,11 +73,15 @@ game.Grid = me.Container.extend({
 
       //if it's done the last change
       if(this.currentMatch == this.cascadeMatches.length && this.currentBoard == this.cascadeBoards.length && !this.attacked) {
+        var team;
         if(game.playScreen.currentPlayer == 2) {
-          game.playScreen.team1.attack(this.turnMana); 
+          team = game.playScreen.team1; 
         } else {
-          game.playScreen.team2.attack(this.turnMana); 
+          team = game.playScreen.team2;
         }
+
+        team.getBestAttacker(this.grabbedCrystal.type).setActive();
+        team.attack(this.turnMana); 
 
         this.attacked = true;
       }
@@ -112,63 +120,42 @@ game.Grid = me.Container.extend({
 
     //handle one set
     matchSet.forEach(function(matchObject) {
-      var type = matchObject.type;
-      if(game.playScreen.currentPlayer == 2) {
-        switch(type) {
-          case 0: 
-            turnMana.red += matchObject.count;
-            game.playScreen.team1.manaScores.red += matchObject.count;    
-            break;
-          case 1:
-            turnMana.blue += matchObject.count;
-            game.playScreen.team1.manaScores.blue += matchObject.count;    
-            break;
-          case 2:
-            turnMana.yellow += matchObject.count;
-            game.playScreen.team1.manaScores.yellow += matchObject.count;    
-            break;
-          case 3:
-            turnMana.green += matchObject.count;
-            game.playScreen.team1.manaScores.green += matchObject.count;    
-            break;
-          case 4:
-            turnMana.white += matchObject.count;
-            game.playScreen.team1.manaScores.white += matchObject.count;    
-            break;
-          case 5:
-            turnMana.black += matchObject.count;
-            game.playScreen.team1.manaScores.black += matchObject.count;    
-            break;
-        }
-      } else {
-        switch(type) {
-          case 0: 
-            turnMana.red += matchObject.count;
-            game.playScreen.team2.manaScores.red += matchObject.count;    
-            break;
-          case 1:
-            turnMana.blue += matchObject.count;
-            game.playScreen.team2.manaScores.blue += matchObject.count;    
-            break;
-          case 2:
-            turnMana.yellow += matchObject.count;
-            game.playScreen.team2.manaScores.yellow += matchObject.count;    
-            break;
-          case 3:
-            turnMana.green += matchObject.count;
-            game.playScreen.team2.manaScores.green += matchObject.count;    
-            break;
-          case 4:
-            turnMana.white += matchObject.count;
-            game.playScreen.team2.manaScores.white += matchObject.count;    
-            break;
-          case 5:
-            turnMana.black += matchObject.count;
-            game.playScreen.team2.manaScores.black += matchObject.count;    
-            break;
-        }
-      }
       game.playScreen.grid.clearTiles(matchObject);
+
+      var team;
+      if(game.playScreen.currentPlayer == 2) {
+        team = game.playScreen.team1;
+      } else {
+        team = game.playScreen.team2;
+      }
+
+      var type = matchObject.type;
+      switch(type) {
+        case 0: 
+          turnMana.red += matchObject.count;
+          team.manaScores.red += matchObject.count;    
+          break;
+        case 1:
+          turnMana.blue += matchObject.count;
+          team.manaScores.blue += matchObject.count;    
+          break;
+        case 2:
+          turnMana.yellow += matchObject.count;
+          team.manaScores.yellow += matchObject.count;    
+          break;
+        case 3:
+          turnMana.green += matchObject.count;
+          team.manaScores.green += matchObject.count;    
+          break;
+        case 4:
+          turnMana.white += matchObject.count;
+          team.manaScores.white += matchObject.count;    
+          break;
+        case 5:
+          turnMana.black += matchObject.count;
+          team.manaScores.black += matchObject.count;    
+          break;
+      }
     });
   },
 
