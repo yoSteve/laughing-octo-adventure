@@ -7,9 +7,8 @@ game.TitleScreen = me.ScreenObject.extend({
     onResetEvent: function() {
       var settings = {};
       settings.image = 'lobby-bg';
-      this.background = new me.ImageLayer(0,0, settings);
+      this.background = new me.ImageLayer(0, 0, settings);
       me.game.world.addChild(this.background);
-
 
       this.message = 'Waiting ...';
 
