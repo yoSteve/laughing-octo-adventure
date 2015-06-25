@@ -4,6 +4,17 @@ game.Team = me.Container.extend({
     
     this.teamName;
     this.teamNameUI;
+
+    this.manaScores = {
+      red: 0,
+      blue: 0,
+      yellow: 0,
+      green: 0,
+      white: 0,
+      black: 0
+    };
+    this.manaUI;
+
     this.playerNum;
     this.characters = [];
     this._super(me.Container, 'init', [0, 0, 0, 0, settings]);
