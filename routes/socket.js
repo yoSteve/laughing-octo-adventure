@@ -24,6 +24,7 @@ var getCurrentUser = function(socket, cb){
 }
 
 var enterMatchmaking = function(socket, currentUser) {
+  console.log(currentUser.username, ' has entered matchmaking \nwith ', currentUser.team);
   User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
     if(user) {
       console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
@@ -57,13 +58,14 @@ function nsp (io) {
 
 
     socket.on('team-chosen', function(teamInfo) {
-      console.log(teamInfo.characters);
       getCurrentUser(socket, function(currentUser) {
         if(currentUser) {
-          currentUser.team = new Team({
+          team = new Team({
             teamName: teamInfo.teamName,
             champions: teamInfo.characters
           }); 
+          
+          currentUser.team = team;
           //assign current team
           currentUser.socketId = socket.id;
           currentUser.waiting = false;

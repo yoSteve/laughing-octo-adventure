@@ -21,9 +21,15 @@ GameSchema.statics.create = function (gameVars){
   console.log('new instance of a new game created', gameVars.gameId);
   // create clones of the team
   var game = new this(gameVars);
-  game.home = JSON.parse(JSON.stringify(gameVars.homeUser.teams));
-  game.away = JSON.parse(JSON.stringify(gameVars.awayUser.teams));
-//
+  game.home = JSON.parse(JSON.stringify(game.homeUser.team));
+  game.away = JSON.parse(JSON.stringify(game.awayUser.team));
+  console.log(game.home.champions);
+  console.log(game.away.champions);
+  console.log('just logged the teams yo');
+  game.home = game.home.champions.map(function(champ) {
+    return {health: champ.charClass.health}
+  });
+  console.log(game.home);
   game.active = true;
   game.matches = [];
   game.currentPlayer = 1;
