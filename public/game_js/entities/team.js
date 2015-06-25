@@ -96,6 +96,8 @@ game.Team = me.Container.extend({
   createUI: function() {
     this.teamNameUI = new game.TeamName(this); 
     me.game.world.addChild(this.teamNameUI);
+    this.manaUI = new game.ManaUI(this);
+    me.game.world.addChild(this.manaUI);
   }
 });
 
