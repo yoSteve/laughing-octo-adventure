@@ -13,6 +13,8 @@ game.Grid = me.Container.extend({
     this.lastBoard = null;
     this.lastMove;
 
+    this.attacked = false;
+
     this.currentMatch = 0;
     this.cascadeMatches = [];
 
@@ -54,6 +56,15 @@ game.Grid = me.Container.extend({
       } else if(this.currentMatch != this.currentBoard && this.currentBoard < this.cascadeBoards.length) {
         this.handleCascadeBoard(this.currentBoard);
         this.currentBoard++;
+      }
+
+      //if it's done the last change
+      if(this.currentMatch == this.cascadeMatches.length && this.currentBoard == this.cascadeBoards.length && !this.attacked) {
+        console.log('attack!');
+
+        //trigger attack
+
+        this.attacked = true;
       }
     } else {
       if(this.lastBoard != null) {
