@@ -15,19 +15,11 @@ game.waitingEntity = me.Entity.extend({
 
     this.rando = Math.floor((Math.random()*5) +1);
 
-    console.log("rando: " + this.rando);
-    console.log("width: " + me.game.viewport.width);
-    console.log("height: " + me.game.viewport.height);
-    console.log("atBeginning: " + this.atBeginning);
-    console.log("atEnd: " + this.atEnd);
-    
     this.buildRandomEntity(this.rando);
 
     this.speed = 0.15;
     this.atBeginning = (me.game.viewport.width / 4) - 96;
     this.atEnd = (me.game.viewport.width / 4) *3 - 96;
-
-
 },
 
   

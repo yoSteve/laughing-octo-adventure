@@ -15,10 +15,8 @@ game.TitleScreen = me.ScreenObject.extend({
       this.messageUI = new game.MessageUI();
       me.game.world.addChild(this.messageUI);
 
-
       var charX = (me.game.viewport.width / 4) - 96;
       var charY = (me.game.viewport.height / 4) *2;
-
 
       this.waitingEntity = new game.waitingEntity(charX, charY, true);
       me.game.world.addChild(this.waitingEntity);
@@ -47,10 +45,10 @@ game.TitleScreen = me.ScreenObject.extend({
       });
     },
 
-
     onDestroyEvent: function() {
       me.game.world.removeChild(this.background); 
       me.game.world.removeChild(this.messageUI); 
       me.game.world.removeChild(this.message); 
+      me.game.world.removeChild(this.waitingEntity);
     }
 });
