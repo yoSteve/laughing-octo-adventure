@@ -78,7 +78,7 @@ game.Team = me.Container.extend({
 //        return character;
 //      } 
 //    });
-  }
+//  }
 
   setTeamActive: function() {
     this.characters.forEach(function(character) {
