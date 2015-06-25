@@ -71,6 +71,15 @@ game.Team = me.Container.extend({
     this.manaScores.black = 0;
   },
 
+  //not sure this goes here
+//  chooseAttacker: function(manaType) {
+//    return this.characters.reduce(function(max, character) {
+//      if(character.type == manaType && character.type.value > max.type.value) {
+//        return character;
+//      } 
+//    });
+  }
+
   setTeamActive: function() {
     this.characters.forEach(function(character) {
       if(character.health > 100) { 
