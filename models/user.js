@@ -12,7 +12,7 @@ var User = new Schema({
 		losses: Number,
 		quits: Number
 	},
-	teams: [Team],
+	team: Object,
 	waiting: Boolean,
   socketId: String
 });
