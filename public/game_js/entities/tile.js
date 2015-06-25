@@ -18,6 +18,27 @@ game.Tile = me.DraggableEntity.extend({
 
     this.col = col;
     this.row = row;
+
+
+    var texture = me.loader.getImage('particle-black');
+    this.emitter = new me.ParticleEmitter(this._absPos.x + game.Tile.width*6+14, this._absPos.y + game.Tile.height*2, {
+      image: texture,
+      minLife: 1000,
+      maxLife: 2000,
+      height: 16,
+      width: 16,
+      totalParticles: 32,
+      angle: 2.324,
+      angleVariation: 1.55,
+      speed: 0,
+      speedVariation: 4,
+      maxRotation: 3.14159265358979,
+      framesToSkip: 3
+    }); 
+    this.emitter.z = 23;
+    me.game.world.addChild(this.emitter);
+    me.game.world.addChild(this.emitter.container);
+
   },
 
   update: function(dt) {
@@ -77,6 +98,7 @@ game.Tile = me.DraggableEntity.extend({
     var tile = this;
     tile.alive = false;
     game.playScreen.grid.cellsVanishing++;
+    tile.emitter.burstParticles();
     this.renderable.setCurrentAnimation('vanish', function() {
       tile.setCrystal(6);
       game.playScreen.grid.needsShifting = true;
@@ -115,3 +137,4 @@ game.Tile = me.DraggableEntity.extend({
 
 game.Tile.width = 64;
 game.Tile.height = 64;
+
