@@ -37,20 +37,21 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team2);
 
       game.socket.on('refresh-board', function(gameObject) {
+        //makes grid wait until data is ready before updating
+        game.playScreen.grid.doStuff = false;
+        
         game.playScreen.grid.currentMatch = 0;
         game.playScreen.grid.currentBoard = 0;
-
-        game.playScreen.grid.doStuff = false;
 
         game.playScreen.grid.lastBoard = gameObject.gameBoard;
         game.playScreen.grid.lastMove = gameObject.lastMove;
         game.playScreen.grid.cascadeMatches = gameObject.matches;
         game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
 
-        game.playScreen.grid.doStuff = true;
-
         game.playScreen.currentPlayer = gameObject.turn;
         game.playScreen.switchTurn();
+
+        game.playScreen.grid.doStuff = true;
       });
     },
 

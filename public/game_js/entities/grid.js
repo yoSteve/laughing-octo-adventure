@@ -46,7 +46,6 @@ game.Grid = me.Container.extend({
 
       return true;
     }
-
     
     if(this.cascadeMatches.length > 0) {
       if(this.currentMatch == this.currentBoard && this.currentMatch < this.cascadeMatches.length) {
@@ -81,6 +80,50 @@ game.Grid = me.Container.extend({
 
     //handle one set
     matchSet.forEach(function(matchObject) {
+      var type = matchObject.type;
+      if(game.playScreen.currentPlayer == 2) {
+        switch(type) {
+          case 0: 
+            game.playScreen.team1.manaScores.red += matchObject.count;    
+            break;
+          case 1:
+            game.playScreen.team1.manaScores.blue += matchObject.count;    
+            break;
+          case 2:
+            game.playScreen.team1.manaScores.yellow += matchObject.count;    
+            break;
+          case 3:
+            game.playScreen.team1.manaScores.green += matchObject.count;    
+            break;
+          case 4:
+            game.playScreen.team1.manaScores.white += matchObject.count;    
+            break;
+          case 5:
+            game.playScreen.team1.manaScores.black += matchObject.count;    
+            break;
+        }
+      } else {
+        switch(type) {
+          case 0: 
+            game.playScreen.team2.manaScores.red += matchObject.count;    
+            break;
+          case 1:
+            game.playScreen.team2.manaScores.blue += matchObject.count;    
+            break;
+          case 2:
+            game.playScreen.team2.manaScores.yellow += matchObject.count;    
+            break;
+          case 3:
+            game.playScreen.team2.manaScores.green += matchObject.count;    
+            break;
+          case 4:
+            game.playScreen.team2.manaScores.white += matchObject.count;    
+            break;
+          case 5:
+            game.playScreen.team2.manaScores.black += matchObject.count;    
+            break;
+        }
+      }
       game.playScreen.grid.clearTiles(matchObject);
     });
   },

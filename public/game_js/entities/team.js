@@ -62,6 +62,15 @@ game.Team = me.Container.extend({
     }
   },
 
+  resetMana: function() {
+    this.manaScores.red = 0;
+    this.manaScores.blue = 0;
+    this.manaScores.yellow = 0;
+    this.manaScores.green = 0;
+    this.manaScores.white = 0;
+    this.manaScores.black = 0;
+  },
+
   setTeamActive: function() {
     this.characters.forEach(function(character) {
       if(character.health > 100) { 
