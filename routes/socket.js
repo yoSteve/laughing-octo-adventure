@@ -2,7 +2,7 @@ var router = require('koa-router');
 var User = require('../models/user');
 var Game = require('../models/game');
 var r = require('../db'); //set up db connection here
-
+var Team = require('../models/team');
 
 var nspLobby;
 var games = {};
@@ -57,10 +57,13 @@ function nsp (io) {
 
 
     socket.on('team-chosen', function(teamInfo) {
-      console.log(teamInfo);
-      getCurrentUser(socket, function(foundUser) {
+      console.log(teamInfo.characters);
+      getCurrentUser(socket, function(currentUser) {
         if(currentUser) {
-          var currentUser = foundUser;
+          currentUser.team = new Team({
+            teamName: teamInfo.teamName,
+            champions: teamInfo.characters
+          }); 
           //assign current team
           currentUser.socketId = socket.id;
           currentUser.waiting = false;
