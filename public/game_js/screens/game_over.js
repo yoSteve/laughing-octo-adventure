@@ -17,6 +17,8 @@ game.GameOverScreen = me.ScreenObject.extend({
     me.game.world.addChild(this.team2);
   },
 
+
+
   onDestroyEvent: function() {
     me.game.world.removeChild(this.background); 
   },
