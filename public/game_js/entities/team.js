@@ -30,12 +30,6 @@ game.Team = me.Container.extend({
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(me.input.isKeyPressed('blueMatch')) {
-      if(this.playerNum == game.playScreen.currentPlayer) {
-        this.setActiveCharacter('blue');
-      }
-    }
-
     return true;
   },
 
@@ -71,8 +65,6 @@ game.Team = me.Container.extend({
     attacks.forEach(function(attack) {
       team.getBestAttacker(attack.type).doAttack(attack.type, attack.mana);
     });
-
-    //on attack finish, send attacked message to server
   },
 
   hurt: function(damage) {
@@ -87,9 +79,11 @@ game.Team = me.Container.extend({
   setNextAlive: function() {
     for(var i = 0; i < this.characters.length; i++) {
       if(!this.characters[i].alive) {
+        this.characters[i].setInactive();
         continue;
       }
-      this.setActive(this.characters[i]); 
+
+      this.characters[i].setActive();
       return true;
     }
     return false;
@@ -117,14 +111,6 @@ game.Team = me.Container.extend({
       this.addChild(tempChar);
     }
   },
-
-  //chooseAttacker: function(manaType) {
-  //  return this.characters.reduce(function(max, character) {
-  //    if(character.type == manaType && character.type.value > max.type.value) {
-  //      return character;
-  //    } 
-  //  });
-  //},
 
   getBestAttacker: function(manaType) {
     var character;

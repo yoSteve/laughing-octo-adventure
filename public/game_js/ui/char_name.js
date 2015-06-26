@@ -14,7 +14,7 @@ game.CharName = me.Renderable.extend({
       this.x = this.character.pos.x + 350;
       this.y = this.character.pos.y + 5;
     } else {
-      this.x = this.character.pos.x - 250;
+      this.x = this.character.pos.x - 160;
       this.y = this.character.pos.y + 5;
       this.font.textAlign = 'left';
     }

@@ -55,9 +55,9 @@ game.Grid = me.Container.extend({
     }
 
     if(this.charactersAttacking > 0) {
+      console.log('characters attacking: ', this.charactersAttacking);
       return true;
     }
-
 
     //after animations, shift
     if(this.needsShifting) {
@@ -84,7 +84,7 @@ game.Grid = me.Container.extend({
           team = game.playScreen.team2;
         }
 
-        team.getBestAttacker(this.grabbedCrystal.type).setActive();
+        team.getBestAttacker(this.grabbedCrystal).setActive();
         team.attack(this.turnMana); 
 
         this.attacked = true;
@@ -313,49 +313,5 @@ game.Grid = me.Container.extend({
       }
     }
     this.needsShifting = swapped;
-  },
-
-  printBoard: function() {
-    var printBoard = '';
-    for(var row = 0; row < this.ROWS; row++) {
-      printBoard += '[ ';
-      for(var col = 0; col < this.COLS; col++) {
-        printBoard += this.board[col][row].type + ', ';
-      }
-      printBoard += ']\n'
-    }
-
-    console.log(printBoard);
-  },
-
-  printCurrentBoard: function() {
-    if(this.cascadeBoards[this.currentBoard] == null) {
-      console.log('none'); 
-      return false;
-    }
-
-    var printBoard = '';
-    for(var row = 0; row < this.ROWS; row++) {
-      printBoard += '[ ';
-      for(var col = 0; col < this.COLS; col++) {
-        printBoard += this.cascadeBoards[this.currentBoard][col][row] + ', ';
-      }
-      printBoard += ']\n'
-    }
-
-    console.log(printBoard);
-  },
-
-  printLastBoard: function() {
-    var printBoard = '';
-    for(var row = 0; row < this.ROWS; row++) {
-      printBoard += '[ ';
-      for(var col = 0; col < this.COLS; col++) {
-        printBoard += this.lastBoard[col][row] + ', ';
-      }
-      printBoard += ']\n'
-    }
-
-    console.log(printBoard);
   }
 });
