@@ -100,14 +100,14 @@ game.Team = me.Container.extend({
 
     if(this.playerNum == 1) {
       rightSide = true;
-      x = 0;
+      x = -30;
     } else {
       rightSide = false;   
       x = me.game.viewport.width - 230;
     }
 
     for(var i = 0; i < game.Team.MAX; i++) {
-      var tempChar = new game.Character(x, me.game.viewport.height / 4 + (i * 100), this, object.characters[i].name, object.characters[i].charClass, rightSide);
+      var tempChar = new game.Character(x, 125 + (i * 125), this, object.characters[i].name, object.characters[i].charClass, rightSide);
       this.characters.push(tempChar);
       this.addChild(tempChar);
     }

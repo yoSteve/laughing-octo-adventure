@@ -33,7 +33,7 @@ game.Grid = me.Container.extend({
 
     this.grabbedCrystal;
 
-    this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
+    this._super(me.Container, 'init', [me.game.viewport.width / 4 + 65, 190, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
   update: function(dt) {

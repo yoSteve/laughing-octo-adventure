@@ -7,10 +7,9 @@ game.PlayScreen = me.ScreenObject.extend({
     onResetEvent: function() {
       var gameObject = game.data.gameObject;
       var settings = {};
-      settings.image = 'gamebaord-bg';
+      settings.image = 'gameboard-bg';
       this.background = new me.ImageLayer(0, 0, settings);
       me.game.world.addChild(this.background);
-      me.game.world.addChild(new me.ColorLayer('background', '#33bbcc', 0)); 
 
       this.grid = new game.Grid(8, 8);  
       this.grid.populate(gameObject.gameBoard);

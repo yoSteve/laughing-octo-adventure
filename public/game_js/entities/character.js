@@ -40,6 +40,9 @@ game.Character = me.Entity.extend({
 
   takeDamage: function(damage) {
     this.health -= damage; 
+    if(this.health < 0) {
+      this.health = 0;
+    }
 
     if(this.health <= 0) {
       this.renderable.setCurrentAnimation('dead');
