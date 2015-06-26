@@ -38,6 +38,7 @@ game.Character = me.Entity.extend({
     return this.health <= 0;
   },
 
+  //TODO set animation to takeDamage when getting hurt
   takeDamage: function(damage) {
     this.health -= damage; 
     if(this.health < 0) {
@@ -122,14 +123,14 @@ game.Character = me.Entity.extend({
     this.renderable.addAnimation('standReady', [num+1]);
     this.renderable.addAnimation('walk', [num, num+2, num, num+4], 250);
     this.renderable.addAnimation('walkWithWeapon', [num+13, num+14, num+15, num+14]);
-    this.renderable.addAnimation('attackWithWeapon', [num+11, num+12]);
+    this.renderable.addAnimation('attackWithWeapon', [num+11, num+12], 250);
     this.renderable.addAnimation('wounded', [num+8]);
-    this.renderable.addAnimation('takeDamage', [num+9, num+8]);
+    this.renderable.addAnimation('takeDamage', [num+9, num+8], 250);
     this.renderable.addAnimation('dead', [num+10]);
-    this.renderable.addAnimation('whisper', [num+5, num+6]);
-    this.renderable.addAnimation('wink', [num, num+6]);
-    this.renderable.addAnimation('punch', [num+4, num+3]);
-    this.renderable.addAnimation('dance', [num, num+7]);
+    this.renderable.addAnimation('whisper', [num+5, num+6], 250);
+    this.renderable.addAnimation('wink', [num, num+6], 250);
+    this.renderable.addAnimation('punch', [num+4, num+3], 250);
+    this.renderable.addAnimation('dance', [num, num+7], 250);
     this.renderable.setCurrentAnimation('idle');
   },
 

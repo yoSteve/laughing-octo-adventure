@@ -54,7 +54,6 @@ game.Grid = me.Container.extend({
     }
 
     if(this.charactersAttacking > 0) {
-      console.log('characters attacking: ', this.charactersAttacking);
       return true;
     }
 
@@ -90,8 +89,6 @@ game.Grid = me.Container.extend({
           team = game.playScreen.team2;
         }
 
-        console.log('extra thing');
-        console.log(this.grabbedCrystal);
         team.getBestAttacker(this.grabbedCrystal).setActive();
         team.attack(this.turnMana); 
 
