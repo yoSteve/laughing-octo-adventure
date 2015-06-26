@@ -29,7 +29,6 @@ game.chooseTeamEntity = me.Entity.extend({
   },
 
   buildTeamEntity: function(teamNumber) {
-    console.log('building team', teamNumber);
       switch(teamNumber) {
         case 0:
           this.setAnimations(0);
