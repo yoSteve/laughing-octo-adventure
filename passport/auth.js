@@ -25,7 +25,7 @@ var GoogleStrategy = require('passport-google-auth').Strategy
 passport.use(new GoogleStrategy({
   clientId: secrets['GOOGLE_CLIENT_ID'],
   clientSecret: secrets['GOOGLE_CLIENT_SECRET'],
-  callbackURL: "http://manamatch.com/auth/google/response"
+  callbackURL: "http://manamatch.com:3000/auth/google/response"
   },
   function(token, tokenSecret, profile, done) {
   //retrieve user
