@@ -31,8 +31,8 @@ var enterMatchmaking = function(socket, currentUser) {
       var gameId = Game.createGameId(currentUser._id, user._id);
       var game = Game.create({ io: nspLobby, 
         gameId: gameId, 
-        homeUser: currentUser, 
-        awayUser: user
+        homeUser: user, 
+        awayUser: currentUser
       });
       currentUser.activeGames.push(gameId);
       user.activeGames.push(gameId);
