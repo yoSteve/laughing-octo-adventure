@@ -83,6 +83,7 @@ game.Team = me.Container.extend({
         continue;
       }
 
+      this.activeCharacter = this.characters[i];
       this.characters[i].setActive();
       return true;
     }
@@ -116,51 +117,55 @@ game.Team = me.Container.extend({
     var character;
     var max = -1;
 
+    var chars = this.characters.filter(function(character) {
+      return character.alive;
+    });
+
     switch(manaType) {
       case 0:
-        for(var i = 0; i < this.characters.length; i++) {
-          if(this.characters[i].manaScores.red > max) {
-            character = this.characters[i];
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.red > max) {
+            character = chars[i];
             max = character.manaScores.red;
           }
         }
         break;
       case 1:
-        for(var i = 0; i < this.characters.length; i++) {
-          if(this.characters[i].manaScores.blue > max) {
-            character = this.characters[i];
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.blue > max) {
+            character = chars[i];
             max = character.manaScores.blue;
           }
         }
         break;
       case 2:
-        for(var i = 0; i < this.characters.length; i++) {
-          if(this.characters[i].manaScores.yellow > max) {
-            character = this.characters[i];
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.yellow > max) {
+            character = chars[i];
             max = character.manaScores.yellow;
           }
         }
         break;
       case 3:
-        for(var i = 0; i < this.characters.length; i++) {
-          if(this.characters[i].manaScores.green > max) {
-            character = this.characters[i];
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.green > max) {
+            character = chars[i];
             max = character.manaScores.green;
           }
         }
         break;
       case 4:
-        for(var i = 0; i < this.characters.length; i++) {
-          if(this.characters[i].manaScores.white > max) {
-            character = this.characters[i];
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.white > max) {
+            character = chars[i];
             max = character.manaScores.white;
           }
         }
         break;
       case 5:
-        for(var i = 0; i < this.characters.length; i++) {
-          if(this.characters[i].manaScores.black > max) {
-            character = this.characters[i];
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.black > max) {
+            character = chars[i];
             max = character.manaScores.black;
           }
         }

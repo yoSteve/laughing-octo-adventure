@@ -43,6 +43,8 @@ game.Character = me.Entity.extend({
 
     if(this.health <= 0) {
       this.renderable.setCurrentAnimation('dead');
+      this.alive = false;
+      this.setInactive();
       //if no more alive, game is over
       if(!this.team.setNextAlive()) {
         game.sendMessage('game-over', { winner: this.playerNum % 2 + 1 }); 
