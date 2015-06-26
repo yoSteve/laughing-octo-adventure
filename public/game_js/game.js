@@ -59,6 +59,9 @@ var game = {
         ] 
       }
 
+      this.gameOverScreen = new game.GameOverScreen();
+      me.state.set(me.state.GAMEOVER, this.gameOverScreen);
+
       this.teamScreen = new game.TeamScreen();
       me.state.set(me.state.READY, this.teamScreen);
 

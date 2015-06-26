@@ -60,12 +60,12 @@ game.Grid = me.Container.extend({
     }
 
     //TODO emit message about game ending, who won, then switch to GAMEOVER screen
-    if(!grid.playScreen.team1.anyAlive) {
-       
-      me.game.state(me.state.GAMEOVER);
-    } else if(!grid.playScreen.team2.anyAlive) {
-       
-      me.game.state(me.state.GAMEOVER);
+    if(!game.playScreen.team1.anyAlive()) {
+      console.log('team1 dead'); 
+      me.state.change(me.state.GAMEOVER);
+    } else if(!game.playScreen.team2.anyAlive()) {
+      console.log('team2 dead'); 
+      me.state.change(me.state.GAMEOVER);
     }
 
     //after animations, shift
