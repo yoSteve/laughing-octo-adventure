@@ -1,7 +1,7 @@
 game.ChooseTeam2 = me.GUI_Object.extend({
   init: function(x, y) {
     var settings = {};
-    settings.image = 'StartButton';
+    settings.image = 'team2Button';
 
     this._super(me.GUI_Object, 'init', [x, y, settings]);
   },

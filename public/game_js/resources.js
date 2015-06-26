@@ -98,5 +98,35 @@ game.resources = [
         "name": "StartButton-pushed",
         "type": "image",
         "src": "data/img/StartButton-pushed.png"
+    },
+    {
+        "name": "team1Button",
+        "type": "image",
+        "src": "data/img/team1Button.png"
+    },
+    {
+        "name": "team1Button-pushed",
+        "type": "image",
+        "src": "data/img/team1Button-pushed.png"
+    },
+    {
+        "name": "team2Button",
+        "type": "image",
+        "src": "data/img/team2Button.png"
+    },
+    {
+        "name": "team2Button-pushed",
+        "type": "image",
+        "src": "data/img/team2Button-pushed.png"
+    },
+    {
+        "name": "gameboard-bg",
+        "type": "image",
+        "src": "data/img/gameboard-bg.png"
+    },
+    {
+        "name": "arena",
+        "type": "image",
+        "src": "data/img/arena.png"
     }
 ];
