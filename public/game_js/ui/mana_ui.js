@@ -5,12 +5,12 @@ game.ManaUI = me.Renderable.extend({
     this.floating = true;
     this.team = team;
 
-    this.redFont = new me.Font('Press Start 2P', 20, '#f00', 'right'); 
-    this.blueFont = new me.Font('Press Start 2P', 20, '#00f', 'right'); 
-    this.yellowFont = new me.Font('Press Start 2P', 20, '#f4e60d', 'right'); 
-    this.greenFont = new me.Font('Press Start 2P', 20, '#0f0', 'right'); 
-    this.whiteFont = new me.Font('Press Start 2P', 20, '#fff', 'right'); 
-    this.blackFont = new me.Font('Press Start 2P', 20, '#000', 'right'); 
+    this.redFont = new me.Font('Press Start 2P', 24, '#f00', 'right'); 
+    this.blueFont = new me.Font('Press Start 2P', 24, '#00f', 'right'); 
+    this.yellowFont = new me.Font('Press Start 2P', 24, '#f4e60d', 'right'); 
+    this.greenFont = new me.Font('Press Start 2P', 24, '#0f0', 'right'); 
+    this.whiteFont = new me.Font('Press Start 2P', 24, '#fff', 'right'); 
+    this.blackFont = new me.Font('Press Start 2P', 24, '#000', 'right'); 
 
     if(this.team.activeCharacter.flipped) {
       this.x = 150; 
