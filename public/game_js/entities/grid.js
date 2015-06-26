@@ -59,6 +59,15 @@ game.Grid = me.Container.extend({
       return true;
     }
 
+    //TODO emit message about game ending, who won, then switch to GAMEOVER screen
+    if(!grid.playScreen.team1.anyAlive) {
+       
+      me.game.state(me.state.GAMEOVER);
+    } else if(!grid.playScreen.team2.anyAlive) {
+       
+      me.game.state(me.state.GAMEOVER);
+    }
+
     //after animations, shift
     if(this.needsShifting) {
       this.shiftEmpties();

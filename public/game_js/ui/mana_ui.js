@@ -13,9 +13,9 @@ game.ManaUI = me.Renderable.extend({
     this.blackFont = new me.Font('Press Start 2P', 24, '#000', 'right'); 
 
     if(this.team.activeCharacter.flipped) {
-      this.x = 150; 
+      this.x = 95; 
     } else {
-      this.x = me.game.viewport.width - 300; 
+      this.x = me.game.viewport.width - 345; 
 
       this.redFont.textAlign = 'left';
       this.blueFont.textAlign = 'left';
@@ -30,10 +30,10 @@ game.ManaUI = me.Renderable.extend({
 
   draw: function(renderer) {
     this.redFont.draw(renderer, this.team.manaScores.red, this.x, this.y);
-    this.blueFont.draw(renderer, this.team.manaScores.blue, this.x + 40, this.y);
-    this.yellowFont.draw(renderer, this.team.manaScores.yellow, this.x + 80, this.y);
-    this.greenFont.draw(renderer, this.team.manaScores.green, this.x + 120, this.y);
-    this.whiteFont.draw(renderer, this.team.manaScores.white, this.x + 160, this.y);
-    this.blackFont.draw(renderer, this.team.manaScores.black, this.x + 200, this.y);
+    this.blueFont.draw(renderer, this.team.manaScores.blue, this.x + 50, this.y);
+    this.yellowFont.draw(renderer, this.team.manaScores.yellow, this.x + 100, this.y);
+    this.greenFont.draw(renderer, this.team.manaScores.green, this.x + 150, this.y);
+    this.whiteFont.draw(renderer, this.team.manaScores.white, this.x + 200, this.y);
+    this.blackFont.draw(renderer, this.team.manaScores.black, this.x + 250, this.y);
   }
 });

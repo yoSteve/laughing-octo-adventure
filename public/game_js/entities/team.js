@@ -33,6 +33,15 @@ game.Team = me.Container.extend({
     return true;
   },
 
+  anyAlive: function() {
+    for(var i = 0; i < this.characters.length; i++) {
+      if(this.characters[i].alive) {
+        return true;
+      }
+    }
+    return false;
+  },
+
   attack: function(turnMana) {
     var attacks = [];
     //iterate through colors, creating objects of best characters to attack.
