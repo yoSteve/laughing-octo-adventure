@@ -61,7 +61,7 @@ var game = {
         ] 
       }
 
-      this.gameOverScreen = new game.GameOverScreen(this.data.team1, this.data.team2);
+      this.gameOverScreen = new game.GameOverScreen();
       me.state.set(me.state.GAMEOVER, this.gameOverScreen);
 
       this.teamScreen = new game.TeamScreen();

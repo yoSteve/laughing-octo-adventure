@@ -1,12 +1,13 @@
 game.GameOverScreen = me.ScreenObject.extend({
-  onResetEvent: function(team1, team2) {
+  onResetEvent: function() {
     var settings = {};
     settings.image = 'gameboard-bg';
+
     this.background = new me.ImageLayer(0, 0, settings);
     me.game.world.addChild(this.background);
 
-    this.team1 = team1;
-    this.team2 = team2;
+    this.team1 = game.data.team1;
+    this.team2 = game.data.team2;
 
     this.winningTeam;
 
@@ -32,18 +33,18 @@ game.GameOverScreen = me.ScreenObject.extend({
       otherTeam = this.team1;
     }
 
-    team.characters.forEach(function(character) {
-      character.renderable.setCurrentAnimation('dance');
-    });
+    //team.characters.forEach(function(character) {
+    //  character.renderable.setCurrentAnimation('dance');
+    //});
 
-    otherTeam.characters.forEach(function(character) {
-      character.renderable.setCurrentAnimation('dead');
-    });
+    //otherTeam.characters.forEach(function(character) {
+    //  character.renderable.setCurrentAnimation('dead');
+    //});
 
-    if(game.data.player == winner) {
-      me.game.world.addChild(new game.winOrLoseSign(500, 500, 0));
-    } else {
-      me.game.world.addChild(new game.winOrLoseSign(500, 500, 1));
-    }
+    //if(game.data.player == winner) {
+    //  me.game.world.addChild(new game.winOrLoseSign(500, 500, 0));
+    //} else {
+    //  me.game.world.addChild(new game.winOrLoseSign(500, 500, 1));
+    //}
   }
 });
