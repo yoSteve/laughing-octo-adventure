@@ -37,8 +37,8 @@ GameSchema.statics.create = function (gameVars){
     obj[champ.name] = champ.charClass.health;
     return obj;
   });
-
-  console.log(game.home);
+  console.log('away', game.away);
+  console.log('home', game.home);
   game.active = true;
   game.matches = [];
   game.currentPlayer = 1;
