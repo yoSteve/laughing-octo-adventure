@@ -28,6 +28,7 @@ game.PlayScreen = me.ScreenObject.extend({
         //makes grid wait until data is ready before updating
         game.playScreen.grid.dataReady = false;
         
+        console.log(gameObject);
         game.playScreen.grid.grabbedCrystal = gameObject.firstCrystal;
         game.playScreen.grid.currentMatch = 0;
         game.playScreen.grid.currentBoard = 0;
