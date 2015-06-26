@@ -23,13 +23,19 @@ GameSchema.statics.create = function (gameVars){
   var game = new this(gameVars);
   game.home = JSON.parse(JSON.stringify(game.homeUser.team));
   game.away = JSON.parse(JSON.stringify(game.awayUser.team));
-  console.log(game.home.champions);
-  console.log(game.away.champions);
-  console.log('just logged the teams yo');
   game.home = game.home.champions.map(function(champ) {
-    return {health: champ.charClass.health}
+    var obj = {}; 
+    obj[champ.name] = [champ.charClass.health, true];
+    return obj;
   });
-  console.log(game.home);
+  
+  game.away = game.away.champions.map(function(champ) {
+    var obj = {}; 
+    obj[champ.name] = [champ.charClass.health, true];
+    return obj;
+  });
+  console.log('away', game.away);
+  console.log('home', game.home);
   game.active = true;
   game.matches = [];
   game.currentPlayer = 1;
@@ -49,9 +55,12 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
+// 1 is home 2 is away
   if (this.currentPlayer == 1) {
+    this.home.active = data.character;
     this.currentPlayer = 2;
   } else {
+    this.away.active = data.character;
     this.currentPlayer = 1;
   }
   if(data['pattern'] === 'row')
@@ -62,7 +71,39 @@ GameSchema.methods.move = function(data) {
   this.lastMove = data;
   this.refreshBoard();
   //respond with emit matches and board state
-  return [this.gameBoard, this.mana];
+}
+
+GameSchema.methods.attack = function(data) {
+  if(this.currentPlayer == 2){
+    this.away[data.target[0]] -= data.damage;
+    if (this.away[data.target[0]] <= 0 && this.home[data.target[1]] == true){
+      this.away[data.target[1]] = false;
+      this.away.dead++;
+      if (this.away.dead == 4)
+        this.end({username: this.homeUser.username, player: 1});
+    }
+  }
+  if(this.currentPlayer == 1){
+    this.home[data.target[0]] -= data.damage;
+    if (this.home[data.target[0]] <= 0 && this.home[data.target[1]] == true){
+      this.home[data.target[1]] = false;
+      this.home.dead++;
+      if (this.home.dead == 4)
+        this.end({username: this.awayUser.username, player: 2});
+    }
+  }
+
+
+  // conditional statement to grab correct user
+  //this.home[data.charName].hp -= data.damage;
+  //if ^^ hp <0 set as dead
+  //if no active teammates end game 
+  
+  //this.end(winner);
+}
+
+GameSchema.methods.end = function(winner) {
+  io.to(this.gameId).emit('game-over', winner);
 }
 
 var countMana = function(allMatches) {
@@ -76,8 +117,6 @@ var countMana = function(allMatches) {
 }
 
 GameSchema.statics.createGameId = function(id1, id2) {
-  console.log(id1);
-  console.log(id2);
   if(id1 > id2)
     return id1 + id2;
   return id2 + id1;
@@ -127,7 +166,7 @@ GameSchema.methods.checkNullSpace = function() {
   } 
 }
 
-GameSchema.methods.refreshBoard = function() {
+GameSchema.methods.refreshBoard = function(firstCrystal) {
   var allMatches = [];
   var cascadeBoards = [];
   do { 
@@ -138,8 +177,8 @@ GameSchema.methods.refreshBoard = function() {
     }
   } while(cascade[0].length > 0);
   this.io.to(this.gameId).emit('refresh-board', {
-    homeMana: this.homeMana,
-    awayMana: this.awayMana,
+    homeUsername: this.homeUser.username,
+    awayUsername: this.awayUser.username,
     gameId: this.gameId, 
     home: this.awayUser.username, 
     away: this.homeUser.username, 
@@ -215,7 +254,6 @@ GameSchema.methods.getColMatches = function() {
 
 GameSchema.methods.resolveMatches = function() {
   var matches;
-  console.log('BOARD BEFORE RESOLVE', this.board)
   matches = this.getRowMatches().concat(this.getColMatches()); 
 
   var match, endCol, endRow, count;
@@ -234,12 +272,8 @@ GameSchema.methods.resolveMatches = function() {
       }
     }
   }
-  console.log('current matches', matches);
-  console.log('BOARD AFTER RESOLVE', this.board);
   this.checkNullSpace();      
-  console.log('BOARD AFTER MOVING NULL SPACE', this.board);
   this.assignCrystalsToBoard();
-  console.log('BOARD AFTER ASSIGN CRYSTALS', this.board);
   var boardCascade = deepClone(this.board); 
   //add matches to current matches this turn
   return [matches, boardCascade];

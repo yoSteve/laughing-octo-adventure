@@ -30,13 +30,72 @@ game.Team = me.Container.extend({
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(me.input.isKeyPressed('blueMatch')) {
-      if(this.playerNum == game.playScreen.currentPlayer) {
-        this.setActiveCharacter('blue');
+    return true;
+  },
+
+  anyAlive: function() {
+    for(var i = 0; i < this.characters.length; i++) {
+      if(this.characters[i].alive) {
+        return true;
       }
     }
+    return false;
+  },
 
-    return true;
+  attack: function(turnMana) {
+    var attacks = [];
+    //iterate through colors, creating objects of best characters to attack.
+    if(turnMana.red > 0) {
+      attacks.push({ type: 0, mana: turnMana.red });
+    }
+
+    if(turnMana.blue > 0) {
+      attacks.push({ type: 1, mana: turnMana.blue });
+    }
+
+    if(turnMana.yellow > 0) {
+      attacks.push({ type: 2, mana: turnMana.yellow });
+    }
+
+    if(turnMana.green > 0) {
+      attacks.push({ type: 3, mana: turnMana.green });
+    }
+
+    if(turnMana.white > 0) {
+      attacks.push({ type: 4, mana: turnMana.white });
+    }
+
+    if(turnMana.black > 0) {
+      attacks.push({ type: 5, mana: turnMana.black });
+    }
+
+    var team = this;
+    //trigger attack animation for each attack object
+    attacks.forEach(function(attack) {
+      team.getBestAttacker(attack.type).doAttack(attack.type, attack.mana);
+    });
+  },
+
+  hurt: function(damage) {
+    if(game.playScreen.currentPlayer == 2) {
+      game.playScreen.team2.activeCharacter.takeDamage(damage);
+    } else {
+      game.playScreen.team1.activeCharacter.takeDamage(damage);
+    }
+  },
+
+  setNextAlive: function() {
+    for(var i = 0; i < this.characters.length; i++) {
+      if(!this.characters[i].alive) {
+        this.characters[i].setInactive();
+        continue;
+      }
+
+      this.activeCharacter = this.characters[i];
+      this.characters[i].setActive();
+      return true;
+    }
+    return false;
   },
 
   buildFromObject: function(object) {
@@ -49,36 +108,80 @@ game.Team = me.Container.extend({
 
     if(this.playerNum == 1) {
       rightSide = true;
-      x = 0;
+      x = -30;
     } else {
       rightSide = false;   
-      x = me.game.viewport.width - 130;
+      x = me.game.viewport.width - 230;
     }
 
     for(var i = 0; i < game.Team.MAX; i++) {
-      var tempChar = new game.Character(x, me.game.viewport.height / 4 + (i * 100), object.characters[i].name, object.characters[i].charClass, rightSide);
+      var tempChar = new game.Character(x, 125 + (i * 125), this, object.characters[i].name, object.characters[i].charClass, rightSide);
       this.characters.push(tempChar);
       this.addChild(tempChar);
     }
   },
 
-  resetMana: function() {
-    this.manaScores.red = 0;
-    this.manaScores.blue = 0;
-    this.manaScores.yellow = 0;
-    this.manaScores.green = 0;
-    this.manaScores.white = 0;
-    this.manaScores.black = 0;
-  },
+  getBestAttacker: function(manaType) {
+    var character;
+    var max = -1;
 
-  //not sure this goes here
-//  chooseAttacker: function(manaType) {
-//    return this.characters.reduce(function(max, character) {
-//      if(character.type == manaType && character.type.value > max.type.value) {
-//        return character;
-//      } 
-//    });
-//  }
+    var chars = this.characters.filter(function(character) {
+      return character.alive;
+    });
+
+    switch(manaType) {
+      case 0:
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.red > max) {
+            character = chars[i];
+            max = character.manaScores.red;
+          }
+        }
+        break;
+      case 1:
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.blue > max) {
+            character = chars[i];
+            max = character.manaScores.blue;
+          }
+        }
+        break;
+      case 2:
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.yellow > max) {
+            character = chars[i];
+            max = character.manaScores.yellow;
+          }
+        }
+        break;
+      case 3:
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.green > max) {
+            character = chars[i];
+            max = character.manaScores.green;
+          }
+        }
+        break;
+      case 4:
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.white > max) {
+            character = chars[i];
+            max = character.manaScores.white;
+          }
+        }
+        break;
+      case 5:
+        for(var i = 0; i < chars.length; i++) {
+          if(chars[i].manaScores.black > max) {
+            character = chars[i];
+            max = character.manaScores.black;
+          }
+        }
+        break;
+    }
+
+    return character;
+  },
 
   setTeamActive: function() {
     this.characters.forEach(function(character) {
@@ -94,21 +197,6 @@ game.Team = me.Container.extend({
         character.renderable.setCurrentAnimation('idle'); 
       }
     });
-  },
-
-  setActiveCharacter: function(color) {
-    var max = -1;
-    var index = -1;
-    for(var i = 0; i < this.characters.length; i++) {
-      if(this.characters[i].manaScores[color] > max) {
-        max = this.characters[i].manaScores[color]; 
-        index = i; 
-      }
-    }
-    
-    this.activeCharacter.setInactive();
-    this.activeCharacter = this.characters[index];
-    this.activeCharacter.setActive();
   },
 
   createUI: function() {

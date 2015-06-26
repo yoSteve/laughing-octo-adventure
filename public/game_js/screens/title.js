@@ -33,6 +33,9 @@ game.TitleScreen = me.ScreenObject.extend({
 
       game.socket.on('refresh-board', function(gameObject) {
         game.gameId = gameObject.gameId;
+
+        game.data.user1 = gameObject.homeUsername;
+        game.data.user2 = gameObject.awayUsername;
         
         if(game.data.player == 0) {
           game.data.player = 2; 

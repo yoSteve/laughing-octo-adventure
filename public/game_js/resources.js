@@ -133,5 +133,10 @@ game.resources = [
         "name": "teamParties",
         "type": "image",
         "src": "data/img/teamParties.png"
+    },
+    {
+        "name": "victoryDefeatSignSprites",
+        "type": "image",
+        "src": "data/img/victoryDefeatSignSprites.png"
     }
 ];

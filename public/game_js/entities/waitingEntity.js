@@ -27,13 +27,11 @@ game.waitingEntity = me.Entity.extend({
     this._super(me.Entity, 'update', [dt]);
     
     if (this.pos.x >= this.atEnd) {
-      console.log("atEnd: " + this.atEnd);
       this.speed = -0.15;
       this.renderable.setCurrentAnimation('standReady', 'walk');
       this.renderable.flipX (!this.flipped);
     };
     if (this.pos.x <= this.atBeginning) {
-      console.log("atBeginning: " + this.atBeginning);
       this.speed = 0.15;
       this.renderable.setCurrentAnimation('standReady', 'walk');
       this.renderable.flipX(this.flipped);

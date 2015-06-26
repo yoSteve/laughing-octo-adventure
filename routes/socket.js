@@ -81,7 +81,9 @@ function nsp (io) {
         games[gameId].refreshBoard();
     });
 
-    socket.on('special-attack', function(attackData) {
+    socket.on('attack', function(attackData) {
+     console.log('\n\n\n', attackData);
+     games[attackData.gameId].attack(attackData);
      //uses special attack happens mid turn  
     });
 

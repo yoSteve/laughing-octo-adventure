@@ -7,11 +7,22 @@ game.Grid = me.Container.extend({
 
     this.cellsVanishing = 0;
     this.cellsAppearing = 0;
+    this.charactersAttacking = 0;
 
-    this.doStuff = false;
+    this.dataReady = false;
 
     this.lastBoard = null;
     this.lastMove;
+
+    this.attacked = false; 
+    this.turnMana = {
+      red: 0,
+      blue: 0,
+      yellow: 0,
+      green: 0,
+      white: 0,
+      black: 0
+    }
 
     this.currentMatch = 0;
     this.cascadeMatches = [];
@@ -19,13 +30,15 @@ game.Grid = me.Container.extend({
     this.currentBoard = 0;
     this.cascadeBoards = [];
 
-    this._super(me.Container, 'init', [me.game.viewport.width / 3.5, 100, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
+    this.grabbedCrystal;
+
+    this._super(me.Container, 'init', [me.game.viewport.width / 4 + 65, 190, this.COLS * game.Tile.width - game.Tile.width / 2, this.ROWS * game.Tile.width - game.Tile.width / 2]);
   },
 
   update: function(dt) {
     this._super(me.Container, 'update', [dt]);
 
-    if(!this.doStuff) {
+    if(!this.dataReady) {
       return true;
     }
 
@@ -38,6 +51,17 @@ game.Grid = me.Container.extend({
     //if animating appearance or vanishes
     if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
       return true;
+    }
+
+    if(this.charactersAttacking > 0) {
+      return true;
+    }
+
+    if(!game.playScreen.team1.anyAlive()) {
+      //send message to server about winner
+      me.state.change(me.state.GAMEOVER);
+    } else if(!game.playScreen.team2.anyAlive()) {
+      me.state.change(me.state.GAMEOVER);
     }
 
     //after animations, shift
@@ -55,6 +79,21 @@ game.Grid = me.Container.extend({
         this.handleCascadeBoard(this.currentBoard);
         this.currentBoard++;
       }
+
+      //if it's done the last change
+      if(this.currentMatch == this.cascadeMatches.length && this.currentBoard == this.cascadeBoards.length && !this.attacked) {
+        var team;
+        if(game.playScreen.currentPlayer == 2) {
+          team = game.playScreen.team1; 
+        } else {
+          team = game.playScreen.team2;
+        }
+
+        team.getBestAttacker(this.grabbedCrystal).setActive();
+        team.attack(this.turnMana); 
+
+        this.attacked = true;
+      }
     } else {
       if(this.lastBoard != null) {
         this.replaceBoard(this.lastBoard);
@@ -63,6 +102,15 @@ game.Grid = me.Container.extend({
     }
 
     return true;
+  },
+
+  resetTurnMana: function() {
+    this.turnMana.red = 0;
+    this.turnMana.blue = 0;
+    this.turnMana.yellow = 0;
+    this.turnMana.green = 0;
+    this.turnMana.white = 0;
+    this.turnMana.black = 0;
   },
 
   handleMove: function() {
@@ -77,54 +125,46 @@ game.Grid = me.Container.extend({
 
   handleCascadeMatch: function(index) {
     var matchSet = this.cascadeMatches[index];
+    var turnMana = this.turnMana;
 
     //handle one set
     matchSet.forEach(function(matchObject) {
-      var type = matchObject.type;
-      if(game.playScreen.currentPlayer == 2) {
-        switch(type) {
-          case 0: 
-            game.playScreen.team1.manaScores.red += matchObject.count;    
-            break;
-          case 1:
-            game.playScreen.team1.manaScores.blue += matchObject.count;    
-            break;
-          case 2:
-            game.playScreen.team1.manaScores.yellow += matchObject.count;    
-            break;
-          case 3:
-            game.playScreen.team1.manaScores.green += matchObject.count;    
-            break;
-          case 4:
-            game.playScreen.team1.manaScores.white += matchObject.count;    
-            break;
-          case 5:
-            game.playScreen.team1.manaScores.black += matchObject.count;    
-            break;
-        }
-      } else {
-        switch(type) {
-          case 0: 
-            game.playScreen.team2.manaScores.red += matchObject.count;    
-            break;
-          case 1:
-            game.playScreen.team2.manaScores.blue += matchObject.count;    
-            break;
-          case 2:
-            game.playScreen.team2.manaScores.yellow += matchObject.count;    
-            break;
-          case 3:
-            game.playScreen.team2.manaScores.green += matchObject.count;    
-            break;
-          case 4:
-            game.playScreen.team2.manaScores.white += matchObject.count;    
-            break;
-          case 5:
-            game.playScreen.team2.manaScores.black += matchObject.count;    
-            break;
-        }
-      }
       game.playScreen.grid.clearTiles(matchObject);
+
+      var team;
+      if(game.playScreen.currentPlayer == 2) {
+        team = game.playScreen.team1;
+      } else {
+        team = game.playScreen.team2;
+      }
+
+      var type = matchObject.type;
+      switch(type) {
+        case 0: 
+          turnMana.red += matchObject.count;
+          team.manaScores.red += matchObject.count;    
+          break;
+        case 1:
+          turnMana.blue += matchObject.count;
+          team.manaScores.blue += matchObject.count;    
+          break;
+        case 2:
+          turnMana.yellow += matchObject.count;
+          team.manaScores.yellow += matchObject.count;    
+          break;
+        case 3:
+          turnMana.green += matchObject.count;
+          team.manaScores.green += matchObject.count;    
+          break;
+        case 4:
+          turnMana.white += matchObject.count;
+          team.manaScores.white += matchObject.count;    
+          break;
+        case 5:
+          turnMana.black += matchObject.count;
+          team.manaScores.black += matchObject.count;    
+          break;
+      }
     });
   },
 
@@ -278,49 +318,5 @@ game.Grid = me.Container.extend({
       }
     }
     this.needsShifting = swapped;
-  },
-
-  printBoard: function() {
-    var printBoard = '';
-    for(var row = 0; row < this.ROWS; row++) {
-      printBoard += '[ ';
-      for(var col = 0; col < this.COLS; col++) {
-        printBoard += this.board[col][row].type + ', ';
-      }
-      printBoard += ']\n'
-    }
-
-    console.log(printBoard);
-  },
-
-  printCurrentBoard: function() {
-    if(this.cascadeBoards[this.currentBoard] == null) {
-      console.log('none'); 
-      return false;
-    }
-
-    var printBoard = '';
-    for(var row = 0; row < this.ROWS; row++) {
-      printBoard += '[ ';
-      for(var col = 0; col < this.COLS; col++) {
-        printBoard += this.cascadeBoards[this.currentBoard][col][row] + ', ';
-      }
-      printBoard += ']\n'
-    }
-
-    console.log(printBoard);
-  },
-
-  printLastBoard: function() {
-    var printBoard = '';
-    for(var row = 0; row < this.ROWS; row++) {
-      printBoard += '[ ';
-      for(var col = 0; col < this.COLS; col++) {
-        printBoard += this.lastBoard[col][row] + ', ';
-      }
-      printBoard += ']\n'
-    }
-
-    console.log(printBoard);
   }
 });

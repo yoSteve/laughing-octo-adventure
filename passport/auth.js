@@ -29,7 +29,7 @@ passport.use(new GoogleStrategy({
   },
   function(token, tokenSecret, profile, done) {
   //retrieve user
-  findOrCreateUser(profile.displayName, profile.id, done, true);
+  findOrCreateUser(profile.emails[0].value, profile.id, done, true);
   }
 ))
 
@@ -37,6 +37,7 @@ passport.use(new GoogleStrategy({
 var findOrCreateUser = function(username, password, done, oauth){
   oauth = typeof oauth !== 'undefined' ?  oauth : false;
   User.findOne({ 'username': sanitize(username) }, function(err, user){
+    console.log(username);
     if (err) {
       console.error(('Error in signup : ' + err));
       return done(err);
@@ -50,6 +51,7 @@ var findOrCreateUser = function(username, password, done, oauth){
 				}
       } else {
         if(!isValidToken(user, password)) {
+          console.log('google oauth issue');
             console.log('Invalid Passowrd');
             return done(null, false);
         }
@@ -58,11 +60,12 @@ var findOrCreateUser = function(username, password, done, oauth){
     } else {
       var newUser = new User();
       //set credentials
-      newUser.username = sanitize(username);
+      //placeholder
+      newUser.username = username;
       if (!oauth)
         newUser.password = createHash(sanitize(password));
       else
-        newUser.password = sanitize(password);
+        newUser.password = password;
 
       //save user
       newUser.save(function(err) {
