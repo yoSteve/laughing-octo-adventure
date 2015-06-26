@@ -82,6 +82,7 @@ function nsp (io) {
     });
 
     socket.on('attack', function(attackData) {
+     console.log('\n\n\n', attackData);
      games[attackData.gameId].attack(attackData);
      //uses special attack happens mid turn  
     });
