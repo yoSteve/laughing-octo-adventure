@@ -103,7 +103,17 @@ GameSchema.methods.attack = function(data) {
 }
 
 GameSchema.methods.end = function(winner) {
-  io.to(this.gameId).emit('game-over', winner);
+  if(winner.disconnect) {
+    if(winner.desconnect == this.homeUser.username) {
+      winner.winner = this.awayUser.username;
+    } else {
+      winner.winner = this.homeUser.username
+    } 
+  }
+  io.to(this.gameId).emit('game-over', winner.winner);
+  this.active = false;
+  this.save();
+  this = null;
 }
 
 var countMana = function(allMatches) {

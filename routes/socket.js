@@ -95,6 +95,13 @@ function nsp (io) {
       //emits refreshed board (game state) to room 
     });
 
+    socket.on('kill-game', function(data) {
+      var game = data.gameId;
+      games[game].end(data);
+      console.log(games[game].gameId, ' in process of being set inactive');
+      delete games[game];
+    });
+
     socket.on('disconnect', function() {
       console.log('someone left the lobby');
       //for performance boost should store logged in users in memory
@@ -104,10 +111,10 @@ function nsp (io) {
             currentUser.activeGames.forEach(function(game) {
               console.log(game, 'why I print soo much');
               if(games[game]){
-                console.log(games[game].gameId, ' in process of being set inactive');
-                games[game].active = false;
-                games[game].save;
+                getCurrentUser(socket, function(currentUser){
+                games[game].end({disconnect: currentUser.username});
                 delete games[game];
+                });
               }
             });
             currentUser.activeGames = [];
