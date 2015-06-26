@@ -15,7 +15,6 @@ game.chooseTeamEntity = me.Entity.extend({
 
     this.buildTeamEntity(this.teamNumber);
 },
-
   
   update: function(dt) {
     this._super(me.Entity, 'update', [dt]);
