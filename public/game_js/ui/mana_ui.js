@@ -25,7 +25,7 @@ game.ManaUI = me.Renderable.extend({
       this.blackFont.textAlign = 'left';
     }
 
-    this.y = 40;
+    this.y = 50;
   },
 
   draw: function(renderer) {

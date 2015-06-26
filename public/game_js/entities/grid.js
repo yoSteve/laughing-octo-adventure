@@ -14,8 +14,7 @@ game.Grid = me.Container.extend({
     this.lastBoard = null;
     this.lastMove;
 
-    this.attacked = false;
-
+    this.attacked = false; 
     this.turnMana = {
       red: 0,
       blue: 0,
@@ -55,16 +54,13 @@ game.Grid = me.Container.extend({
     }
 
     if(this.charactersAttacking > 0) {
-      console.log('characters attacking: ', this.charactersAttacking);
       return true;
     }
 
-    //TODO emit message about game ending, who won, then switch to GAMEOVER screen
     if(!game.playScreen.team1.anyAlive()) {
-      console.log('team1 dead'); 
+      //send message to server about winner
       me.state.change(me.state.GAMEOVER);
     } else if(!game.playScreen.team2.anyAlive()) {
-      console.log('team2 dead'); 
       me.state.change(me.state.GAMEOVER);
     }
 
@@ -93,8 +89,6 @@ game.Grid = me.Container.extend({
           team = game.playScreen.team2;
         }
 
-        console.log('extra thing');
-        console.log(this.grabbedCrystal);
         team.getBestAttacker(this.grabbedCrystal).setActive();
         team.attack(this.turnMana); 
 

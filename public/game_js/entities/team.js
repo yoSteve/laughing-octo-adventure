@@ -77,7 +77,6 @@ game.Team = me.Container.extend({
   },
 
   hurt: function(damage) {
-    console.log('damage', damage);
     if(game.playScreen.currentPlayer == 2) {
       game.playScreen.team2.activeCharacter.takeDamage(damage);
     } else {
