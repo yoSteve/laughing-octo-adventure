@@ -29,19 +29,6 @@ game.Character = me.Entity.extend({
   update: function(dt) {
     this._super(me.Entity, 'update', [dt]);
 
-    if(this.health > 0 && me.input.isKeyPressed('hurtChar')) {
-      this.renderable.setCurrentAnimation('takeDamage');
-      this.health -= 100;
-    }
-
-    if(this.health <= 100) {
-      this.renderable.setCurrentAnimation('wounded');
-    }
-
-    if(this.health <= 0) {
-      this.renderable.setCurrentAnimation('dead');
-    }
-
     this.body.update();
 
     return true;
@@ -98,15 +85,26 @@ game.Character = me.Entity.extend({
 
     var character = this;
 
-    game.playScreen.grid.charactersAttacking++;
+    if(!this.renderable.isCurrentAnimation('attackWithWeapon')) {
+      game.playScreen.grid.charactersAttacking++;
+    }
+
+    var team;
+
+    if(game.playScreen.currentPlayer == 2) {
+      team = game.playScreen.team1;
+    } else {
+      team = game.playScreen.team2;
+    }
+
+    var targetName = team.activeCharacter.name; 
+
     this.renderable.setCurrentAnimation('attackWithWeapon', function() {
-      console.log(this);
       //deal damage
       character.team.hurt(damage);
 
       //send message to server about damage
-      console.log('attack');
-      game.sendMessage('attack', { player: character.team.playerNum, damage: damage });  
+      game.sendMessage('attack', { player: character.team.playerNum, damage: damage, target: targetName });  
 
       game.playScreen.grid.charactersAttacking--;
             

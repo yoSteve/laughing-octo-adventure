@@ -76,7 +76,7 @@ game.Tile = me.DraggableEntity.extend({
     this._super(me.DraggableEntity, 'dragStart', [event]);
     this.oldPos = this.mousePos.clone();
     this.grabbed = true;
-    game.playScreen.grid.grabbedCrystal = this;
+    game.playScreen.grid.grabbedCrystal = this.type;
   },
 
   dragEnd: function(event) {
