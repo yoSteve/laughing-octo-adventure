@@ -22,10 +22,16 @@ game.PlayScreen = me.ScreenObject.extend({
       this.team1.setTeamActive();
       me.game.world.addChild(this.team1);
 
+      this.user1Name = new game.UserName(game.data.user1, 25, 120, 'left'); 
+      me.game.world.addChild(this.user1Name);
+
       var team2Object = game.data.team2; 
-      this.team2 = new game.Team(team2Object);
+      this.team2 = new game.Team(game.data.team2);
       this.team2.setTeamInactive();
       me.game.world.addChild(this.team2);
+
+      this.user2Name = new game.UserName(game.data.user2, 1260, 120, 'right'); 
+      me.game.world.addChild(this.user2Name);
 
       game.socket.on('refresh-board', function(gameObject) {
         //makes grid wait until data is ready before updating
@@ -56,6 +62,8 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.removeChild(this.grid); 
       me.game.world.removeChild(this.team1); 
       me.game.world.removeChild(this.team2); 
+      me.game.world.removeChild(this.user1Name);
+      me.game.world.removeChild(this.user2Name);
     },
 
     switchTurn: function() {
