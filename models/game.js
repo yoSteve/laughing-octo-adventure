@@ -104,7 +104,7 @@ GameSchema.methods.attack = function(data) {
 
 GameSchema.methods.end = function(winner) {
   if(winner.disconnect) {
-    if(winner.desconnect == this.homeUser.username) {
+    if(winner.disconnect == this.homeUser.username) {
       winner.winner = this.awayUser.username;
     } else {
       winner.winner = this.homeUser.username
