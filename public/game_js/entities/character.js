@@ -46,15 +46,15 @@ game.Character = me.Entity.extend({
     this.renderable.addAnimation('idle', [num]);
     this.renderable.addAnimation('standReady', [num+1]);
     this.renderable.addAnimation('walk', [num, num+2, num, num+4], 250);
-    this.renderable.addAnimation('walkWithWeapon', [num+13, num+14, num+15, num+14]);
-    this.renderable.addAnimation('attackWithWeapon', [num+11, num+12]);
+    this.renderable.addAnimation('walkWithWeapon', [num+13, num+14, num+15, num+14], 250);
+    this.renderable.addAnimation('attackWithWeapon', [num+11, num+12], 500);
     this.renderable.addAnimation('wounded', [num+8]);
-    this.renderable.addAnimation('takeDamage', [num+9, num+8]);
+    this.renderable.addAnimation('takeDamage', [num+9, num+8], 500);
     this.renderable.addAnimation('dead', [num+10]);
-    this.renderable.addAnimation('whisper', [num+5, num+6]);
-    this.renderable.addAnimation('wink', [num, num+6]);
-    this.renderable.addAnimation('punch', [num+4, num+3]);
-    this.renderable.addAnimation('dance', [num, num+7]);
+    this.renderable.addAnimation('whisper', [num+5, num+6], 500);
+    this.renderable.addAnimation('wink', [num, num+6], 500);
+    this.renderable.addAnimation('punch', [num+4, num+3], 500);
+    this.renderable.addAnimation('dance', [num, num+7], 500);
     this.renderable.setCurrentAnimation('idle');
   },
 
