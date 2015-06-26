@@ -26,10 +26,14 @@ game.PlayScreen = me.ScreenObject.extend({
 
       game.socket.on('refresh-board', function(gameObject) {
         //makes grid wait until data is ready before updating
-        game.playScreen.grid.doStuff = false;
+        game.playScreen.grid.dataReady = false;
         
         game.playScreen.grid.currentMatch = 0;
         game.playScreen.grid.currentBoard = 0;
+
+        game.playScreen.grid.attacked = false;
+
+        game.playScreen.grid.resetTurnMana();
 
         game.playScreen.grid.lastBoard = gameObject.gameBoard;
         game.playScreen.grid.lastMove = gameObject.lastMove;
@@ -39,7 +43,7 @@ game.PlayScreen = me.ScreenObject.extend({
         game.playScreen.currentPlayer = gameObject.turn;
         game.playScreen.switchTurn();
 
-        game.playScreen.grid.doStuff = true;
+        game.playScreen.grid.dataReady = true;
       });
     },
 
