@@ -84,6 +84,7 @@ game.Grid = me.Container.extend({
           team = game.playScreen.team2;
         }
 
+        console.log('extra thing');
         console.log(this.grabbedCrystal);
         team.getBestAttacker(this.grabbedCrystal).setActive();
         team.attack(this.turnMana); 
