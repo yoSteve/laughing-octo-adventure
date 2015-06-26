@@ -150,7 +150,7 @@ GameSchema.methods.checkNullSpace = function() {
         this.board[col][i] = null;
     }
   } 
-
+}
 
 GameSchema.methods.refreshBoard = function(firstCrystal) {
   var allMatches = [];
