@@ -24,7 +24,7 @@ var getCurrentUser = function(socket, cb){
 }
 
 var enterMatchmaking = function(socket, currentUser) {
-  console.log(currentUser.username, ' has entered matchmaking \nwith ', currentUser.team);
+  console.log(currentUser.username, ' has entered matchmaking' );
   User.findOne({waiting: true, username: {'$ne': currentUser.username}}, function(err, user){
     if(user) {
       console.log("matchXXXXXXXXXXX", user.username, currentUser.username);
@@ -55,7 +55,12 @@ function nsp (io) {
   nspLobby = io.of('/lobby'); 
   nspLobby.on('connection', function(socket){
     console.log('new connection, current active games: ',games.length);
-
+    User.find({'waiting': true}, function(err, users) {
+      var usernamesx = users.map(function(user) {
+       return user.username;
+      });
+      console.log('users waitins! \n', usernamesx, '\n');
+    });
 
     socket.on('team-chosen', function(teamInfo) {
       getCurrentUser(socket, function(currentUser) {
@@ -82,13 +87,11 @@ function nsp (io) {
     });
 
     socket.on('attack', function(attackData) {
-     console.log('\n\n\n', attackData);
      games[attackData.gameId].attack(attackData);
      //uses special attack happens mid turn  
     });
 
     socket.on('move', function(data) {
-      console.log(data.gameId);
       games[data.gameId].move(data);
       //receives the move information
       //emits matches to room,
@@ -100,16 +103,16 @@ function nsp (io) {
       games[game].end(data);
       console.log(games[game].gameId, ' in process of being set inactive');
       delete games[game];
+      console.log('list of active games after ', data.gameId, ' ended \n', games)
     });
 
     socket.on('disconnect', function() {
       console.log('someone left the lobby');
       //for performance boost should store logged in users in memory
       getCurrentUser(socket, function(currentUser) {
-        console.log('it was ', currentUser);
+        console.log('it was ', currentUser.username);
           if(currentUser) {
             currentUser.activeGames.forEach(function(game) {
-              console.log(game, 'why I print soo much');
               if(games[game]){
                 getCurrentUser(socket, function(currentUser){
                 games[game].end({disconnect: currentUser.username});

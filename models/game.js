@@ -34,8 +34,6 @@ GameSchema.statics.create = function (gameVars){
     obj[champ.name] = [champ.charClass.health, true];
     return obj;
   });
-  console.log('away', game.away);
-  console.log('home', game.home);
   game.active = true;
   game.matches = [];
   game.currentPlayer = 1;
@@ -67,7 +65,7 @@ GameSchema.methods.move = function(data) {
     this.shiftRow(data['row'], data['movedRight']);
   else
     this.shiftCol(data['col'], data['movedDown']);
-  console.log('moving');
+  console.log(this.currentPlayer, ' moving');
   this.lastMove = data;
   this.refreshBoard();
   //respond with emit matches and board state
@@ -109,11 +107,11 @@ GameSchema.methods.end = function(winner) {
     } else {
       winner.winner = this.homeUser.username
     } 
+  this.io.to(this.gameId).emit('dc', winner.winner);
   }
-  io.to(this.gameId).emit('game-over', winner.winner);
   this.active = false;
   this.save();
-  this = null;
+  delete this;
 }
 
 var countMana = function(allMatches) {
@@ -176,7 +174,7 @@ GameSchema.methods.checkNullSpace = function() {
   } 
 }
 
-GameSchema.methods.refreshBoard = function(firstCrystal) {
+GameSchema.methods.refreshBoard = function() {
   var allMatches = [];
   var cascadeBoards = [];
   do { 
@@ -190,8 +188,6 @@ GameSchema.methods.refreshBoard = function(firstCrystal) {
     homeUsername: this.homeUser.username,
     awayUsername: this.awayUser.username,
     gameId: this.gameId, 
-    home: this.awayUser.username, 
-    away: this.homeUser.username, 
     matches: allMatches,
     turnMana: countMana(allMatches),
     cascadeBoards: cascadeBoards,
