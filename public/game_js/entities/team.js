@@ -76,6 +76,7 @@ game.Team = me.Container.extend({
   },
 
   hurt: function(damage) {
+    console.log('damage', damage);
     if(game.playScreen.currentPlayer == 2) {
       game.playScreen.team2.activeCharacter.takeDamage(damage);
     } else {
@@ -107,7 +108,7 @@ game.Team = me.Container.extend({
       x = 0;
     } else {
       rightSide = false;   
-      x = me.game.viewport.width - 130;
+      x = me.game.viewport.width - 230;
     }
 
     for(var i = 0; i < game.Team.MAX; i++) {

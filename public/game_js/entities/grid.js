@@ -50,10 +50,14 @@ game.Grid = me.Container.extend({
     this.lastMove = null;
     
     //if animating appearance or vanishes
-    if(this.cellsVanishing > 0 || this.cellsAppearing > 0 || this.charactersAttacking > 0) {
-      console.log(this.charactersAttacking);
+    if(this.cellsVanishing > 0 || this.cellsAppearing > 0) {
       return true;
     }
+
+    if(this.charactersAttacking > 0) {
+      return true;
+    }
+
 
     //after animations, shift
     if(this.needsShifting) {
