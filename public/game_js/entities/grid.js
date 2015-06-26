@@ -14,8 +14,7 @@ game.Grid = me.Container.extend({
     this.lastBoard = null;
     this.lastMove;
 
-    this.attacked = false;
-
+    this.attacked = false; 
     this.turnMana = {
       red: 0,
       blue: 0,
@@ -59,12 +58,10 @@ game.Grid = me.Container.extend({
       return true;
     }
 
-    //TODO emit message about game ending, who won, then switch to GAMEOVER screen
     if(!game.playScreen.team1.anyAlive()) {
-      console.log('team1 dead'); 
+      //send message to server about winner
       me.state.change(me.state.GAMEOVER);
     } else if(!game.playScreen.team2.anyAlive()) {
-      console.log('team2 dead'); 
       me.state.change(me.state.GAMEOVER);
     }
 

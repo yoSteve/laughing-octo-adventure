@@ -4,7 +4,9 @@ var game = {
   //set which player is connected
     player: 0,
     team1: null, 
-    team2: null 
+    team2: null, 
+    user1: null,
+    user2: null
   },
 
   onload: function () {
