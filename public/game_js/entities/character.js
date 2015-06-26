@@ -95,7 +95,7 @@ game.Character = me.Entity.extend({
     var character = this;
 
     game.playScreen.grid.charactersAttacking++;
-    this.renderable.setCurrentAnimation('attack', function() {
+    this.renderable.setCurrentAnimation('attackWithWeapon', function() {
       //deal damage
       character.team.hurt(damage);
 
