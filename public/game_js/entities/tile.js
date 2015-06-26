@@ -124,14 +124,14 @@ game.Tile = me.DraggableEntity.extend({
   moveHorizontal: function(right) {
     this.pos.y = this.row * game.Tile.height;
     game.playScreen.grid.shiftRow(this.row, right);
-    game.sendMessage('move', { pattern: 'row', row: this.row, movedRight: right });
+    game.sendMessage('move', { pattern: 'row', row: this.row, movedRight: right, firstCrystal: game.playScreen.grid.grabbedCrystal });
     this.moved = true;
   },
 
   moveVertical: function(down) {
     this.pos.x = this.col * game.Tile.width;
     game.playScreen.grid.shiftCol(this.col, down);
-    game.sendMessage('move', { pattern: 'column', col: this.col, movedDown: down });
+    game.sendMessage('move', { pattern: 'column', col: this.col, movedDown: down, firstCrystal: game.playScreen.grid.grabbedCrystal });
     this.moved = true;
   }
 });

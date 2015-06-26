@@ -100,6 +100,7 @@ game.Character = me.Entity.extend({
       character.team.hurt(damage);
 
       //send message to server about damage
+      console.log('attack');
       game.sendMessage('attack', { player: character.team.playerNum, damage: damage });  
             
       game.playScreen.grid.charactersAttacking--;
