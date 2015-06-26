@@ -1,6 +1,6 @@
 game.charClasses = {
   Fighter: {
-    health: 1000,
+    health: 100, //1000
     manaScores: {
       red: 10,
       blue: 5,
@@ -13,7 +13,7 @@ game.charClasses = {
   },
 
   Thief: {
-    health: 680,
+    health: 68, //680
     manaScores: {
       red: 5,
       blue: 10,
@@ -26,7 +26,7 @@ game.charClasses = {
   },
 
   BlackBelt: {
-    health: 875,
+    health: 87, //875
     manaScores: {
       red: 5,
       blue: 5,
@@ -39,7 +39,7 @@ game.charClasses = {
   },
 
   RedMage: {
-    health: 800,
+    health: 80, //800
     manaScores: {
       red: 5,
       blue: 5,
@@ -52,7 +52,7 @@ game.charClasses = {
   },
 
   WhiteMage: {
-    health: 600,
+    health: 60, //600
     manaScores: {
       red: 5,
       blue: 5,
@@ -65,7 +65,7 @@ game.charClasses = {
   },
 
   BlackMage: {
-    health: 600,
+    health: 60, //600
     manaScores: {
       red: 5,
       blue: 5,
