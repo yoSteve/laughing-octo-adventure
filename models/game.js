@@ -23,18 +23,15 @@ GameSchema.statics.create = function (gameVars){
   var game = new this(gameVars);
   game.home = JSON.parse(JSON.stringify(game.homeUser.team));
   game.away = JSON.parse(JSON.stringify(game.awayUser.team));
-  console.log(game.home.champions);
-  console.log(game.away.champions);
-  console.log('just logged the teams yo');
   game.home = game.home.champions.map(function(champ) {
     var obj = {}; 
-    obj[champ.name] = champ.charClass.health;
+    obj[champ.name] = [champ.charClass.health, true];
     return obj;
   });
   
   game.away = game.away.champions.map(function(champ) {
     var obj = {}; 
-    obj[champ.name] = champ.charClass.health;
+    obj[champ.name] = [champ.charClass.health, true];
     return obj;
   });
   console.log('away', game.away);
@@ -59,7 +56,6 @@ GameSchema.methods.randomPlayer = function() {
 
 GameSchema.methods.move = function(data) {
 // 1 is home 2 is away
-  console.log('\n\n\n\n', data, '\n\n move data');
   if (this.currentPlayer == 1) {
     this.home.active = data.character;
     this.currentPlayer = 2;
@@ -78,11 +74,31 @@ GameSchema.methods.move = function(data) {
 }
 
 GameSchema.methods.attack = function(data) {
-  console.log('\n\n\n', data);
+  if(this.currentPlayer == 2){
+    this.away[data.target[0]] -= data.damage;
+    if (this.away[data.target[0]] <= 0 && this.home[data.target[1]] == true){
+      this.away[data.target[1]] = false;
+      this.away.dead++;
+      if (this.away.dead == 4)
+        this.end({username: this.homeUser.username, player: 1});
+    }
+  }
+  if(this.currentPlayer == 1){
+    this.home[data.target[0]] -= data.damage;
+    if (this.home[data.target[0]] <= 0 && this.home[data.target[1]] == true){
+      this.home[data.target[1]] = false;
+      this.home.dead++;
+      if (this.home.dead == 4)
+        this.end({username: this.awayUser.username, player: 2});
+    }
+  }
+
+
   // conditional statement to grab correct user
   //this.home[data.charName].hp -= data.damage;
   //if ^^ hp <0 set as dead
   //if no active teammates end game 
+  
   //this.end(winner);
 }
 
@@ -101,8 +117,6 @@ var countMana = function(allMatches) {
 }
 
 GameSchema.statics.createGameId = function(id1, id2) {
-  console.log(id1);
-  console.log(id2);
   if(id1 > id2)
     return id1 + id2;
   return id2 + id1;
