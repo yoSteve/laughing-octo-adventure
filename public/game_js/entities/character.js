@@ -13,13 +13,17 @@ game.Character = me.Entity.extend({
 
     this.team = team;
     this.name = name;
+    this.nameUI;
+
     this.health;
     this.healthUI;
+
     this.charClass;
     this.specials;
     this.manaScores;
 
     this.buildFromClass(charClass);
+    this.createUI();
   },
 
   update: function(dt) {
@@ -96,14 +100,16 @@ game.Character = me.Entity.extend({
 
     game.playScreen.grid.charactersAttacking++;
     this.renderable.setCurrentAnimation('attackWithWeapon', function() {
+      console.log(this);
       //deal damage
       character.team.hurt(damage);
 
       //send message to server about damage
       console.log('attack');
       game.sendMessage('attack', { player: character.team.playerNum, damage: damage });  
-            
+
       game.playScreen.grid.charactersAttacking--;
+            
       character.renderable.setCurrentAnimation(prevAnimation); 
     });
   },
@@ -176,5 +182,12 @@ game.Character = me.Entity.extend({
 
   setInactive: function() {
     this.pos.x = this.startPos.x;
+  },
+
+  createUI: function() {
+    this.nameUI = new game.CharName(this);
+    me.game.world.addChild(this.nameUI);
+    this.healthUI = new game.CharHealth(this);
+    me.game.world.addChild(this.healthUI);
   }
 });

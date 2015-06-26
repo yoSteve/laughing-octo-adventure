@@ -19,6 +19,6 @@ game.TeamName = me.Renderable.extend({
   },
 
   draw: function(renderer) {
-    this.font.draw(renderer, 'Team ' + this.team.teamName, this.x, this.y); 
+    this.font.draw(renderer, this.team.teamName, this.x, this.y); 
   }
 });
