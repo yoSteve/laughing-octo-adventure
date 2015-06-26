@@ -41,21 +41,21 @@ var game = {
   loaded: function () {
       this.socket = io('http://localhost:3000/lobby');
       
-      this.data.team1 = { teamName: 'Squatpump', playerNum: 1, characters: 
+      this.data.team1 = { teamName: 'Atomic Puppies', playerNum: 1, characters: 
         [ 
-          { name: 'Stinky Pete', charClass: game.charClasses.Fighter },
-          { name: 'Shteven', charClass: game.charClasses.RedMage },
-          { name: 'Wheel', charClass: game.charClasses.Thief },
-          { name: 'Kervin', charClass: game.charClasses.BlackMage }
+          { name: 'Scrappy', charClass: game.charClasses.Fighter },
+          { name: 'Rufus', charClass: game.charClasses.RedMage },
+          { name: 'Rover', charClass: game.charClasses.Thief },
+          { name: 'Shadow', charClass: game.charClasses.BlackMage }
         ]
       }
 
-      this.data.team2 = { teamName: 'Derpyderp', playerNum: 2, characters: 
+      this.data.team2 = { teamName: 'Battle Kittens', playerNum: 2, characters: 
         [ 
-          { name: 'Benji', charClass: game.charClasses.WhiteMage },
-          { name: 'Shames', charClass: game.charClasses.Fighter },
-          { name: 'Brody', charClass: game.charClasses.Thief },
-          { name: 'Vance', charClass: game.charClasses.BlackBelt }
+          { name: 'Boots', charClass: game.charClasses.Fighter },
+          { name: 'Pockets', charClass: game.charClasses.Thief },
+          { name: 'Tiger', charClass: game.charClasses.BlackBelt },
+          { name: 'Muffin', charClass: game.charClasses.WhiteMage }
         ] 
       }
 
