@@ -177,8 +177,8 @@ GameSchema.methods.refreshBoard = function(firstCrystal) {
     }
   } while(cascade[0].length > 0);
   this.io.to(this.gameId).emit('refresh-board', {
-    homeMana: this.homeMana,
-    awayMana: this.awayMana,
+    homeUsername: this.homeUser.username,
+    awayUsername: this.awayUser.username,
     gameId: this.gameId, 
     home: this.awayUser.username, 
     away: this.homeUser.username, 
