@@ -31,7 +31,6 @@ GameSchema.statics.create = function (gameVars){
     obj[champ.name] = champ.charClass.health;
     return obj;
   });
-
   
   game.away = game.away.champions.map(function(champ) {
     var obj = {}; 
@@ -74,15 +73,14 @@ GameSchema.methods.move = function(data) {
     this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
   this.lastMove = data;
-  this.refreshBoard(data.firstCrystal);
+  this.refreshBoard();
   //respond with emit matches and board state
-  return [this.gameBoard, this.mana];
 }
 
 GameSchema.methods.attack = function(data) {
   console.log('\n\n\n', data);
   // conditional statement to grab correct user
-  this.home[data.charName].hp -= data.damage;
+  //this.home[data.charName].hp -= data.damage;
   //if ^^ hp <0 set as dead
   //if no active teammates end game 
   //this.end(winner);
@@ -152,7 +150,7 @@ GameSchema.methods.checkNullSpace = function() {
         this.board[col][i] = null;
     }
   } 
-}
+
 
 GameSchema.methods.refreshBoard = function(firstCrystal) {
   var allMatches = [];
@@ -175,8 +173,7 @@ GameSchema.methods.refreshBoard = function(firstCrystal) {
     cascadeBoards: cascadeBoards,
     gameBoard: this.board,
     turn: this.currentPlayer,
-    lastMove: this.lastMove,
-    firstCrystal: firstCrystal
+    lastMove: this.lastMove
   });
 }
 
