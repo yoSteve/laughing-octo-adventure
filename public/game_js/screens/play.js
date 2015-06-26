@@ -29,7 +29,7 @@ game.PlayScreen = me.ScreenObject.extend({
         game.playScreen.grid.dataReady = false;
         
         console.log(gameObject);
-        game.playScreen.grid.grabbedCrystal = gameObject.firstCrystal;
+        game.playScreen.grid.grabbedCrystal = gameObject.lastMove.firstCrystal;
         game.playScreen.grid.currentMatch = 0;
         game.playScreen.grid.currentBoard = 0;
         game.playScreen.grid.charactersAttacking = 0;
