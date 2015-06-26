@@ -25,6 +25,8 @@ game.chooseTeamEntity = me.Entity.extend({
 
   setAnimations: function(num) {
     this.renderable.addAnimation('walk', [num, num+1, num+2, num+1], 250);
+    this.renderable.addAnimation('dance', [num+3, num+4], 250);
+    this.renderable.addAnimation('dead', [num+5, num+5], 250);
     this.renderable.setCurrentAnimation('walk');
   },
 
