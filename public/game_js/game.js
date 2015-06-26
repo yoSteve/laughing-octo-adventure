@@ -41,7 +41,7 @@ var game = {
 
   // Run on game resources loaded.
   loaded: function () {
-      this.socket = io('http://localhost:3000/lobby');
+      this.socket = io('http://manamatch.com/lobby');
       
       this.data.team1 = { teamName: 'Atomic Puppies', playerNum: 1, characters: 
         [ 
