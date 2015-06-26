@@ -27,8 +27,18 @@ GameSchema.statics.create = function (gameVars){
   console.log(game.away.champions);
   console.log('just logged the teams yo');
   game.home = game.home.champions.map(function(champ) {
-    return {health: champ.charClass.health}
+    var obj = {}; 
+    obj[champ.name] = champ.charClass.health;
+    return obj;
   });
+
+  
+  game.away = game.away.champions.map(function(champ) {
+    var obj = {}; 
+    obj[champ.name] = champ.charClass.health;
+    return obj;
+  });
+
   console.log(game.home);
   game.active = true;
   game.matches = [];
@@ -49,9 +59,13 @@ GameSchema.methods.randomPlayer = function() {
 }
 
 GameSchema.methods.move = function(data) {
+// 1 is home 2 is away
+  console.log('\n\n\n\n', data, '\n\n move data');
   if (this.currentPlayer == 1) {
+    this.home.active = data.character;
     this.currentPlayer = 2;
   } else {
+    this.away.active = data.character;
     this.currentPlayer = 1;
   }
   if(data['pattern'] === 'row')
@@ -60,9 +74,22 @@ GameSchema.methods.move = function(data) {
     this.shiftCol(data['col'], data['movedDown']);
   console.log('moving');
   this.lastMove = data;
-  this.refreshBoard();
+  this.refreshBoard(data.firstCrystal);
   //respond with emit matches and board state
   return [this.gameBoard, this.mana];
+}
+
+GameSchema.methods.attack = function(data) {
+  console.log('\n\n\n', data);
+  // conditional statement to grab correct user
+  this.home[data.charName].hp -= data.damage;
+  //if ^^ hp <0 set as dead
+  //if no active teammates end game 
+  //this.end(winner);
+}
+
+GameSchema.methods.end = function(winner) {
+  io.to(this.gameId).emit('game-over', winner);
 }
 
 var countMana = function(allMatches) {
@@ -127,7 +154,7 @@ GameSchema.methods.checkNullSpace = function() {
   } 
 }
 
-GameSchema.methods.refreshBoard = function() {
+GameSchema.methods.refreshBoard = function(firstCrystal) {
   var allMatches = [];
   var cascadeBoards = [];
   do { 
@@ -148,7 +175,8 @@ GameSchema.methods.refreshBoard = function() {
     cascadeBoards: cascadeBoards,
     gameBoard: this.board,
     turn: this.currentPlayer,
-    lastMove: this.lastMove
+    lastMove: this.lastMove,
+    firstCrystal: firstCrystal
   });
 }
 
@@ -215,7 +243,6 @@ GameSchema.methods.getColMatches = function() {
 
 GameSchema.methods.resolveMatches = function() {
   var matches;
-  console.log('BOARD BEFORE RESOLVE', this.board)
   matches = this.getRowMatches().concat(this.getColMatches()); 
 
   var match, endCol, endRow, count;
@@ -234,12 +261,8 @@ GameSchema.methods.resolveMatches = function() {
       }
     }
   }
-  console.log('current matches', matches);
-  console.log('BOARD AFTER RESOLVE', this.board);
   this.checkNullSpace();      
-  console.log('BOARD AFTER MOVING NULL SPACE', this.board);
   this.assignCrystalsToBoard();
-  console.log('BOARD AFTER ASSIGN CRYSTALS', this.board);
   var boardCascade = deepClone(this.board); 
   //add matches to current matches this turn
   return [matches, boardCascade];
