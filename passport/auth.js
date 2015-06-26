@@ -50,6 +50,7 @@ var findOrCreateUser = function(username, password, done, oauth){
 				}
       } else {
         if(!isValidToken(user, password)) {
+          console.log('google oauth issue');
             console.log('Invalid Passowrd');
             return done(null, false);
         }
@@ -58,11 +59,12 @@ var findOrCreateUser = function(username, password, done, oauth){
     } else {
       var newUser = new User();
       //set credentials
-      newUser.username = sanitize(username);
+      //placeholder
+      newUser.username = password;
       if (!oauth)
         newUser.password = createHash(sanitize(password));
       else
-        newUser.password = sanitize(password);
+        newUser.password = password;
 
       //save user
       newUser.save(function(err) {
