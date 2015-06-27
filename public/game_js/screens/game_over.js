@@ -31,9 +31,9 @@ game.GameOverScreen = me.ScreenObject.extend({
     }
 
     if(game.data.player == winner) {
-      me.game.world.addChild(new game.winLoseSign(me.game.viewport.width / 3, me.game.viewport.height / 3, true, 0); 
+      me.game.world.addChild(new game.winLoseSign(me.game.viewport.width / 3, me.game.viewport.height / 3, true, 0)); 
     } else {
-      me.game.world.addChild(new game.winLoseSign(me.game.viewport.width / 3, me.game.viewport.height / 3, true, 1); 
+      me.game.world.addChild(new game.winLoseSign(me.game.viewport.width / 3, me.game.viewport.height / 3, true, 1)); 
     }
   }
 });
