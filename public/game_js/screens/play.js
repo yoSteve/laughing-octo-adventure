@@ -15,8 +15,6 @@ game.PlayScreen = me.ScreenObject.extend({
       this.grid.populate(gameObject.gameBoard);
       me.game.world.addChild(this.grid, 1);
 
-      me.game.world.addChild(new game.TurnUI());
-
       var team1Object = game.data.team1;
       this.team1 = new game.Team(team1Object);
       this.team1.setTeamActive();
