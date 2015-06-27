@@ -26,7 +26,6 @@ game.winLoseSign = me.Entity.extend({
   setAnimations: function(num) {
     this.renderable.addAnimation('win', [num, num+1], 250);
     this.renderable.addAnimation('lose', [num+2, num+2], 250);
-    this.renderable.setCurrentAnimation('walk');
   },
 
   buildSignEntity: function(winOrLose) {
