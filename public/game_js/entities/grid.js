@@ -61,20 +61,20 @@ game.Grid = me.Container.extend({
       //send message to server about winner
       game.sendMessage('kill-game', { winner: game.data.user2 });
       game.playScreen.currentPlayer = 0;
-      game.gameOverScreen.winner = 2;
+      game.gameOverScreen.setWinner(2);
 
       //after 5 seconds, switch to gameOver screen
       setTimeout(function() {
         me.state.change(me.state.GAMEOVER);
-      }, 5000);
+      }, 3000);
     } else if(!game.playScreen.team2.anyAlive()) {
       game.sendMessage('kill-game', { winner: game.data.user1 });
       game.playScreen.currentPlayer = 0;
-      game.gameOverScreen.winner = 1;
+      game.gameOverScreen.setWinner(1);
 
       setTimeout(function() {
         me.state.change(me.state.GAMEOVER);
-      }, 5000);
+      }, 3000);
     }
 
     //after animations, shift

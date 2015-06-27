@@ -9,7 +9,7 @@ game.chooseTeamEntity = me.Entity.extend({
 
     this.startPos = { x: x, y: y};
     this.flipped = flipped;
-    this.renderable.flipX(this.flipped);
+    //this.renderable.flipX(this.flipped);
 
     this.teamNumber = teamNumber;
 
