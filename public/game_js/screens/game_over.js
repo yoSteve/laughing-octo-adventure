@@ -8,11 +8,6 @@ game.GameOverScreen = me.ScreenObject.extend({
 
     this.victorySign = new game.winLoseSign(x, y, flipped, winOrLose);
 
-    this.team1Entity = new game.chooseTeamEntity(50, 400, false, 0);
-    me.game.world.addChild(this.team1Entity);
-
-    this.team2Entity = new game.chooseTeamEntity(700, 400, false, 1);
-    me.game.world.addChild(this.team2Entity);
 
     this.winner;
   },
@@ -22,6 +17,12 @@ game.GameOverScreen = me.ScreenObject.extend({
   },
 
   setWinner: function(winner) {
+    this.team1Entity = new game.chooseTeamEntity(50, 400, false, 0);
+    me.game.world.addChild(this.team1Entity);
+
+    this.team2Entity = new game.chooseTeamEntity(700, 400, false, 1);
+    me.game.world.addChild(this.team2Entity);
+
     if(winner == 2) {
       this.team1Entity.renderable.setCurrentAnimation('dance'); 
       this.team2Entity.renderable.setCurrentAnimation('dead'); 
