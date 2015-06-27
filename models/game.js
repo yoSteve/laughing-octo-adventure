@@ -65,7 +65,7 @@ GameSchema.methods.move = function(data) {
     this.shiftRow(data['row'], data['movedRight']);
   else
     this.shiftCol(data['col'], data['movedDown']);
-  console.log(this.currentPlayer, ' moving');
+  console.log(this.homeUser.username, ' ', this.awayUser.username, ' ', this.currentPlayer, ' moving');
   this.lastMove = data;
   this.refreshBoard();
   //respond with emit matches and board state
