@@ -54,6 +54,11 @@ game.PlayScreen = me.ScreenObject.extend({
 
         game.playScreen.grid.dataReady = true;
       });
+
+      game.socket.on('dc', function(winner){
+        alert("somebody disconnected, please head back to the start screen");
+     console.log(winner, " has won the game due to a disconnect");
+      });
     },
 
     onDestroyEvent: function() {
@@ -67,10 +72,14 @@ game.PlayScreen = me.ScreenObject.extend({
     switchTurn: function() {
       if(this.currentPlayer == 1) {
         this.team1.setTeamActive();
+        this.user1Name.setActive();
         this.team2.setTeamInactive();
+        this.user1Name.setInactive();
       } else {
         this.team2.setTeamActive();
+        this.user2Name.setActive();
         this.team1.setTeamInactive();
+        this.user1Name.setInactive();
       }
     }
 });

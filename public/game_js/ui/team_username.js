@@ -17,8 +17,7 @@ game.TeamUsername = me.Renderable.extend({
       this.x = me.game.viewport.width - 350; 
       this.font.textAlign = 'left';
     }
-  },
-
+  }
   draw: function(renderer) {
     this.font.draw(renderer, this.team.teamUserName, this.x, this.y); 
   }
