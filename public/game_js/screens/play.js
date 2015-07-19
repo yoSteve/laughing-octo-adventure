@@ -50,6 +50,7 @@ game.PlayScreen = me.ScreenObject.extend({
         game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
 
         game.playScreen.currentPlayer = gameObject.turn;
+        console.log('board refreshed ', this.user2Name, this.user1Name)
         game.playScreen.switchTurn();
 
         game.playScreen.grid.dataReady = true;
@@ -74,7 +75,7 @@ game.PlayScreen = me.ScreenObject.extend({
         this.team1.setTeamActive();
         this.user1Name.setActive();
         this.team2.setTeamInactive();
-        this.user1Name.setInactive();
+        this.user2Name.setInactive();
       } else {
         this.team2.setTeamActive();
         this.user2Name.setActive();

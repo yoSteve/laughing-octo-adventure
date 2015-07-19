@@ -1,6 +1,7 @@
 game.UserName = me.Renderable.extend({
   init: function(userName, x, y, alignment) {
     this._super(me.Renderable, 'init', [0, 0, 0, 0]);
+    this.alignment = alignment;
     this.font = new me.Font('Press Start 2P', 16, '#fff', alignment); 
     this.floating = true;
 
@@ -9,10 +10,10 @@ game.UserName = me.Renderable.extend({
     this.y = y;
   },
   setActive: function() {
-    this.font.setFont('Press Start 2P', 16, '#339900');
+    this.font.setFont('Press Start 2P', 16, '#339900', this.alignment);
   },
   setInactive: function() {
-    this.font.setFont('Press Start 2P', 16, '#fff');
+    this.font.setFont('Press Start 2P', 16, '#fff', this.alignment);
   },
   draw: function (renderer) {
     this.font.draw(renderer, this.name, this.x, this.y);
