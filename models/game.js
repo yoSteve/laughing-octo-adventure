@@ -101,18 +101,25 @@ GameSchema.methods.attack = function(data) {
 }
 
 GameSchema.methods.end = function(winner) {
-  if(winner.disconnect) {
-    console.log("disconnect");
-    if(winner.disconnect == this.homeUser.username) {
-      winner.winner = this.awayUser.username;
-    } else {
-      winner.winner = this.homeUser.username
-    } 
-  this.io.to(this.gameId).emit('dc', winner.winner);
+  if (this.active) {
+    var idx;
+    if(winner.disconnect) {
+      console.log("disconnect");
+      if(winner.disconnect == this.homeUser.username) {
+        winner.winner = this.awayUser;
+      } else {
+        winner.winner = this.homeUser
+      } 
+    idx = winner.winner.activeGames.indexOf(this);
+    winner.winner.activeGames.splice(idx, 1);
+    winner.winner.socketId.leave(this.gameId);
+    this.io.to(this.gameId).emit('dc', winner.winner.username);
+    }
+    
+    this.active = false;
+    this.save();
+    delete this;
   }
-  this.active = false;
-  this.save();
-  delete this;
 }
 
 var countMana = function(allMatches) {

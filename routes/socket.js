@@ -98,13 +98,13 @@ function nsp (io) {
       //emits refreshed board (game state) to room 
     });
 
-    socket.on('kill-game', function(data) {
-      var game = data.gameId;
-      games[game].end(data);
-      console.log(games[game].gameId, ' in process of being set inactive');
-      delete games[game];
-      console.log('list of active games after ', data.gameId, ' ended \n', games)
-    });
+//    socket.on('kill-game', function(data) {
+//      var game = data.gameId;
+//      games[game].end(data);
+//      console.log(games[game].gameId, ' in process of being set inactive');
+//      delete games[game];
+//      console.log('list of active games after ', data.gameId, ' ended \n', games)
+//    });
 
     socket.on('disconnect', function() {
       console.log('someone left the lobby');
@@ -116,7 +116,6 @@ function nsp (io) {
               if(games[game]){
                 getCurrentUser(socket, function(currentUser){
                 games[game].end({disconnect: currentUser.username});
-                enterMatchmaking(socket, currentUser);
                 delete games[game];
                 });
               }

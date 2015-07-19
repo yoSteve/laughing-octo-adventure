@@ -58,10 +58,10 @@ game.PlayScreen = me.ScreenObject.extend({
       });
 
       game.socket.on('dc', function(winner){
-        alert("somebody disconnected, please head back to the start screen");
+        alert("somebody disconnected" );
         console.log(winner, " has won the game due to a disconnect");
         me.state.change(me.state.READY);
-        me.game.reset();
+        //should really reset the game somehow here...
       });
     },
 
