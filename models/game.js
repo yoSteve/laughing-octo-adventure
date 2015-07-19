@@ -112,8 +112,8 @@ GameSchema.methods.end = function(winner) {
       } 
     idx = winner.winner.activeGames.indexOf(this);
     winner.winner.activeGames.splice(idx, 1);
-    winner.winner.socketId.leave(this.gameId);
     this.io.to(this.gameId).emit('dc', winner.winner.username);
+    winner.winner.socketId.leave(this.gameId);
     }
     
     this.active = false;
