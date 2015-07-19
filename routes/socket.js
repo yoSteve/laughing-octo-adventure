@@ -116,6 +116,7 @@ function nsp (io) {
               if(games[game]){
                 getCurrentUser(socket, function(currentUser){
                 games[game].end({disconnect: currentUser.username});
+                enterMatchmaking(socket, currentUser);
                 delete games[game];
                 });
               }

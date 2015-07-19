@@ -35,7 +35,9 @@ game.PlayScreen = me.ScreenObject.extend({
         //makes grid wait until data is ready before updating
         game.playScreen.grid.dataReady = false;
         
-        game.playScreen.grid.grabbedCrystal = gameObject.lastMove.firstCrystal;
+        if (gameObject.lastMove) {
+          game.playScreen.grid.grabbedCrystal = gameObject.lastMove.firstCrystal;
+        }
         game.playScreen.grid.currentMatch = 0;
         game.playScreen.grid.currentBoard = 0;
         game.playScreen.grid.charactersAttacking = 0;
@@ -50,7 +52,6 @@ game.PlayScreen = me.ScreenObject.extend({
         game.playScreen.grid.cascadeBoards = gameObject.cascadeBoards;
 
         game.playScreen.currentPlayer = gameObject.turn;
-        console.log('board refreshed ', this.user2Name, this.user1Name)
         game.playScreen.switchTurn();
 
         game.playScreen.grid.dataReady = true;
@@ -58,7 +59,9 @@ game.PlayScreen = me.ScreenObject.extend({
 
       game.socket.on('dc', function(winner){
         alert("somebody disconnected, please head back to the start screen");
-     console.log(winner, " has won the game due to a disconnect");
+        console.log(winner, " has won the game due to a disconnect");
+        me.state.change(me.state.READY);
+        me.game.reset();
       });
     },
 
