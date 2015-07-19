@@ -21,7 +21,7 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(this.team1);
 
       this.user1Name = new game.UserName(game.data.user1, 25, 120, 'left'); 
-      this.user.setActive();
+      this.user1Name.setActive();
       me.game.world.addChild(this.user1Name);
 
       var team2Object = game.data.team2; 
