@@ -45,5 +45,9 @@ app.use(router(app));
 var server = http.createServer(app.callback());
 var io = socketIo(server);
 socket(io, app, this);
-server.listen(process.env.PORT || 80);
-console.log('server listening on port 80');
+var port = 80;
+if(process.env.NODE_ENV = 'development') {
+  port = 3000;
+}
+server.listen(process.env.PORT || port);
+console.log('server listening on port ', port);

@@ -21,12 +21,16 @@ passport.use(new LocalStrategy(function(username, password, done) {
   }
 ))
 
+if(process.env.NODE_ENV = 'development') {
+  var callbackURL = "http://localhost:3000/auth/google/response"; 
+} else {
+  callbackURL = "http://manamatch.com/auth/google/response";
+}
 var GoogleStrategy = require('passport-google-auth').Strategy
 passport.use(new GoogleStrategy({
   clientId: secrets['GOOGLE_CLIENT_ID'],
   clientSecret: secrets['GOOGLE_CLIENT_SECRET'],
-  //callbackURL: "http://localhost:3000/auth/google/response" //"http://manamatch.com/auth/google/response"
-  callbackURL: "http://manamatch.com/auth/google/response"
+  callbackURL: callbackURL
   },
   function(token, tokenSecret, profile, done) {
   //retrieve user
